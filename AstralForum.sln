@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34408.163
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AstralForum", "AstralForum\AstralForum.csproj", "{B112FB1F-AFD0-45F3-A369-77F04718E240}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B112FB1F-AFD0-45F3-A369-77F04718E240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B112FB1F-AFD0-45F3-A369-77F04718E240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B112FB1F-AFD0-45F3-A369-77F04718E240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B112FB1F-AFD0-45F3-A369-77F04718E240}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A602DB3-7313-40C5-8EDF-F7D6BC797B3D}
+	EndGlobalSection
+EndGlobal
