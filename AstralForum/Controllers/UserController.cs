@@ -1,4 +1,4 @@
-﻿using AstralForum.Models;
+﻿using AstralForum.Models.User;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 
