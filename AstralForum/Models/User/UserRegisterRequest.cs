@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AstralForum.Models
+namespace AstralForum.Models.User
 {
     public class UserRegisterRequest
     {

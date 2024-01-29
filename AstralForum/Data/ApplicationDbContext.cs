@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using AstralForum.Data.Entities.Comments;
+using AstralForum.Data.Entities.Reactions;
+using AstralForum.Data.Entities.Threads;
+using AstralForum.Data.Entities.ThreadsCategory;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Data
@@ -9,5 +13,12 @@ namespace AstralForum.Data
             : base(options)
         {
         }
+        public DbSet<Comments> Comments { get; set; }
+        public DbSet<CommentsAttachment> CommentsAttachment { get; set; }
+        public DbSet<Reactions> Reactions { get; set; }
+        public DbSet<ReactionsType> ReactionsType { get; set; }
+        public DbSet<Threads> Threads { get; set; }
+        public DbSet<ThreadsAttachment> ThreadsAttachment { get; set; }
+        public DbSet<ThreadsCategory> Category { get; set; }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace AstralForum.Models
+﻿namespace AstralForum.Data.Entities.Users
 {
-     public class User
+    public class User
     {
         public int Id { get; set; }
         public string Email { get; set; } = string.Empty;
