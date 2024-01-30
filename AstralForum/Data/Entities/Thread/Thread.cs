@@ -1,12 +1,9 @@
 ﻿using System.Drawing;
 
-namespace AstralForum.Data.Entities.Threads
+namespace AstralForum.Data.Entities.Thread
 {
-    public class Threads
+    public class Thread : MetadataBaseEntity
     {
-        public int Id { get; set; }
-        public int UserId { get; set; }
-        public DateTime Date { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
         public string ImageUrl { get; set; }

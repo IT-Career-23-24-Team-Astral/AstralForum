@@ -1,4 +1,8 @@
 ﻿using AstralForum.Data.Entities;
+using AstralForum.Data.Entities.Comment;
+using AstralForum.Data.Entities.Reaction;
+using AstralForum.Data.Entities.Thread;
+using AstralForum.Data.Entities.ThreadCategory;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -13,12 +17,12 @@ namespace AstralForum.Data
         }
         
         public DbSet<Ban> Bans { get; set; }
-        public DbSet<Comments> Comments { get; set; }
-        public DbSet<CommentsAttachment> CommentsAttachment { get; set; }
-        public DbSet<Reactions> Reactions { get; set; }
-        public DbSet<ReactionsType> ReactionsType { get; set; }
-        public DbSet<Threads> Threads { get; set; }
-        public DbSet<ThreadsAttachment> ThreadsAttachment { get; set; }
-        public DbSet<ThreadsCategory> Category { get; set; }
+        public DbSet<Comment> Comments { get; set; }
+        public DbSet<CommentAttachment> CommentsAttachment { get; set; }
+        public DbSet<Reaction> Reactions { get; set; }
+        public DbSet<ReactionType> ReactionsType { get; set; }
+        public DbSet<Entities.Thread.Thread> Threads { get; set; }
+        public DbSet<ThreadAttachment> ThreadsAttachment { get; set; }
+        public DbSet<ThreadCategory> Category { get; set; }
     }
 }

@@ -1,10 +1,9 @@
 ﻿using System.Net.Mail;
 
-namespace AstralForum.Data.Entities.Threads
+namespace AstralForum.Data.Entities.Thread
 {
-    public class ThreadsAttachment
+    public class ThreadAttachment : MetadataBaseEntity
     {
-        public int Id { get; set; }
         public int ThreadId { get; set; }
         public string AttachmentUrl { get; set; } 
     }

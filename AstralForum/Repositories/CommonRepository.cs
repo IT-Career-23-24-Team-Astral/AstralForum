@@ -1,5 +1,6 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
@@ -15,6 +16,10 @@ namespace AstralForum.Repositories
         public List<T> GetAll()
         {
             return context.Set<T>().ToList();
+        }
+        public int Save()
+        {
+            return context.SaveChanges();
         }
     }
 }
