@@ -6,7 +6,7 @@ namespace AstralForum.Repositories
 {
     public class CommonRepository<T> : ICommonRepository<T> where T : BaseEntity
     {
-        private ApplicationDbContext context;
+        private readonly ApplicationDbContext context;
 
         public CommonRepository(ApplicationDbContext context)
         {

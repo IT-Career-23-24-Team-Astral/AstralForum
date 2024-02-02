@@ -2,9 +2,9 @@
 
 namespace AstralForum.Data.Entities.Thread
 {
-    public class ThreadAttachment : MetadataBaseEntity
+    public class ThreadAttachment : BaseEntity
     {
         public int ThreadId { get; set; }
-        public string AttachmentUrl { get; set; } 
+        public string AttachmentUrl { get; set; }
     }
 }

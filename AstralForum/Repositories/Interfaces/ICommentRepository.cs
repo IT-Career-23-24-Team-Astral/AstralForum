@@ -6,8 +6,9 @@ namespace AstralForum.Repositories.Interfaces
 {
     public interface ICommentRepository : ICommonRepository<Comment>
     {
-        public IEnumerable<CommentViewModel> GetComments(int id);
-        public void AddComment(CommentViewModel model, string ownerName);
+        public IEnumerable<CommentViewModel> GetCommentsByThreadId(int id);
+        public IEnumerable<CommentViewModel> GetCommentsByCommentId(int id);
+        public void AddComment(CommentViewModel model, User id);
         public void Edit(Comment comment, CommentViewModel model);
         public void Delete(Comment comment);
     }

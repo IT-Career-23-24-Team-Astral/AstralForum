@@ -5,7 +5,7 @@ namespace AstralForum.Repositories
 {
     public class BanRepository : CommonRepository<Ban>, IBanRepository
     {
-        private ApplicationDbContext context;
+        private readonly ApplicationDbContext context;
 
         public BanRepository(ApplicationDbContext context) : base(context)
         {

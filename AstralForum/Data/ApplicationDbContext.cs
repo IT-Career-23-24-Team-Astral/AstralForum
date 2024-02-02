@@ -21,8 +21,8 @@ namespace AstralForum.Data
         public DbSet<CommentAttachment> CommentsAttachment { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
         public DbSet<ReactionType> ReactionsType { get; set; }
-        public DbSet<Entities.Thread.Thread> Threads { get; set; }
+        public DbSet<Post> Threads { get; set; }
         public DbSet<ThreadAttachment> ThreadsAttachment { get; set; }
-        public DbSet<ThreadCategory> Category { get; set; }
+        public DbSet<ThreadCategory> ThreadCategory { get; set; }
     }
 }
