@@ -1,10 +1,8 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Repositories.Interfaces;
-using AstralForum.Models.Thread;
 using AstralForum.Data.Entities.ThreadCategory;
-using AstralForum.Models.Category;
 using AstralForum.Data.Entities.Thread;
-using AstralForum.Models.Comment;
+using AstralForum.Models;
 
 
 namespace AstralForum.Repositories
@@ -17,7 +15,7 @@ namespace AstralForum.Repositories
         {
             this.context = context;  
         }
-        public void AddThread(ThreadFormModel model, User id)
+        public void AddThread(ThreadModel model, User id)
         {
             Post thread = new Post()
             {
@@ -30,9 +28,9 @@ namespace AstralForum.Repositories
             context.Threads.Add(thread);
             context.SaveChanges();
         }
-        public List<ThreadViewModel> GetAllThreadsByThreadCategory(int ThreadCategory)
+        public List<ThreadModel> GetAllThreadsByThreadCategory(int ThreadCategory)
         {
-            return context.Threads.Where(x => x.ThreadCategory == ThreadCategory).Select(x => new ThreadViewModel()
+            return context.Threads.Where(x => x.ThreadCategory == ThreadCategory).Select(x => new ThreadModel()
             {
                 Id = x.Id,
                 Title = x.Title,
@@ -42,7 +40,7 @@ namespace AstralForum.Repositories
                 CreatedOn = x.CreatedOn
             }).ToList();
         }
-        public void Edit(Post thread, ThreadFormModel model)
+        public void Edit(Post thread, ThreadModel model)
         {
             thread.Title = model.Title;
             thread.Text = model.Text;

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AstralForum.Models.Comment
+namespace AstralForum.Models
 {
-    public class CommentFormModel
+    public class CommentModel
     {
         [Required]
         public int Id { get; set; }
@@ -13,5 +13,6 @@ namespace AstralForum.Models.Comment
         public int CommentId { get; set; }
         [Required]
         public int CreatedById { get; set; }
+        public DateTime Date { get; set; }
     }
 }
