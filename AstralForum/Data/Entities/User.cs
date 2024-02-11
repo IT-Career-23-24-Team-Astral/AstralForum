@@ -8,4 +8,5 @@ namespace AstralForum.Data.Entities
         public string LastName { get; set; }
         public DateTime DateOfCreation { get; set; }
     }
+
 }
