@@ -14,4 +14,5 @@ namespace AstralForum.Data.Entities
         [ForeignKey(nameof(AffectedUser))]
         public int AffectedUserId { get; set; }
     }
+
 }

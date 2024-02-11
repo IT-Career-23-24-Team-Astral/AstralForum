@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using AstralForum.Data.Entities;
+using AstralForum.Data.Entities.Comment;
+using AstralForum.Data.Entities.Reaction;
+using AstralForum.Data.Entities.Thread;
+using AstralForum.Data.Entities.ThreadCategory;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using AstralForum.Data.Entities;
 using AstralForum.Data.Entities.Comment;

@@ -454,4 +454,6 @@ namespace AstralForum.Migrations
                 name: "AspNetUsers");
         }
     }
+
 }
+
