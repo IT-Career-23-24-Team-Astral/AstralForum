@@ -8,6 +8,6 @@ namespace AstralForum.Repositories.Interfaces
     {
         public IEnumerable<CommentAttachmentModel> GetCommentAttachmentByCommentId(int id);
         public void AddAttachment(CommentAttachmentModel model);
-        public void Delete(CommentAttachmentModel model);
+        public void Delete(CommentAttachment model);
     }
 }

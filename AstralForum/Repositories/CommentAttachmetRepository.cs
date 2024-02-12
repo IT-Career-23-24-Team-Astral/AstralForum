@@ -22,9 +22,9 @@ namespace AstralForum.Repositories
             context.SaveChanges();
         }
 
-        public void Delete(CommentAttachmentModel model)
+        public void Delete(CommentAttachment model)
         {
-            //context.CommentsAttachment.Remove(model);
+            context.CommentsAttachment.Remove(model);
             context.SaveChanges();
         }
 

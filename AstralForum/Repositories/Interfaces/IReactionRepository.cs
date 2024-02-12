@@ -10,6 +10,6 @@ namespace AstralForum.Repositories.Interfaces
         public IEnumerable<ReactionModel> GetReactionsByThreadId(int id);
         public IEnumerable<ReactionModel> GetReactionsByCommentId(int id);
         public void AddReaction(ReactionModel model, User id);
-        public void Delete(ReactionModel model);
+        public void Delete(Reaction model);
     }
 }

@@ -25,9 +25,9 @@ namespace AstralForum.Repositories
             context.SaveChanges();
         }
 
-        public void Delete(ThreadAttachmentModel model)
+        public void Delete(ThreadAttachment model)
         {
-            //context.ThreadsAttachment.Remove(model);
+            context.ThreadsAttachment.Remove(model);
             context.SaveChanges();
         }
 

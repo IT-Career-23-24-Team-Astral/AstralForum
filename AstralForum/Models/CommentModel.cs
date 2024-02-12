@@ -13,6 +13,6 @@ namespace AstralForum.Models
         public int CommentId { get; set; }
         [Required]
         public int CreatedById { get; set; }
-        public DateTime Date { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

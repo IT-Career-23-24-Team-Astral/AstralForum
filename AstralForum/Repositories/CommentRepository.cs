@@ -5,18 +5,18 @@ using AstralForum.Repositories.Interfaces;
 
 namespace AstralForum.Repositories
 {
-    public class CommentRepository : CommonRepository<Comment>, ICommentRepository
+    public class CommentRepository : CommonRepository<Comment> //, ICommentRepository
     {
         private readonly ApplicationDbContext context;
         public CommentRepository(ApplicationDbContext context) : base(context)
         {
-            this.context = context;
+            //this.context = context;
         }
         public IEnumerable<CommentModel> GetCommentsByThreadId(int id) => context.Comments.Where(c => c.ThreadId == id).Select(x => new CommentModel()
         {
             Id = x.Id,
             ThreadId = x.ThreadId,
-            Date = DateTime.Now,
+            CreatedOn = x.CreatedOn,
             Text = x.Text,
             CommentId = (int)x.CommentId
         }).ToList();
@@ -24,12 +24,12 @@ namespace AstralForum.Repositories
         {
             Id = x.Id,
             ThreadId = x.ThreadId,
-            Date = DateTime.Now,
+            CreatedOn = x.CreatedOn,
             Text = x.Text,
             CommentId = (int)x.CommentId
         }).ToList();
 
-        public void AddComment(CommentModel model, User id)
+        public void AddComment(CommentModel model)
         {
             Comment coment = new Comment()
             {
@@ -37,7 +37,7 @@ namespace AstralForum.Repositories
                 ThreadId = model.ThreadId,
                 Text = model.Text,
                 CommentId = model.CommentId,
-                CreatedBy = id
+                CreatedById = model.CreatedById
             };
             context.Comments.Add(coment);
             context.SaveChanges();
