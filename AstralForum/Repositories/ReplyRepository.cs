@@ -1,15 +1,14 @@
 ﻿using AstralForum.Models;
-using AstralForum.Repositories;
 using AstralForum.Data.Entities.Reply;
 using AstralForum.Data.Entities;
-using AstralForum.Repository.Interfaces;
+using AstralForum.Repositories.Interfaces;
 
-namespace AstralForum.Repository
+namespace AstralForum.Repositories
 {
     public class ReplyRepository : CommonRepository<Reply>, IReplyRepository
     {
         private readonly ApplicationDbContext context;
-        public ReplyRepository(ApplicationDbContext context) : base(context) 
+        public ReplyRepository(ApplicationDbContext context) : base(context)
         {
             this.context = context;
         }
@@ -20,7 +19,7 @@ namespace AstralForum.Repository
             CommentId = r.CommentId,
             Date = DateTime.Now,
             Text = r.Text,
-            ReplyId = (int)r.ReplyId
+            ReplyId = r.ReplyId
 
         }).ToList();
         public IEnumerable<ReplyModel> GetRepliesByCommentId(int id) => context.Replies.Where(b => b.CommentId == id).Select(r => new ReplyModel()
@@ -30,7 +29,7 @@ namespace AstralForum.Repository
             CommentId = r.CommentId,
             Date = DateTime.Now,
             Text = r.Text,
-            ReplyId = (int)r.ReplyId
+            ReplyId = r.ReplyId
 
         }).ToList();
         public IEnumerable<ReplyModel> GetRepliesByThreadId(int id) => context.Replies.Where(b => b.ThreadId == id).Select(r => new ReplyModel()
@@ -40,7 +39,7 @@ namespace AstralForum.Repository
             CommentId = r.CommentId,
             Date = DateTime.Now,
             Text = r.Text,
-            ReplyId = (int)r.ReplyId
+            ReplyId = r.ReplyId
 
         }).ToList();
         public void AddReply(ReplyModel model, User id)

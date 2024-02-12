@@ -1,4 +1,4 @@
-﻿namespace AstralForum.Repository.Interfaces
+﻿namespace AstralForum.Repositories.Interfaces
 {
     public interface ITagRepository
     {

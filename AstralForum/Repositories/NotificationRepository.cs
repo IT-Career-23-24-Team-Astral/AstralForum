@@ -2,15 +2,14 @@
 using AstralForum.Data.Entities.Comment;
 using AstralForum.Models;
 using AstralForum.Models.Notification;
-using AstralForum.Repositories;
-using AstralForum.Repository.Interfaces;
+using AstralForum.Repositories.Interfaces;
 using AstralForum.Services;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 
 
-namespace AstralForum.Repository
+namespace AstralForum.Repositories
 {
     public class NotificationRepository : CommonRepository<Notification>, INotificationRepository
     {
@@ -21,13 +20,13 @@ namespace AstralForum.Repository
             this.context = context;
         }
 
-        public void CreateNotification(NotificationModel model, User Id )
+        public void CreateNotification(NotificationModel model, User Id)
         {
             Notification notification = new Notification()
             {
                 Id = model.Id,
                 NotificationId = model.NotificationId,
-                Message = model.Message,
+                Text = model.Text,
 
             };
             context.Notifications.Add(notification);
@@ -38,7 +37,7 @@ namespace AstralForum.Repository
             context.UserNotifications.Add(userNotification);
             context.SaveChanges();
         }
-            public List<NotificationApplicationUser> GetUserNotifications(string userId)
+        public List<NotificationApplicationUser> GetUserNotifications(string userId)
         {
             return context.UserNotifications.Where(u => u.UserId.Equals(userId) && !u.IsRead)
                                             .Include(n => n.Notification)
@@ -48,17 +47,17 @@ namespace AstralForum.Repository
         {
             Id = a.Id,
             Date = DateTime.Now,
-            Message = a.Message,
+            Text = a.Text,
             NotificationId = a.NotificationId
         }).ToList();
 
         public void ReadNotification(int notificationId, string userId)
         {
-            var notification = context.UserNotifications
+            var notifications = context.UserNotifications
                                         .FirstOrDefault(n => n.UserId.Equals(userId)
                                         && n.NotificationId == notificationId);
-            notification.IsRead = true;
-            context.UserNotifications.Update(notification);
+            notifications.IsRead = true;
+            context.UserNotifications.Update(notifications);
             context.SaveChanges();
         }
     }

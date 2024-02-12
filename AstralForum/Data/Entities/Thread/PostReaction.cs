@@ -4,17 +4,11 @@ namespace AstralForum.Data.Entities.Thread
 {
     public class PostReaction : MetadataBaseEntity
     {
-        public int Id { get; set; }
-
         public ReactionType ReactionType { get; set; }
 
         public int PostId { get; set; }
 
         public Post Post { get; set; }
-
-        public string CreatedById { get; set; }
-
-        public User CreatedBy { get; set; }
 
         public DateTime? ModifiedOn { get; set; }
     }

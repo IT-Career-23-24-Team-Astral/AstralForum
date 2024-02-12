@@ -2,7 +2,7 @@
 using AstralForum.Data.Entities.Reply;
 using AstralForum.Models;
 
-namespace AstralForum.Repository.Interfaces
+namespace AstralForum.Repositories.Interfaces
 {
     public interface IReplyRepository
     {

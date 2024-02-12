@@ -9,10 +9,10 @@ namespace AstralForum.Data.Entities._Notifications
         public int ThreadId { get; set; }
         public int CommentId { get; set; }
         public int ReactionId { get; set; }
-        public int Id { get; set; }
         public ReactionType ReactionType { get; set; }
         public string AuthorId { get; set; }
         public User Author { get; set; }
         public DateTime? ModifiedOn { get; set; }
+        public string Text { get; set; }
     }
 }
