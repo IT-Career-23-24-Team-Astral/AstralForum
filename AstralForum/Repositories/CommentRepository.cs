@@ -29,7 +29,7 @@ namespace AstralForum.Repositories
             CommentId = (int)x.CommentId
         }).ToList();
 
-        public void AddComment(CommentModel model)
+        /*public void AddComment(CommentModel model)
         {
             Comment coment = new Comment()
             {
@@ -42,7 +42,7 @@ namespace AstralForum.Repositories
             context.Comments.Add(coment);
             context.SaveChanges();
         }
-        public void Edit(Comment comment, CommentModel model)
+        /*public void Edit(Comment comment, CommentModel model)
         {
             comment.Text = model.Text;
             context.Comments.Update(comment);
@@ -52,6 +52,6 @@ namespace AstralForum.Repositories
         {
             context.Comments.Remove(comment);
             context.SaveChanges();
-        }
+        }*/
     }
 }
