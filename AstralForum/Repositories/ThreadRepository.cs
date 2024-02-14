@@ -3,6 +3,9 @@ using AstralForum.Repositories.Interfaces;
 using AstralForum.Data.Entities.ThreadCategory;
 using AstralForum.Data.Entities.Thread;
 using AstralForum.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore;
+using AstralForum.Data.Entities.Comment;
 
 
 namespace AstralForum.Repositories

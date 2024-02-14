@@ -1,7 +1,9 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Data.Entities.Comment;
+using AstralForum.Data.Entities.Thread;
 using AstralForum.Models;
 using AstralForum.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
@@ -12,7 +14,21 @@ namespace AstralForum.Repositories
         {
             //this.context = context;
         }
-        public IEnumerable<CommentModel> GetCommentsByThreadId(int id) => context.Comments.Where(c => c.ThreadId == id).Select(x => new CommentModel()
+        public async Task<List<Comment>> GetCommentsByThreadId(int id)
+        {
+            Post thread = await context.Threads
+                .Include(e => e.Comments)
+                .FirstAsync(p => p.ThreadCategory == id);
+            return thread.Comments;
+        }
+        public async Task<List<Comment>> GetCommentsByCommentId(int id)
+        {
+            Comment comment = await context.Comments
+                .Include(e => e.Text)
+                .FirstAsync(p => p.CommentId == id);
+            return comment.Comments;
+        }
+        /*public IEnumerable<CommentModel> GetCommentsByThreadId(int id) => context.Comments.Where(c => c.ThreadId == id).Select(x => new CommentModel()
         {
             Id = x.Id,
             ThreadId = x.ThreadId,

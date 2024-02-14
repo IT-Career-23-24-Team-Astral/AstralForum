@@ -30,9 +30,14 @@ namespace AstralForum.Services
 
         public async Task<CommentDto> GetAllCommentsByThreadId(CommentDto commentDto)
         {
-            Comment comment = commentDto.ToEntity();
+            //Comment comment = await GetByIdInternalAsync(id);
             return null;
             //return (await _commentRepository.GetCommentsByThreadId(comment)).ToDto();
+        }
+        private async Task<Comment> GetByIdInternalAsync(int id)
+        {
+            return null;
+            //return await _commentRepository.
         }
 
         public async Task<CommentDto> GetAllCommentsByCommentId(CommentDto commentDto)
