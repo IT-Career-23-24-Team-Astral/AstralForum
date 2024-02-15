@@ -6,7 +6,7 @@ using AstralForum.Repositories.Interfaces;
 
 namespace AstralForum.Repositories
 {
-    public class ReactionRepository : CommonRepository<Reaction>, IReactionRepository
+    public class ReactionRepository : CommonRepository<Reaction>//, IReactionRepository
     {
         private readonly ApplicationDbContext context;
         public ReactionRepository(ApplicationDbContext context) : base(context)
@@ -14,7 +14,7 @@ namespace AstralForum.Repositories
             this.context = context;
         }
 
-        public void AddReaction(ReactionModel model, User id)
+        /*public void AddReaction(ReactionModel model, User id)
         {
             Reaction reaction = new Reaction()
             {
@@ -41,6 +41,6 @@ namespace AstralForum.Repositories
         public IEnumerable<ReactionModel> GetReactionsByThreadId(int id) => context.Threads.Where(c => c.Id == id).Select(x => new ReactionModel()
         {
             ReactionId = x.Id,
-        }).ToList();
+        }).ToList();*/
     }
 }

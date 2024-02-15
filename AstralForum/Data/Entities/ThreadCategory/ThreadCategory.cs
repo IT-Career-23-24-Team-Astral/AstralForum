@@ -6,6 +6,6 @@ namespace AstralForum.Data.Entities.ThreadCategory
     {
         public string CategoryName { get; set; }
 
-        public List<Post> Threads { get; set; }
+        public List<Thread.Thread> Threads { get; set; }
     }
 }

@@ -14,7 +14,7 @@ namespace AstralForum.Mapping
             thread.Title = threadDto.Title;
             thread.Text = threadDto.Text;
             thread.ImageUrl = threadDto.ImageUrl;
-            thread.ThreadCategory = threadDto.ThreadCategory;
+            thread.ThreadCategoryId = threadDto.ThreadCategoryId;
             thread.CreatedById = threadDto.CreatedById;
             thread.CreatedOn = threadDto.CreatedOn;
 
@@ -29,7 +29,7 @@ namespace AstralForum.Mapping
             threadDto.Title = thread.Title;
             threadDto.Text = thread.Text;
             threadDto.ImageUrl = thread.ImageUrl;
-            threadDto.ThreadCategory = thread.ThreadCategory;
+            threadDto.ThreadCategoryId = thread.ThreadCategoryId;
             threadDto.CreatedById = thread.CreatedById;
             threadDto.CreatedOn = thread.CreatedOn;
 

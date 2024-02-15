@@ -18,14 +18,14 @@ namespace AstralForum.Repositories
         {
             Post thread = await context.Threads
                 .Include(e => e.Comments)
-                .FirstAsync(p => p.ThreadCategory == id);
+                .FirstAsync(p => p.ThreadCategoryId == id);
             return thread.Comments;
         }
         public async Task<List<Comment>> GetCommentsByCommentId(int id)
         {
             Comment comment = await context.Comments
-                .Include(e => e.Text)
-                .FirstAsync(p => p.CommentId == id);
+                .Include(e => e.Comments)
+                .FirstAsync(p => p.Id == id);
             return comment.Comments;
         }
         /*public IEnumerable<CommentModel> GetCommentsByThreadId(int id) => context.Comments.Where(c => c.ThreadId == id).Select(x => new CommentModel()

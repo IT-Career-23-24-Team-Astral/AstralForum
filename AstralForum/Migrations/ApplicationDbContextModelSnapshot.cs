@@ -135,7 +135,7 @@ namespace AstralForum.Migrations
                     b.Property<int?>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReactionId")
+                    b.Property<int>("ReactionTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("ThreadId")
@@ -148,6 +148,8 @@ namespace AstralForum.Migrations
                     b.HasIndex("CreatedById");
 
                     b.HasIndex("PostId");
+
+                    b.HasIndex("ReactionTypeId");
 
                     b.ToTable("Reactions");
                 });
@@ -199,10 +201,7 @@ namespace AstralForum.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ThreadCategory")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ThreadCategoryId")
+                    b.Property<int>("ThreadCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -234,6 +233,8 @@ namespace AstralForum.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ThreadId");
 
                     b.ToTable("ThreadsAttachment");
                 });
@@ -544,7 +545,15 @@ namespace AstralForum.Migrations
                         .WithMany("Reactions")
                         .HasForeignKey("PostId");
 
+                    b.HasOne("AstralForum.Data.Entities.Reaction.ReactionType", "ReactionType")
+                        .WithMany()
+                        .HasForeignKey("ReactionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("CreatedBy");
+
+                    b.Navigation("ReactionType");
                 });
 
             modelBuilder.Entity("AstralForum.Data.Entities.Reaction.ReactionType", b =>
@@ -568,9 +577,22 @@ namespace AstralForum.Migrations
 
                     b.HasOne("AstralForum.Data.Entities.ThreadCategory.ThreadCategory", null)
                         .WithMany("Threads")
-                        .HasForeignKey("ThreadCategoryId");
+                        .HasForeignKey("ThreadCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("AstralForum.Data.Entities.Thread.ThreadAttachment", b =>
+                {
+                    b.HasOne("AstralForum.Data.Entities.Thread.Post", "Thread")
+                        .WithMany()
+                        .HasForeignKey("ThreadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Thread");
                 });
 
             modelBuilder.Entity("AstralForum.Data.Entities.ThreadCategory.ThreadCategory", b =>

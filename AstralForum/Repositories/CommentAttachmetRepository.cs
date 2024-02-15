@@ -10,12 +10,12 @@ namespace AstralForum.Repositories
     {
         private readonly ApplicationDbContext context;
         public CommentAttachmetRepository(ApplicationDbContext context) : base(context) { }
-        public async Task<List<Comment>> GetAttachmetsByCommentId(int id)
+        public async Task<List<CommentAttachment>> GetAttachmetsByCommentId(int id)
         {
             Comment comment = await context.Comments
                 .Include(e => e.Attachments)
                 .FirstAsync(p => p.CommentId == id);
-            return comment.Comments;
+            return comment.Attachments;
         }
        /* public void AddAttachment(CommentAttachmentModel model)
         {

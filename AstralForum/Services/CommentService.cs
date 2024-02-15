@@ -28,25 +28,21 @@ namespace AstralForum.Services
             return (await _commentRepository.Edit(comment)).ToDto();
         }
 
-        public async Task<CommentDto> GetAllCommentsByThreadId(CommentDto commentDto)
+        public async Task<List<CommentDto>> GetAllCommentsByThreadId(int id)
         {
-            //Comment comment = await GetByIdInternalAsync(id);
-            return null;
-            //return (await _commentRepository.GetCommentsByThreadId(comment)).ToDto();
-        }
-        private async Task<Comment> GetByIdInternalAsync(int id)
-        {
-            return null;
-            //return await _commentRepository.
-        }
+            List<Comment> comments = await _commentRepository.GetCommentsByThreadId(id);
+            List<CommentDto> commentDtos = comments.Select(comment => comment.ToDto()).ToList();
 
-        public async Task<CommentDto> GetAllCommentsByCommentId(CommentDto commentDto)
-        {
-            Comment comment = commentDto.ToEntity();
-            return null;
-            //return (await _commentRepository.GetCommentsByCommentId(comment)).ToDto();
+            return commentDtos;
         }
+        
+        public async Task<List<CommentDto>> GetAllCommentsByCommentId(int id)
+        {
+            List<Comment> comments = await _commentRepository.GetCommentsByCommentId(id);
+            List<CommentDto> commentDtos = comments.Select(comment => comment.ToDto()).ToList();
 
+            return commentDtos;
+        }
         public async Task<CommentDto> DeleteComment(CommentDto commentDto)
         {
             Comment comment = commentDto.ToEntity();
