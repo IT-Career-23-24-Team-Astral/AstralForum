@@ -1,8 +1,6 @@
 ﻿using AstralForum.Data.Entities;
-using AstralForum.Data.Entities.Comment;
 using AstralForum.Data.Entities.ThreadCategory;
-using AstralForum.Models.Category;
-using AstralForum.Models.Thread;
+using AstralForum.Models;
 using AstralForum.Repositories.Interfaces;
 
 namespace AstralForum.Repositories
@@ -14,7 +12,7 @@ namespace AstralForum.Repositories
         {
             this.context = context;
         }
-        public void AddThreadCategory(ThreadCategoryFormModel model, User id)
+        public void AddThreadCategory(ThreadCategoryModel model, User id)
         {
             ThreadCategory category = new ThreadCategory()
             {
@@ -25,9 +23,9 @@ namespace AstralForum.Repositories
             context.ThreadCategory.Add(category);
             context.SaveChanges();
         }
-        public ThreadCategoryViewModel CategoryDetails(int id)
+        public ThreadCategoryModel CategoryDetails(int id)
         {
-            var category = context.ThreadCategory.Where(c => c.Id == id).Select(c => new ThreadCategoryViewModel()
+            var category = context.ThreadCategory.Where(c => c.Id == id).Select(c => new ThreadCategoryModel()
             {
                 Id = c.Id,
                 CategoryName = c.CategoryName,
@@ -36,15 +34,15 @@ namespace AstralForum.Repositories
             }).FirstOrDefault();
             return category;
         }
-        public List<ThreadCategoryViewModel> GetAllThreadGategories()
+        public List<ThreadCategoryModel> GetAllThreadGategories()
         {
-            return context.ThreadCategory.Select(c => new ThreadCategoryViewModel()
+            return context.ThreadCategory.Select(c => new ThreadCategoryModel()
             {
                 Id = c.Id,
                 CategoryName = c.CategoryName
             }).ToList();
         }
-        public void Edit(ThreadCategory threadCategory, ThreadCategoryFormModel model)
+        public void Edit(ThreadCategory threadCategory, ThreadCategoryModel model)
         {
             threadCategory.CategoryName = model.CategoryName;
             context.ThreadCategory.Update(threadCategory);

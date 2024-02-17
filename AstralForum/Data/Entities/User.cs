@@ -13,4 +13,5 @@ namespace AstralForum.Data.Entities
             DateOfCreation = DateTime.Now;
         }
     }
+
 }

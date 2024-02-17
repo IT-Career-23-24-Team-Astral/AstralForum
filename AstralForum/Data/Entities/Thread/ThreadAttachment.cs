@@ -7,4 +7,5 @@ namespace AstralForum.Data.Entities.Thread
         public int ThreadId { get; set; }
         public string AttachmentUrl { get; set; }
     }
+
 }

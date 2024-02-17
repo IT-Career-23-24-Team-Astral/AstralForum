@@ -1,12 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace AstralForum.Models.Category
+namespace AstralForum.Models.Tag
 {
-    public class ThreadCategoryFormModel
+    public class Tag
     {
+        [Required]
         public int Id { get; set; }
         [Required]
-        public string CategoryName { get; set; }
+        public int ThreadId { get; set; }
+        public int CommentId { get; set; }
         [Required]
         public int CreatedById { get; set; }
     }
