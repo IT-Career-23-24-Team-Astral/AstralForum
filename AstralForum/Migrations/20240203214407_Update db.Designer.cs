@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AstralForum.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240202151126_Initial")]
-    partial class Initial
+    [Migration("20240203214407_Update db")]
+    partial class Updatedb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
