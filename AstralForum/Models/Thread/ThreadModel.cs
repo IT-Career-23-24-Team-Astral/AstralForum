@@ -1,8 +1,8 @@
 ﻿using Microsoft.Build.Framework;
 
-namespace AstralForum.Models.Thread
+namespace AstralForum.Models
 {
-    public class ThreadFormModel
+    public class ThreadModel
     {
         public int Id { get; set; }
         [Required]
@@ -14,5 +14,6 @@ namespace AstralForum.Models.Thread
         public int ThreadCategory { get; set; }
         [Required]
         public int CreatedById { get; set; }
+        public DateTime CreatedOn { get; set; }
     }
 }

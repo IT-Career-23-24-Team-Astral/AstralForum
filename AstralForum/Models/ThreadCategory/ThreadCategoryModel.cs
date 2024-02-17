@@ -1,13 +1,15 @@
-﻿using AstralForum.Models.Thread;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace AstralForum.Models.Category
+namespace AstralForum.Models
 {
-    public class ThreadCategoryViewModel
+    public class ThreadCategoryModel
     {
         public int Id { get; set; }
+        [Required]
         public string CategoryName { get; set; }
+        [Required]
         public int CreatedById { get; set; }
         public DateTime CreatedOn { get; set; }
     }
 }
+   

@@ -1,9 +1,7 @@
-﻿using AstralForum.Models.Category;
-
-namespace AstralForum.Services
+﻿namespace AstralForum.Services
 {
     public class ThreadService
     {
-        
+
     }
 }
