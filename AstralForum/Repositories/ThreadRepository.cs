@@ -3,11 +3,15 @@ using AstralForum.Repositories.Interfaces;
 using AstralForum.Data.Entities.ThreadCategory;
 using AstralForum.Data.Entities.Thread;
 using AstralForum.Models;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore;
+using AstralForum.Data.Entities.Comment;
+using System.Threading;
 
 
 namespace AstralForum.Repositories
 {
-    public class ThreadRepository :CommonRepository<Post>, IThreadRepository
+    public class ThreadRepository :CommonRepository<Data.Entities.Thread.Thread>//, IThreadRepository
     {
         private readonly ApplicationDbContext context;
 
@@ -15,14 +19,22 @@ namespace AstralForum.Repositories
         {
             this.context = context;  
         }
-        public void AddThread(ThreadModel model, User id)
+        public async Task<List<Data.Entities.Thread.Thread>> GetThreadsByThreadCategoryId(int id)
+        {
+            ThreadCategory category =  await context.ThreadCategory
+                .Include(e => e.Threads)
+                .FirstAsync(p => p.Id == id);
+
+            return category.Threads;
+        }
+        /*public void AddThread(ThreadModel model, User id)
         {
             Post thread = new Post()
             {
                 Title = model.Title,
                 Text = model.Text,
                 ImageUrl = model.ImageUrl,
-                ThreadCategory = model.ThreadCategory,
+                ThreadCategoryId = model.ThreadCategory,
                 CreatedById = model.CreatedById
             };
             context.Threads.Add(thread);
@@ -30,7 +42,7 @@ namespace AstralForum.Repositories
         }
         public List<ThreadModel> GetAllThreadsByThreadCategory(int ThreadCategory)
         {
-            return context.Threads.Where(x => x.ThreadCategory == ThreadCategory).Select(x => new ThreadModel()
+            return context.Threads.Where(x => x.ThreadCategoryId == ThreadCategory).Select(x => new ThreadModel()
             {
                 Id = x.Id,
                 Title = x.Title,
@@ -45,7 +57,7 @@ namespace AstralForum.Repositories
             thread.Title = model.Title;
             thread.Text = model.Text;
             thread.ImageUrl = model.ImageUrl;
-            thread.ThreadCategory = model.ThreadCategory;
+            thread.ThreadCategoryId = model.ThreadCategory;
             context.Threads.Update(thread);
             context.SaveChanges();
         }
@@ -53,6 +65,6 @@ namespace AstralForum.Repositories
         {
             context.Threads.Remove(thread);
             context.SaveChanges();
-        }
+        }*/
     }
 }

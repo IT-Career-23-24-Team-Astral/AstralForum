@@ -1,17 +1,23 @@
 ﻿using AstralForum.Data.Entities.Comment;
+using AstralForum.Data.Entities.Thread;
 using AstralForum.Models;
 using AstralForum.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
-    public class CommentAttachmetRepository : ICommentAttachment
+    public class CommentAttachmetRepository : CommonRepository<CommentAttachment>//: ICommentAttachment
     {
         private readonly ApplicationDbContext context;
-        public CommentAttachmetRepository(ApplicationDbContext context) 
+        public CommentAttachmetRepository(ApplicationDbContext context) : base(context) { }
+        public async Task<List<CommentAttachment>> GetAttachmetsByCommentId(int id)
         {
-            this.context = context; 
+            Comment comment = await context.Comments
+                .Include(e => e.Attachments)
+                .FirstAsync(p => p.CommentId == id);
+            return comment.Attachments;
         }
-        public void AddAttachment(CommentAttachmentModel model)
+       /* public void AddAttachment(CommentAttachmentModel model)
         {
             CommentAttachment comentAttachment = new CommentAttachment()
             {
@@ -22,15 +28,15 @@ namespace AstralForum.Repositories
             context.SaveChanges();
         }
 
-        public void Delete(CommentAttachmentModel model)
+        public void Delete(CommentAttachment model)
         {
-            //context.CommentsAttachment.Remove(model);
+            context.CommentsAttachment.Remove(model);
             context.SaveChanges();
         }
 
         public IEnumerable<CommentAttachmentModel> GetCommentAttachmentByCommentId(int id) => context.CommentsAttachment.Where(c => c.CommentId == id).Select(x => new CommentAttachmentModel()
         {
             AttachmentUrl=x.AttachmentUrl
-        }).ToList();
+        }).ToList();*/
     }
 }

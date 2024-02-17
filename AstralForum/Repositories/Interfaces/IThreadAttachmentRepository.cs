@@ -8,6 +8,6 @@ namespace AstralForum.Repositories.Interfaces
     {
         public IEnumerable<ThreadAttachmentModel> GetThreadAttachmentByThreadId(int id);
         public void AddAttachment(ThreadAttachmentModel model);
-        public void Delete(ThreadAttachmentModel model);
+        public void Delete(ThreadAttachment model);
     }
 }

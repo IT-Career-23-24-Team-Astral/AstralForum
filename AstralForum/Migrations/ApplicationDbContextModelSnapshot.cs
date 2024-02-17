@@ -72,6 +72,9 @@ namespace AstralForum.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -81,7 +84,11 @@ namespace AstralForum.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CommentId");
+
                     b.HasIndex("CreatedById");
+
+                    b.HasIndex("PostId");
 
                     b.ToTable("Comments");
                 });
@@ -103,6 +110,8 @@ namespace AstralForum.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CommentId");
+
                     b.ToTable("CommentsAttachment");
                 });
 
@@ -123,7 +132,10 @@ namespace AstralForum.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ReactionId")
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReactionTypeId")
                         .HasColumnType("int");
 
                     b.Property<int>("ThreadId")
@@ -131,7 +143,13 @@ namespace AstralForum.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CommentId");
+
                     b.HasIndex("CreatedById");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("ReactionTypeId");
 
                     b.ToTable("Reactions");
                 });
@@ -183,7 +201,7 @@ namespace AstralForum.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ThreadCategory")
+                    b.Property<int>("ThreadCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -193,6 +211,8 @@ namespace AstralForum.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
+
+                    b.HasIndex("ThreadCategoryId");
 
                     b.ToTable("Threads");
                 });
@@ -213,6 +233,8 @@ namespace AstralForum.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ThreadId");
 
                     b.ToTable("ThreadsAttachment");
                 });
@@ -479,24 +501,59 @@ namespace AstralForum.Migrations
 
             modelBuilder.Entity("AstralForum.Data.Entities.Comment.Comment", b =>
                 {
+                    b.HasOne("AstralForum.Data.Entities.Comment.Comment", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("CommentId");
+
                     b.HasOne("AstralForum.Data.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("AstralForum.Data.Entities.Thread.Post", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId");
 
                     b.Navigation("CreatedBy");
                 });
 
+            modelBuilder.Entity("AstralForum.Data.Entities.Comment.CommentAttachment", b =>
+                {
+                    b.HasOne("AstralForum.Data.Entities.Comment.Comment", null)
+                        .WithMany("Attachments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AstralForum.Data.Entities.Reaction.Reaction", b =>
                 {
+                    b.HasOne("AstralForum.Data.Entities.Comment.Comment", null)
+                        .WithMany("Reactions")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AstralForum.Data.Entities.User", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("AstralForum.Data.Entities.Thread.Post", null)
+                        .WithMany("Reactions")
+                        .HasForeignKey("PostId");
+
+                    b.HasOne("AstralForum.Data.Entities.Reaction.ReactionType", "ReactionType")
+                        .WithMany()
+                        .HasForeignKey("ReactionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("CreatedBy");
+
+                    b.Navigation("ReactionType");
                 });
 
             modelBuilder.Entity("AstralForum.Data.Entities.Reaction.ReactionType", b =>
@@ -518,7 +575,24 @@ namespace AstralForum.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("AstralForum.Data.Entities.ThreadCategory.ThreadCategory", null)
+                        .WithMany("Threads")
+                        .HasForeignKey("ThreadCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("AstralForum.Data.Entities.Thread.ThreadAttachment", b =>
+                {
+                    b.HasOne("AstralForum.Data.Entities.Thread.Post", "Thread")
+                        .WithMany()
+                        .HasForeignKey("ThreadId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Thread");
                 });
 
             modelBuilder.Entity("AstralForum.Data.Entities.ThreadCategory.ThreadCategory", b =>
@@ -581,6 +655,27 @@ namespace AstralForum.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AstralForum.Data.Entities.Comment.Comment", b =>
+                {
+                    b.Navigation("Attachments");
+
+                    b.Navigation("Comments");
+
+                    b.Navigation("Reactions");
+                });
+
+            modelBuilder.Entity("AstralForum.Data.Entities.Thread.Post", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Reactions");
+                });
+
+            modelBuilder.Entity("AstralForum.Data.Entities.ThreadCategory.ThreadCategory", b =>
+                {
+                    b.Navigation("Threads");
                 });
 #pragma warning restore 612, 618
         }

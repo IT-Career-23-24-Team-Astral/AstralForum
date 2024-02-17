@@ -6,7 +6,7 @@ using AstralForum.Repositories.Interfaces;
 
 namespace AstralForum.Repositories
 {
-    public class ReactionRepository : CommonRepository<Reaction>, IReactionRepository
+    public class ReactionRepository : CommonRepository<Reaction>//, IReactionRepository
     {
         private readonly ApplicationDbContext context;
         public ReactionRepository(ApplicationDbContext context) : base(context)
@@ -14,7 +14,7 @@ namespace AstralForum.Repositories
             this.context = context;
         }
 
-        public void AddReaction(ReactionModel model, User id)
+        /*public void AddReaction(ReactionModel model, User id)
         {
             Reaction reaction = new Reaction()
             {
@@ -27,20 +27,20 @@ namespace AstralForum.Repositories
             context.SaveChanges();
         }
 
-        public void Delete(ReactionModel model)
+        public void Delete(Reaction model)
         {
-            //context.Reactions.Remove(model);
+            context.Reactions.Remove(model);
             context.SaveChanges();
         }
 
-        public IEnumerable<ReactionModel> GetReactionsByCommentId(int id) => context.Comments.Where(c => c.CommentId == id).Select(x => new CommentModel()
+        public IEnumerable<ReactionModel> GetReactionsByCommentId(int id) => context.Comments.Where(c => c.CommentId == id).Select(x => new ReactionModel()
         {
-            
+            ReactionId = x.Id,
         }).ToList();
 
-        public IEnumerable<ReactionModel> GetReactionsByThreadId(int id) => context.ThreadsAttachment.Where(c => c.ThreadId == id).Select(x => new ReactionModel()
+        public IEnumerable<ReactionModel> GetReactionsByThreadId(int id) => context.Threads.Where(c => c.Id == id).Select(x => new ReactionModel()
         {
-            ReactionId=x.Id,
-        }).ToList();
+            ReactionId = x.Id,
+        }).ToList();*/
     }
 }
