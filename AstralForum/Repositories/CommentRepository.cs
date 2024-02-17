@@ -16,7 +16,7 @@ namespace AstralForum.Repositories
         }
         public async Task<List<Comment>> GetCommentsByThreadId(int id)
         {
-            Post thread = await context.Threads
+            Data.Entities.Thread.Thread thread = await context.Threads
                 .Include(e => e.Comments)
                 .FirstAsync(p => p.ThreadCategoryId == id);
             return thread.Comments;

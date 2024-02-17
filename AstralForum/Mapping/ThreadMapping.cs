@@ -6,9 +6,9 @@ namespace AstralForum.Mapping
 {
     public static class ThreadMapping
     {
-        public static Post ToEntity(this ThreadDto threadDto)
+        public static Data.Entities.Thread.Thread ToEntity(this ThreadDto threadDto)
         {
-            Post thread = new Post();
+            Data.Entities.Thread.Thread thread = new Data.Entities.Thread.Thread();
 
             thread.Id = threadDto.Id;
             thread.Title = threadDto.Title;
@@ -21,7 +21,7 @@ namespace AstralForum.Mapping
             return thread;
         }
 
-        public static ThreadDto ToDto(this Post thread)
+        public static ThreadDto ToDto(this Data.Entities.Thread.Thread thread)
         {
             ThreadDto threadDto = new ThreadDto();
 
