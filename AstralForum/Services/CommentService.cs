@@ -2,7 +2,6 @@
 using AstralForum.Mapping;
 using AstralForum.Models;
 using AstralForum.Repositories;
-using AstralForum.Repositories.Interfaces;
 using AstralForum.ServiceModels;
 
 namespace AstralForum.Services

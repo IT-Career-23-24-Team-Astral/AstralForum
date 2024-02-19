@@ -1,19 +1,12 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Data.Entities.Comment;
-using AstralForum.Data.Entities.Thread;
-using AstralForum.Models;
-using AstralForum.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
-    public class CommentRepository : CommonRepository<Comment> //, ICommentRepository
+    public class CommentRepository : CommonRepository<Comment> 
     {
-        private readonly ApplicationDbContext context;
-        public CommentRepository(ApplicationDbContext context) : base(context)
-        {
-            //this.context = context;
-        }
+        public CommentRepository(ApplicationDbContext context) : base(context) { }
         public async Task<List<Comment>> GetCommentsByThreadId(int id)
         {
             Data.Entities.Thread.Thread thread = await context.Threads

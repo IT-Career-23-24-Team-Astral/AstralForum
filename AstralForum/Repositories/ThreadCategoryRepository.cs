@@ -1,18 +1,13 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Data.Entities.ThreadCategory;
 using AstralForum.Models;
-using AstralForum.Repositories.Interfaces;
 
 namespace AstralForum.Repositories
 {
-    public class ThreadCategoryRepository : CommonRepository<ThreadCategory>, IThreadCategoryRepository
+    public class ThreadCategoryRepository : CommonRepository<ThreadCategory>
     {
-        private readonly ApplicationDbContext context;
-        public ThreadCategoryRepository(ApplicationDbContext context) : base(context)
-        {
-            this.context = context;
-        }
-        public void AddThreadCategory(ThreadCategoryModel model, User id)
+        public ThreadCategoryRepository(ApplicationDbContext context) : base(context) { }
+        /*public void AddThreadCategory(ThreadCategoryModel model, User id)
         {
             ThreadCategory category = new ThreadCategory()
             {
@@ -52,6 +47,6 @@ namespace AstralForum.Repositories
         {
             context.ThreadCategory.Remove(threadCategory);
             context.SaveChanges();
-        }
+        }*/
     }
 }

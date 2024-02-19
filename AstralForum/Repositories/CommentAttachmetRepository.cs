@@ -1,20 +1,18 @@
 ﻿using AstralForum.Data.Entities.Comment;
 using AstralForum.Data.Entities.Thread;
 using AstralForum.Models;
-using AstralForum.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
-    public class CommentAttachmetRepository : CommonRepository<CommentAttachment>//: ICommentAttachment
+    public class CommentAttachmetRepository : CommonRepository<CommentAttachment>
     {
-        private readonly ApplicationDbContext context;
         public CommentAttachmetRepository(ApplicationDbContext context) : base(context) { }
         public async Task<List<CommentAttachment>> GetAttachmetsByCommentId(int id)
         {
             Comment comment = await context.Comments
                 .Include(e => e.Attachments)
-                .FirstAsync(p => p.CommentId == id);
+                .FirstAsync(p => p.Id == id); //или CommentId
             return comment.Attachments;
         }
        /* public void AddAttachment(CommentAttachmentModel model)

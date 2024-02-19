@@ -16,11 +16,14 @@ namespace AstralForum.Mapping
             thread.ImageUrl = threadDto.ImageUrl;
             thread.ThreadCategoryId = threadDto.ThreadCategoryId;
             thread.CreatedById = threadDto.CreatedById;
+            thread.CreatedBy = threadDto.CreatedBy;
             thread.CreatedOn = threadDto.CreatedOn;
+            thread.Comments = threadDto.Comments.Select(c => c.ToEntity()).ToList();
+            thread.Reactions = threadDto.Reactions.Select(c => c.ToEntity()).ToList();
+            thread.Attachments = threadDto.Attachments.Select(c => c.ToEntity()).ToList();
 
             return thread;
         }
-
         public static ThreadDto ToDto(this Data.Entities.Thread.Thread thread)
         {
             ThreadDto threadDto = new ThreadDto();
@@ -31,7 +34,11 @@ namespace AstralForum.Mapping
             threadDto.ImageUrl = thread.ImageUrl;
             threadDto.ThreadCategoryId = thread.ThreadCategoryId;
             threadDto.CreatedById = thread.CreatedById;
+            threadDto.CreatedBy = thread.CreatedBy;
             threadDto.CreatedOn = thread.CreatedOn;
+            threadDto.Comments = thread.Comments.Select(c => c.ToDto()).ToList();
+            threadDto.Reactions = thread.Reactions.Select(c => c.ToDto()).ToList();
+            threadDto.Attachments = thread.Attachments.Select(c => c.ToDto()).ToList();
 
             return threadDto;
         }

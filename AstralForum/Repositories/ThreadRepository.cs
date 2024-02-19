@@ -1,24 +1,11 @@
-﻿using AstralForum.Data.Entities;
-using AstralForum.Repositories.Interfaces;
-using AstralForum.Data.Entities.ThreadCategory;
-using AstralForum.Data.Entities.Thread;
-using AstralForum.Models;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using AstralForum.Data.Entities.ThreadCategory;
 using Microsoft.EntityFrameworkCore;
-using AstralForum.Data.Entities.Comment;
-using System.Threading;
-
 
 namespace AstralForum.Repositories
 {
-    public class ThreadRepository :CommonRepository<Data.Entities.Thread.Thread>//, IThreadRepository
+    public class ThreadRepository :CommonRepository<Data.Entities.Thread.Thread>
     {
-        private readonly ApplicationDbContext context;
-
-        public ThreadRepository(ApplicationDbContext context) : base(context) 
-        {
-            this.context = context;  
-        }
+        public ThreadRepository(ApplicationDbContext context) : base(context) { }
         public async Task<List<Data.Entities.Thread.Thread>> GetThreadsByThreadCategoryId(int id)
         {
             ThreadCategory category =  await context.ThreadCategory

@@ -1,19 +1,27 @@
-﻿using AstralForum.Data.Entities;
-using AstralForum.Data.Entities.Comment;
+﻿using AstralForum.Data.Entities.Comment;
 using AstralForum.Data.Entities.Reaction;
 using AstralForum.Models;
-using AstralForum.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
-    public class ReactionRepository : CommonRepository<Reaction>//, IReactionRepository
+    public class ReactionRepository : CommonRepository<Reaction>
     {
-        private readonly ApplicationDbContext context;
-        public ReactionRepository(ApplicationDbContext context) : base(context)
+        public ReactionRepository(ApplicationDbContext context) : base(context) { }
+        public async Task<List<Reaction>> GetReactionsByThreadId(int id)
         {
-            this.context = context;
+            Data.Entities.Thread.Thread thread = await context.Threads
+                .Include(e => e.Reactions)
+                .FirstAsync(p => p.Id == id);
+            return thread.Reactions;
         }
-
+        public async Task<List<Reaction>> GetReactionsByCommentId(int id)
+        {
+            Comment comment = await context.Comments
+                .Include(e => e.Reactions)
+                .FirstAsync(p => p.Id == id);
+            return comment.Reactions;
+        }
         /*public void AddReaction(ReactionModel model, User id)
         {
             Reaction reaction = new Reaction()

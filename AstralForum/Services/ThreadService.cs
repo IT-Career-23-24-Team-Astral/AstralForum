@@ -1,7 +1,6 @@
 ﻿using AstralForum.Data.Entities.Comment;
 using AstralForum.Mapping;
 using AstralForum.Repositories;
-using AstralForum.Repositories.Interfaces;
 using AstralForum.ServiceModels;
 using AstralForum.Data.Entities.Thread;
 

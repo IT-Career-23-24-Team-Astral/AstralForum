@@ -6,6 +6,7 @@ using AstralForum.Data.Entities.ThreadCategory;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Thread = AstralForum.Data.Entities.Thread.Thread;
 
 namespace AstralForum.Data
 {
@@ -21,7 +22,7 @@ namespace AstralForum.Data
         public DbSet<CommentAttachment> CommentsAttachment { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
         public DbSet<ReactionType> ReactionsType { get; set; }
-        public DbSet<Entities.Thread.Thread> Threads { get; set; }
+        public DbSet<Thread> Threads { get; set; }
         public DbSet<ThreadAttachment> ThreadsAttachment { get; set; }
         public DbSet<ThreadCategory> ThreadCategory { get; set; }
     }

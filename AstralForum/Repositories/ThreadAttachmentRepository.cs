@@ -2,19 +2,21 @@
 using AstralForum.Data.Entities.Thread;
 using AstralForum.Data.Entities.ThreadCategory;
 using AstralForum.Models;
-using AstralForum.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
-    public class ThreadAttachmentRepository : CommonRepository<ThreadAttachment>, IThreadAttachmentRepository
+    public class ThreadAttachmentRepository : CommonRepository<ThreadAttachment>
     {
-        private readonly ApplicationDbContext context;
-        public ThreadAttachmentRepository(ApplicationDbContext context) : base(context)
+        public ThreadAttachmentRepository(ApplicationDbContext context) : base(context) { }
+        public async Task<List<ThreadAttachment>> GetThreadsByThreadId(int id)
         {
-            this.context = context;
+            Data.Entities.Thread.Thread thread = await context.Threads
+                .Include(e => e.Attachments)
+                .FirstAsync(p => p.Id == id);
+            return thread.Attachments;
         }
-
-        public void AddAttachment(ThreadAttachmentModel model)
+        /*public void AddAttachment(ThreadAttachmentModel model)
         {
             ThreadAttachment attachment = new ThreadAttachment()
             {
@@ -34,6 +36,6 @@ namespace AstralForum.Repositories
         public IEnumerable<ThreadAttachmentModel> GetThreadAttachmentByThreadId(int id) => context.ThreadsAttachment.Where(c => c.ThreadId == id).Select(x => new ThreadAttachmentModel()
         {
             AttachmentUrl = x.AttachmentUrl
-        }).ToList();
+        }).ToList();*/
     }
 }
