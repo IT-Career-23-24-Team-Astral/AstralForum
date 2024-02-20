@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using AstralForum.Data.Entities.Reply;
 using AstralForum.Models.Notification;
 using AstralForum.Data.Entities.Tag;
+using AstralForum.Models;
 
 namespace AstralForum.Data
 {
@@ -31,8 +32,8 @@ namespace AstralForum.Data
         public DbSet<NotificationApplicationUser> UserNotifications { get; set; }
         public DbSet<PostReaction> PostReactions { get; set; }
 
-        public DbSet<PostReport> PostReports { get; set; }
-        public DbSet<PostTag> PostsTags { get; set; }
+        public DbSet<ThreadReport> PostReports { get; set; }
+        public DbSet<ThreadTag> PostsTags { get; set; }
 
         public DbSet<Reply> Replies { get; set; }
 
@@ -41,8 +42,9 @@ namespace AstralForum.Data
         public DbSet<ReplyReport> ReplyReports { get; set; }
 
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<AstralForum.Models.ThreadModel> ThreadModel { get; set; } = default!;
 
-        public DbSet<UserFollower> UsersFollowers { get; set; }
+        // public DbSet<UserFollower> UsersFollowers { get; set; }
 
     }
 }

@@ -5,5 +5,6 @@
         public int ThreadId { get; set; }
         public string Text { get; set; }
         public int? CommentId { get; set; }
+        public UserDto Author { get; set; }
     }
 }

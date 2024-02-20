@@ -1,10 +1,10 @@
 ﻿namespace AstralForum.Data.Entities.Thread
 {
-    public class PostTag : BaseEntity
+    public class ThreadTag : BaseEntity
     {
-        public int PostId { get; set; }
+        public int ThreadId { get; set; }
 
-        public Post Post { get; set; }
+        public Thread Thread { get; set; }
 
         public int TagId { get; set; }
     }

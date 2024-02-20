@@ -32,7 +32,7 @@ namespace AstralForum.Repositories
             context.Notifications.Add(notification);
             context.SaveChanges();
             var userNotification = new NotificationApplicationUser();
-            userNotification.NotificationId = notification.Id;
+            userNotification.Id = notification.Id;
 
             context.UserNotifications.Add(userNotification);
             context.SaveChanges();
@@ -55,7 +55,7 @@ namespace AstralForum.Repositories
         {
             var notifications = context.UserNotifications
                                         .FirstOrDefault(n => n.UserId.Equals(userId)
-                                        && n.NotificationId == notificationId);
+                                        && n.Id == notificationId);
             notifications.IsRead = true;
             context.UserNotifications.Update(notifications);
             context.SaveChanges();

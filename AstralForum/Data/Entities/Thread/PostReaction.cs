@@ -6,9 +6,9 @@ namespace AstralForum.Data.Entities.Thread
     {
         public ReactionType ReactionType { get; set; }
 
-        public int PostId { get; set; }
+        public int ThreadId { get; set; }
 
-        public Post Post { get; set; }
+        public Thread Thread { get; set; }
 
         public DateTime? ModifiedOn { get; set; }
     }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AstralForum.Migrations
 {
     /// <inheritdoc />
-    public partial class Updatedb : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -53,6 +53,36 @@ namespace AstralForum.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NotificationModel",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    NotificationId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NotificationModel", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,6 +221,28 @@ namespace AstralForum.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NotificationId = table.Column<int>(type: "int", nullable: false),
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notifications_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ReactionsType",
                 columns: table => new
                 {
@@ -205,6 +257,33 @@ namespace AstralForum.Migrations
                     table.PrimaryKey("PK_ReactionsType", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ReactionsType_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Replies",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReplyId = table.Column<int>(type: "int", nullable: false),
+                    ThreadId = table.Column<int>(type: "int", nullable: false),
+                    CommentId = table.Column<int>(type: "int", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Replies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Replies_AspNetUsers_CreatedById",
                         column: x => x.CreatedById,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -230,6 +309,93 @@ namespace AstralForum.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserNotifications",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    NotificationId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserNotifications", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserNotifications_NotificationModel_NotificationId",
+                        column: x => x.NotificationId,
+                        principalTable: "NotificationModel",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReplyReactions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReactionTypeId = table.Column<int>(type: "int", nullable: false),
+                    ReplyId = table.Column<int>(type: "int", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReplyReactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReplyReactions_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ReplyReactions_ReactionsType_ReactionTypeId",
+                        column: x => x.ReactionTypeId,
+                        principalTable: "ReactionsType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ReplyReactions_Replies_ReplyId",
+                        column: x => x.ReplyId,
+                        principalTable: "Replies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReplyReports",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReplyId = table.Column<int>(type: "int", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReplyReports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReplyReports_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_ReplyReports_Replies_ReplyId",
+                        column: x => x.ReplyId,
+                        principalTable: "Replies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -271,7 +437,6 @@ namespace AstralForum.Migrations
                     ThreadId = table.Column<int>(type: "int", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CommentId = table.Column<int>(type: "int", nullable: true),
-                    PostId = table.Column<int>(type: "int", nullable: true),
                     CreatedById = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -290,10 +455,103 @@ namespace AstralForum.Migrations
                         principalTable: "Comments",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Comments_Threads_PostId",
-                        column: x => x.PostId,
+                        name: "FK_Comments_Threads_ThreadId",
+                        column: x => x.ThreadId,
                         principalTable: "Threads",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostReactions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReactionTypeId = table.Column<int>(type: "int", nullable: false),
+                    ThreadId = table.Column<int>(type: "int", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostReactions", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PostReactions_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_PostReactions_ReactionsType_ReactionTypeId",
+                        column: x => x.ReactionTypeId,
+                        principalTable: "ReactionsType",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostReactions_Threads_ThreadId",
+                        column: x => x.ThreadId,
+                        principalTable: "Threads",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostReports",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ThreadId = table.Column<int>(type: "int", nullable: false),
+                    CreatedById = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedById1 = table.Column<int>(type: "int", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostReports", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PostReports_AspNetUsers_CreatedById1",
+                        column: x => x.CreatedById1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostReports_Threads_ThreadId",
+                        column: x => x.ThreadId,
+                        principalTable: "Threads",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostsTags",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ThreadId = table.Column<int>(type: "int", nullable: false),
+                    TagId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostsTags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PostsTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostsTags_Threads_ThreadId",
+                        column: x => x.ThreadId,
+                        principalTable: "Threads",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -345,7 +603,6 @@ namespace AstralForum.Migrations
                     ThreadId = table.Column<int>(type: "int", nullable: false),
                     CommentId = table.Column<int>(type: "int", nullable: false),
                     ReactionTypeId = table.Column<int>(type: "int", nullable: false),
-                    PostId = table.Column<int>(type: "int", nullable: true),
                     CreatedById = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -371,10 +628,11 @@ namespace AstralForum.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reactions_Threads_PostId",
-                        column: x => x.PostId,
+                        name: "FK_Reactions_Threads_ThreadId",
+                        column: x => x.ThreadId,
                         principalTable: "Threads",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -437,14 +695,54 @@ namespace AstralForum.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_PostId",
+                name: "IX_Comments_ThreadId",
                 table: "Comments",
-                column: "PostId");
+                column: "ThreadId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CommentsAttachment_CommentId",
                 table: "CommentsAttachment",
                 column: "CommentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_CreatedById",
+                table: "Notifications",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostReactions_CreatedById",
+                table: "PostReactions",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostReactions_ReactionTypeId",
+                table: "PostReactions",
+                column: "ReactionTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostReactions_ThreadId",
+                table: "PostReactions",
+                column: "ThreadId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostReports_CreatedById1",
+                table: "PostReports",
+                column: "CreatedById1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostReports_ThreadId",
+                table: "PostReports",
+                column: "ThreadId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostsTags_TagId",
+                table: "PostsTags",
+                column: "TagId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostsTags_ThreadId",
+                table: "PostsTags",
+                column: "ThreadId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reactions_CommentId",
@@ -457,19 +755,49 @@ namespace AstralForum.Migrations
                 column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reactions_PostId",
-                table: "Reactions",
-                column: "PostId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Reactions_ReactionTypeId",
                 table: "Reactions",
                 column: "ReactionTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Reactions_ThreadId",
+                table: "Reactions",
+                column: "ThreadId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ReactionsType_CreatedById",
                 table: "ReactionsType",
                 column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Replies_CreatedById",
+                table: "Replies",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReplyReactions_CreatedById",
+                table: "ReplyReactions",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReplyReactions_ReactionTypeId",
+                table: "ReplyReactions",
+                column: "ReactionTypeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReplyReactions_ReplyId",
+                table: "ReplyReactions",
+                column: "ReplyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReplyReports_CreatedById",
+                table: "ReplyReports",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReplyReports_ReplyId",
+                table: "ReplyReports",
+                column: "ReplyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ThreadCategory_CreatedById",
@@ -490,6 +818,11 @@ namespace AstralForum.Migrations
                 name: "IX_ThreadsAttachment_ThreadId",
                 table: "ThreadsAttachment",
                 column: "ThreadId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserNotifications_NotificationId",
+                table: "UserNotifications",
+                column: "NotificationId");
         }
 
         /// <inheritdoc />
@@ -517,19 +850,49 @@ namespace AstralForum.Migrations
                 name: "CommentsAttachment");
 
             migrationBuilder.DropTable(
+                name: "Notifications");
+
+            migrationBuilder.DropTable(
+                name: "PostReactions");
+
+            migrationBuilder.DropTable(
+                name: "PostReports");
+
+            migrationBuilder.DropTable(
+                name: "PostsTags");
+
+            migrationBuilder.DropTable(
                 name: "Reactions");
+
+            migrationBuilder.DropTable(
+                name: "ReplyReactions");
+
+            migrationBuilder.DropTable(
+                name: "ReplyReports");
 
             migrationBuilder.DropTable(
                 name: "ThreadsAttachment");
 
             migrationBuilder.DropTable(
+                name: "UserNotifications");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "ReactionsType");
+
+            migrationBuilder.DropTable(
+                name: "Replies");
+
+            migrationBuilder.DropTable(
+                name: "NotificationModel");
 
             migrationBuilder.DropTable(
                 name: "Threads");
@@ -541,6 +904,4 @@ namespace AstralForum.Migrations
                 name: "AspNetUsers");
         }
     }
-
 }
-

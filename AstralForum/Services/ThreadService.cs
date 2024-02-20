@@ -9,9 +9,6 @@ namespace AstralForum.Services
 {
     public class ThreadService : IThreadService
     {
-<<<<<<< HEAD
-
-=======
         private readonly ThreadRepository _threadRepository;
 
         public ThreadService(ThreadRepository threadRepository)
@@ -43,6 +40,5 @@ namespace AstralForum.Services
 
             return threadDtos;
         }
->>>>>>> demo
     }
 }

@@ -1,14 +1,14 @@
 ﻿namespace AstralForum.Data.Entities.Thread
 {
-    public class PostReport
+    public class ThreadReport
     { 
     public int Id { get; set; }
 
     public string Text { get; set; }
 
-    public int PostId { get; set; }
+    public int ThreadId { get; set; }
 
-    public Post Post { get; set; }
+    public Thread Thread { get; set; }
 
     public string CreatedById { get; set; }
 

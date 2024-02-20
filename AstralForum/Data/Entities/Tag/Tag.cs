@@ -12,6 +12,6 @@ namespace AstralForum.Data.Entities.Tag
 
         public DateTime? DeletedOn { get; set; }
 
-        public ICollection<PostTag> Posts { get; set; } = new HashSet<PostTag>();
+        public ICollection<ThreadTag> Threads { get; set; } = new HashSet<ThreadTag>();
     }
 }
