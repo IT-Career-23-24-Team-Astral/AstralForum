@@ -1,7 +1,7 @@
 ﻿using AstralForum.Data.Entities.Comment;
 using AstralForum.ServiceModels;
 
-namespace AstralForum.Services
+namespace AstralForum.Services.Comment
 {
     public interface ICommentService
     {

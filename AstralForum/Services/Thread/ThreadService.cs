@@ -4,7 +4,7 @@ using AstralForum.Repositories;
 using AstralForum.ServiceModels;
 using AstralForum.Data.Entities.Thread;
 
-namespace AstralForum.Services
+namespace AstralForum.Services.Thread
 {
     public class ThreadService : IThreadService
     {

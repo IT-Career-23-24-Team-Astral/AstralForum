@@ -1,6 +1,6 @@
 ﻿using AstralForum.ServiceModels;
 
-namespace AstralForum.Services
+namespace AstralForum.Services.Thread
 {
     public interface IThreadService
     {
