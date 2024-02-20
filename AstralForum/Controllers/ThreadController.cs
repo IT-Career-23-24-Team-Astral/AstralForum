@@ -11,7 +11,8 @@ namespace AstralForum.Controllers
 			return View();
 		}
 
-		public IActionResult Create(int id)
+        [Authorize]
+        public IActionResult Create(int id)
 		{
 			ThreadCreationFormModel model = new ThreadCreationFormModel()
 			{
