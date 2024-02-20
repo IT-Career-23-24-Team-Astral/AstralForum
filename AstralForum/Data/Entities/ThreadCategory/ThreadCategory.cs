@@ -9,3 +9,4 @@ namespace AstralForum.Data.Entities.ThreadCategory
         public List<Thread.Thread> Threads { get; set; }
     }
 }
+

@@ -11,5 +11,6 @@ namespace AstralForum.ServiceModels
         public List<CommentDto> Comments { get; set; }
         public List<ReactionDto> Reactions { get; set; }
         public List<CommentAttachmentDto> Attachments { get; set; }
+        public UserDto Author { get; set; }
     }
 }

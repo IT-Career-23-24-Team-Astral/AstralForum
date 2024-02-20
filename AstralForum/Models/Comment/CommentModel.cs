@@ -1,17 +1,16 @@
-﻿using Microsoft.Build.Framework;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace AstralForum.Models
 {
-    public class ThreadModel
+    public class CommentModel
     {
+        [Required]
         public int Id { get; set; }
         [Required]
-        public string Title { get; set; }
+        public int ThreadId { get; set; }
         [Required]
         public string Text { get; set; }
-        public string ImageUrl { get; set; }
-        [Required]
-        public int ThreadCategory { get; set; }
+        public int CommentId { get; set; }
         [Required]
         public int CreatedById { get; set; }
         public DateTime CreatedOn { get; set; }

@@ -1,0 +1,29 @@
+﻿@model AstralForum.Models.Thread.ThreadCreationFormModel
+
+@{
+    ViewData["Title"] = "Post a new thread in " + Model.CategoryName;
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<h5>To post a new thread in @Model.CategoryName you need to fill out the following:</h5>
+
+<form method="post">
+    <input asp-for="CategoryId" type="hidden" value="@Model.CategoryId"/>
+    <div class="mb-3">
+        <label asp-for="Title" class="form-label">Title</label>
+        <input asp-for="Title" type="text" class="form-control" aria-describedby="threadTitleHelp">
+        <div id="threadTitleHelp" class="form-text">
+            Make it short and clear what your thread is about. It will be showed on the homepage of
+            the corresponding category.
+        </div>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Text" class="form-label">Text</label>
+        <textarea asp-for="Text" class="form-control" rows="5"></textarea>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Attachments" class="form-label">Attachments</label>
+        <input asp-for="Attachments" class="form-control" type="file" multiple>
+    </div>
+    <button type="submit" class="btn btn-primary">Post</button>
+</form>

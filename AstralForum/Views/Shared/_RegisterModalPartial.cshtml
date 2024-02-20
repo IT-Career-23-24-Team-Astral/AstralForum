@@ -1,0 +1,102 @@
+﻿<div class="modal" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel"
+	 aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="registerModalLabel">Register now</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form asp-controller="Authentication" asp-action="Register" id="registerForm">
+					@Html.AntiForgeryToken()
+					<div class="row mb-3">
+						<div class="col">
+							<label for="RegisterFirstName" class="form-label">First name</label>
+							<input name="FirstName" type="text" class="form-control" id="RegisterFirstName">
+							<span id="FirstNameRegistrationValidation" class="text-danger"></span>
+						</div>
+						<div class="col">
+							<label for="RegisterLastName" class="form-label">Last name</label>
+							<input name="LastName" type="text" class="form-control" id="RegisterLastName">
+							<span id="LastNameRegistrationValidation" class="text-danger"></span>
+						</div>
+						<div id="firstAndLastNameHelpBlock" class="form-text">
+							Your first and last name won't be visible to the other members of the forum. They will be used only for personal communication in emails.
+						</div>
+					</div>
+					<div class="mb-3">
+						<label for="RegisterUsername" class="form-label">Username</label>
+						<input name="Username" type="email" class="form-control" id="RegisterUsername">
+						<div id="usernameHelpBlock" class="form-text">
+							The username must be 5-20 characters long and can contain only lowercase latin
+							characters, the underscore character (_) and numbers.
+							Your username will be shown to other users when you create threads, write comments or
+							perform other actions on the forum. Try to be creative!
+						</div>
+						<span id="UsernameRegistrationValidation" class="text-danger"></span>
+					</div>
+					<div class="mb-3">
+						<label for="RegisterEmail" class="form-label">Email address</label>
+						<input name="Email" type="email" class="form-control" id="RegisterEmail">
+						<span id="EmailRegistrationValidation" class="text-danger"></span>
+					</div>
+					<div class="mb-3">
+						<label for="RegisterPassword" class="form-label">Password</label>
+						<input name="Password" type="password" class="form-control" id="RegisterPassword">
+						<div id="passwordHelpBlock" class="form-text">
+							Your password must be 8-20 characters long, contain letters, numbers and at least one
+							special character (!, @@, #, $, %, ^, &, *), and must not
+							contain spaces or emoji.
+						</div>
+						<span id="PasswordRegistrationValidation" class="text-danger"></span>
+					</div>
+					<div class="mb-3">
+						<label for="RegisterConfirmPassword" class="form-label">Repeat your password</label>
+						<input name="ConfirmPassword" type="password" class="form-control" id="RegisterConfirmPassword">
+						<span id="ConfirmPasswordRegistrationValidation" class="text-danger"></span>
+					</div>
+					<div class="mb-3">
+						Already have an account?
+						<a href="#" id="linkLogIn">Log in</a>
+					</div>
+					<div class="mb-3">
+						<span id="FailedRegistrationValidation" class="text-danger"></span>
+					</div>
+					<button type="submit" class="btn btn-primary">Register</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$("#linkLogIn").on('click', function () {
+		$("#registerModal").modal('hide');
+		$("#loginModal").modal('show');
+	});
+
+	$("#registerModal").on('shown.bs.modal', function () {
+		$("#RegisterFirstName").focus();
+	})
+
+	$(document).ready(function () {
+		$('#registerForm').submit(function (event) {
+			event.preventDefault();
+
+			var formData = $(this).serialize();
+
+			$.post(this.action, formData, function (response) {
+				console.log(response);
+				if (response.success == false) {
+					$.each(response.errors, function (fieldName, errorMessages) {
+						var $field = $('#' + fieldName + 'RegistrationValidation');
+						$field.text(errorMessages.join('\n'));
+					});
+				} else {
+					alert("Successful registration!");
+				}
+
+			});
+		});
+	})
+</script>
