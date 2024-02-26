@@ -10,6 +10,7 @@ using AstralForum.Data.Entities.Reply;
 using AstralForum.Models.Notification;
 using AstralForum.Data.Entities.Tag;
 using AstralForum.Models;
+using Thread = AstralForum.Data.Entities.Thread.Thread;
 
 namespace AstralForum.Data
 {
@@ -19,6 +20,16 @@ namespace AstralForum.Data
             : base(options)
         {
         }
+
+        /*protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<Reaction>()
+                .HasOne(r => r.Thread)
+                .WithMany(t => t.Reactions)
+                .HasForeignKey(r => r.ThreadId);
+
+            base.OnModelCreating(builder);
+        }*/
 
         public DbSet<Ban> Bans { get; set; }
         public DbSet<Comment> Comments { get; set; }

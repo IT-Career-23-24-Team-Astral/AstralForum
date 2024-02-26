@@ -13,7 +13,7 @@ namespace AstralForum.Mapping
             threadCategory.Id = threadCategoryDto.Id;
             threadCategory.CategoryName = threadCategoryDto.CategoryName;
             threadCategory.CreatedById = threadCategoryDto.CreatedById;
-            threadCategory.CreatedBy = threadCategoryDto.CreatedBy;
+            threadCategory.CreatedBy = threadCategoryDto.CreatedBy.ToEntity();
             threadCategory.CreatedOn = threadCategoryDto.CreatedOn;
 
             return threadCategory;
@@ -25,8 +25,10 @@ namespace AstralForum.Mapping
 
             threadCategoryDto.Id = threadCategory.Id;
             threadCategoryDto.CategoryName = threadCategory.CategoryName;
+            // only have to include the comments in the threads of a category
+            threadCategoryDto.Threads = threadCategory.Threads.Select(t => t.ToDto(true, false, false)).ToList();
             threadCategoryDto.CreatedById = threadCategory.CreatedById;
-            threadCategoryDto.CreatedBy = threadCategory.CreatedBy;
+            threadCategoryDto.CreatedBy = threadCategory.CreatedBy.ToDto();
             threadCategoryDto.CreatedOn = threadCategory.CreatedOn;
 
             return threadCategoryDto;

@@ -1,45 +1,26 @@
 ﻿using AstralForum.Models.Thread;
 using AstralForum.ServiceModels;
+using AstralForum.Services.ThreadCategory;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AstralForum.Controllers
 {
-    public class CategoryController : Controller
-    {
-        public IActionResult Index(int id)
-        {
-            CategoryThreadsViewModel model = new CategoryThreadsViewModel()
-            {
-                CategoryName = "Main category",
-                CategoryId = id
-            };
+	public class CategoryController : Controller
+	{
 
-			List<ThreadTableViewModel> list = new List<ThreadTableViewModel>();
-            ThreadTableViewModel thread = new ThreadTableViewModel()
-            {
-				Author = new UserDto()
-				{
-					Username = "Rocky47",
-					DateOfCreation = DateTime.Now
-				},
-				DateOfCreation = DateTime.Now,
-                Title = "Lorem ipsum dolor sit amet",
-                LastComment = new CommentDto()
-                {
-                    Text = "Comment text lorem ipsum",
-                    CreatedOn = DateTime.Now.AddHours(2.3),
-					Author = new UserDto()
-                    {
-                        Username = "Rocky47",
-                        DateOfCreation = DateTime.Now
-					}
-                }
-            };
-            list.Add(thread);
+		private readonly IThreadCategoryFacade threadCategoryFacade;
 
-            model.Threads = list;
+		public CategoryController(IThreadCategoryFacade threadCategoryFacade)
+		{
+			this.threadCategoryFacade = threadCategoryFacade;
+		}
 
-            return View(model);
-        }
-    }
+
+		public async Task<IActionResult> Index(int id)
+		{
+			CategoryThreadsViewModel model = threadCategoryFacade.GetAllThreadsByCategoryId(id);
+
+			return View(model);
+		}
+	}
 }

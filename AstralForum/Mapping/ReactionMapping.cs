@@ -11,7 +11,7 @@ namespace AstralForum.Mapping
             Reaction reaction = new Reaction();
 
             reaction.Id = reactionDto.Id;
-            reaction.ThreadsId = reactionDto.ThreadId;
+            reaction.ThreadId = reactionDto.ThreadId;
             reaction.CommentId = reactionDto.CommentId;
             reaction.ReactionTypeId = reactionDto.ReactionTypeId;
             reaction.ReactionType = reactionDto.ReactionType;
@@ -25,7 +25,7 @@ namespace AstralForum.Mapping
             ReactionDto reactionDto = new ReactionDto();
 
             reactionDto.Id = reaction.Id;
-            reactionDto.ThreadId = reaction.ThreadsId;
+            reactionDto.ThreadId = reaction.ThreadId;
             reactionDto.CommentId = reaction.CommentId;
             reactionDto.ReactionTypeId = reaction.ReactionTypeId;
             reactionDto.ReactionType = reaction.ReactionType;

@@ -86,7 +86,6 @@
 			var formData = $(this).serialize();
 
 			$.post(this.action, formData, function (response) {
-				console.log(response);
 				if (response.success == false) {
 					$.each(response.errors, function (fieldName, errorMessages) {
 						var $field = $('#' + fieldName + 'RegistrationValidation');

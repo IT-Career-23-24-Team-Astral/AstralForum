@@ -12,12 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AstralForum.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:AstralForum/Migrations/20240219180000_Initial.Designer.cs
-    [Migration("20240219180000_Initial")]
-========
-    [Migration("20240219140840_Initial")]
->>>>>>>> threadViews:AstralForum/Migrations/20240219140840_Initial.Designer.cs
-    partial class Initial
+    [Migration("20240223155809_Make ImageUrl in Thread optional")]
+    partial class MakeImageUrlinThreadoptional
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -167,10 +163,7 @@ namespace AstralForum.Migrations
                     b.Property<int>("ReactionTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ThreadId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ThreadsId")
+                    b.Property<int>("ThreadId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -211,8 +204,6 @@ namespace AstralForum.Migrations
                     b.ToTable("ReactionsType");
                 });
 
-<<<<<<<< HEAD:AstralForum/Migrations/20240219180000_Initial.Designer.cs
-========
             modelBuilder.Entity("AstralForum.Data.Entities.Reply.Reply", b =>
                 {
                     b.Property<int>("Id")
@@ -385,7 +376,6 @@ namespace AstralForum.Migrations
                     b.ToTable("PostReactions");
                 });
 
->>>>>>>> threadViews:AstralForum/Migrations/20240219140840_Initial.Designer.cs
             modelBuilder.Entity("AstralForum.Data.Entities.Thread.Thread", b =>
                 {
                     b.Property<int>("Id")
@@ -401,7 +391,6 @@ namespace AstralForum.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Text")
@@ -661,6 +650,40 @@ namespace AstralForum.Migrations
                     b.ToTable("NotificationModel");
                 });
 
+            modelBuilder.Entity("AstralForum.Models.ThreadModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ThreadCategory")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ThreadModel");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -880,17 +903,11 @@ namespace AstralForum.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-<<<<<<<< HEAD:AstralForum/Migrations/20240219180000_Initial.Designer.cs
-                    b.HasOne("AstralForum.Data.Entities.Thread.Thread", null)
-                        .WithMany("Reactions")
-                        .HasForeignKey("ThreadId");
-========
                     b.HasOne("AstralForum.Data.Entities.Thread.Thread", "Thread")
                         .WithMany("Reactions")
                         .HasForeignKey("ThreadId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
->>>>>>>> threadViews:AstralForum/Migrations/20240219140840_Initial.Designer.cs
 
                     b.Navigation("CreatedBy");
 
@@ -910,8 +927,6 @@ namespace AstralForum.Migrations
                     b.Navigation("CreatedBy");
                 });
 
-<<<<<<<< HEAD:AstralForum/Migrations/20240219180000_Initial.Designer.cs
-========
             modelBuilder.Entity("AstralForum.Data.Entities.Reply.Reply", b =>
                 {
                     b.HasOne("AstralForum.Data.Entities.User", "CreatedBy")
@@ -996,7 +1011,6 @@ namespace AstralForum.Migrations
                     b.Navigation("Thread");
                 });
 
->>>>>>>> threadViews:AstralForum/Migrations/20240219140840_Initial.Designer.cs
             modelBuilder.Entity("AstralForum.Data.Entities.Thread.Thread", b =>
                 {
                     b.HasOne("AstralForum.Data.Entities.User", "CreatedBy")
@@ -1017,10 +1031,7 @@ namespace AstralForum.Migrations
             modelBuilder.Entity("AstralForum.Data.Entities.Thread.ThreadAttachment", b =>
                 {
                     b.HasOne("AstralForum.Data.Entities.Thread.Thread", "Thread")
-<<<<<<<< HEAD:AstralForum/Migrations/20240219180000_Initial.Designer.cs
                         .WithMany("Attachments")
-========
-                        .WithMany()
                         .HasForeignKey("ThreadId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1057,7 +1068,6 @@ namespace AstralForum.Migrations
 
                     b.HasOne("AstralForum.Data.Entities.Thread.Thread", "Thread")
                         .WithMany()
->>>>>>>> threadViews:AstralForum/Migrations/20240219140840_Initial.Designer.cs
                         .HasForeignKey("ThreadId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1147,8 +1157,6 @@ namespace AstralForum.Migrations
                     b.Navigation("Reactions");
                 });
 
-<<<<<<<< HEAD:AstralForum/Migrations/20240219180000_Initial.Designer.cs
-========
             modelBuilder.Entity("AstralForum.Data.Entities.Reply.Reply", b =>
                 {
                     b.Navigation("Reactions");
@@ -1161,7 +1169,6 @@ namespace AstralForum.Migrations
                     b.Navigation("Threads");
                 });
 
->>>>>>>> threadViews:AstralForum/Migrations/20240219140840_Initial.Designer.cs
             modelBuilder.Entity("AstralForum.Data.Entities.Thread.Thread", b =>
                 {
                     b.Navigation("Attachments");

@@ -16,7 +16,7 @@ namespace AstralForum.Mapping
             thread.ImageUrl = threadDto.ImageUrl;
             thread.ThreadCategoryId = threadDto.ThreadCategoryId;
             thread.CreatedById = threadDto.CreatedById;
-            thread.CreatedBy = threadDto.CreatedBy;
+            thread.CreatedBy = threadDto.CreatedBy.ToEntity();
             thread.CreatedOn = threadDto.CreatedOn;
             thread.Comments = threadDto.Comments.Select(c => c.ToEntity()).ToList();
             thread.Reactions = threadDto.Reactions.Select(c => c.ToEntity()).ToList();
@@ -24,7 +24,7 @@ namespace AstralForum.Mapping
 
             return thread;
         }
-        public static ThreadDto ToDto(this Data.Entities.Thread.Thread thread)
+        public static ThreadDto ToDto(this Data.Entities.Thread.Thread thread, bool includeComments = true, bool includeReactions = true, bool includeAttachments = true)
         {
             ThreadDto threadDto = new ThreadDto();
 
@@ -34,11 +34,11 @@ namespace AstralForum.Mapping
             threadDto.ImageUrl = thread.ImageUrl;
             threadDto.ThreadCategoryId = thread.ThreadCategoryId;
             threadDto.CreatedById = thread.CreatedById;
-            threadDto.CreatedBy = thread.CreatedBy;
+            threadDto.CreatedBy = thread.CreatedBy.ToDto();
             threadDto.CreatedOn = thread.CreatedOn;
-            threadDto.Comments = thread.Comments.Select(c => c.ToDto()).ToList();
-            threadDto.Reactions = thread.Reactions.Select(c => c.ToDto()).ToList();
-            threadDto.Attachments = thread.Attachments.Select(c => c.ToDto()).ToList();
+            threadDto.Comments = includeComments ? thread.Comments.Select(c => c.ToDto()).ToList() : null;
+            threadDto.Reactions = includeReactions ? thread.Reactions.Select(r => r.ToDto()).ToList() : null;
+            threadDto.Attachments = includeAttachments ? thread.Attachments.Select(a => a.ToDto()).ToList() : null;
 
             return threadDto;
         }

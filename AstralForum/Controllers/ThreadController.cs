@@ -1,13 +1,26 @@
-﻿using AstralForum.Models.Thread;
+﻿using AstralForum.Data.Entities;
+using AstralForum.Models.Thread;
+using AstralForum.Services.Thread;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AstralForum.Controllers
 {
 	public class ThreadController : Controller
 	{
-		public IActionResult Index()
+		private readonly IThreadFacade threadFacade;
+		private readonly UserManager<User> userManager;
+
+		public ThreadController(IThreadFacade threadFacade, UserManager<User> userManager)
+        {
+            this.threadFacade = threadFacade;
+            this.userManager = userManager;
+        }
+
+        public IActionResult Index(int id)
 		{
+			// ThreadViewModel model = new ThreadViewModel();
 			return View();
 		}
 
@@ -24,9 +37,11 @@ namespace AstralForum.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize]
-		public IActionResult Create(ThreadCreationFormModel newThread)
+		public async Task<IActionResult> Create(ThreadCreationFormModel threadForm)
 		{
-			return RedirectToAction("Index", "Category", new { id = newThread.CategoryId });
+			await threadFacade.CreateThread(threadForm, await userManager.GetUserAsync(User));
+
+			return RedirectToAction("Index", "Category", new { id = threadForm.CategoryId });
 		}
 	}
 }

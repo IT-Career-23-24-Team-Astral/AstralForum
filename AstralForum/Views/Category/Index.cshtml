@@ -19,7 +19,7 @@
 </form>
 
 <div class="container">
-	<table class="table table-striped table-hover">
+	<table class="table table-striped table-hover" id="threadsTable">
 		<thead>
 			<tr>
 				<th class="col-3">
@@ -39,7 +39,7 @@
 		<tbody class="table-group-divider">
 			@foreach (var item in Model.Threads)
 			{
-				<tr>
+				<tr id="tableRow" thread-id="@item.Id">
 					<td>
 						@item.Title
 					</td>
@@ -49,7 +49,7 @@
 					<td>
 						<div class="row">
 							<div class="col-8">
-								@item.Author.Username
+								@item.Author.UserName
 								<br>
 								<span class="fw-light">
 									Member since: @item.Author.DateOfCreation.ToString("g")
@@ -61,27 +61,44 @@
 						</div>
 					</td>
 					<td>
-						@item.LastComment.Text
-						<div>
-							<div class="row">
-								<div class="col">
-									<span class="font-monospace">
-										by @item.LastComment.Author.Username
-									</span>
-									<br>
-									<span class="fw-light">
-										on @item.LastComment.CreatedOn.ToString("g")
-									</span>
-								</div>
-								<div class="col d-flex justify-content-end">
-									<img src="profilePicture.JPG" class="rounded-4 object-fit-cover" width="45"
-										 height="45">
+						@if(item.LastComment == default)
+						{
+							<p class="fst-italic fw-semibold">No comments have been made on this thread yet</p>
+						}
+						else
+						{
+							@item.LastComment.Text
+							<div>
+								<div class="row">
+									<div class="col">
+										<span class="font-monospace">
+											by @item.LastComment.Author.UserName
+										</span>
+										<br>
+										<span class="fw-light">
+											on @item.LastComment.CreatedOn.ToString("g")
+										</span>
+									</div>
+									<div class="col d-flex justify-content-end">
+										<img src="profilePicture.JPG" class="rounded-4 object-fit-cover" width="45"
+											 height="45">
+									</div>
 								</div>
 							</div>
-						</div>
+						}
 					</td>
 				</tr>
 			}
 		</tbody>
 	</table>
 </div>
+
+<script>
+	$(document).ready(function () {
+		$("#threadsTable tr").click(function() {
+			var id = $(this).attr("thread-id");
+			
+			window.location.href = url;
+		})
+	})
+</script>

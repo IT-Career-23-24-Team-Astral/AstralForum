@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AstralForum.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Initalcreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -83,6 +83,24 @@ namespace AstralForum.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tags", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ThreadModel",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ThreadCategory = table.Column<int>(type: "int", nullable: false),
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ThreadModel", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -460,8 +478,6 @@ namespace AstralForum.Migrations
                         principalTable: "Threads",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-<<<<<<<< HEAD:AstralForum/Migrations/20240219180000_Initial.cs
-========
                 });
 
             migrationBuilder.CreateTable(
@@ -554,7 +570,6 @@ namespace AstralForum.Migrations
                         principalTable: "Threads",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
->>>>>>>> threadViews:AstralForum/Migrations/20240219140840_Initial.cs
                 });
 
             migrationBuilder.CreateTable(
@@ -603,13 +618,9 @@ namespace AstralForum.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ThreadsId = table.Column<int>(type: "int", nullable: false),
+                    ThreadId = table.Column<int>(type: "int", nullable: false),
                     CommentId = table.Column<int>(type: "int", nullable: false),
                     ReactionTypeId = table.Column<int>(type: "int", nullable: false),
-<<<<<<<< HEAD:AstralForum/Migrations/20240219180000_Initial.cs
-                    ThreadId = table.Column<int>(type: "int", nullable: true),
-========
->>>>>>>> threadViews:AstralForum/Migrations/20240219140840_Initial.cs
                     CreatedById = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -876,6 +887,9 @@ namespace AstralForum.Migrations
 
             migrationBuilder.DropTable(
                 name: "ReplyReports");
+
+            migrationBuilder.DropTable(
+                name: "ThreadModel");
 
             migrationBuilder.DropTable(
                 name: "ThreadsAttachment");

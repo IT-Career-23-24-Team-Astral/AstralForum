@@ -6,6 +6,12 @@ namespace AstralForum.ServiceModels
 {
     public class ThreadDto : MetaBaseEntityDto
     {
+        public ThreadDto() {
+            Comments = new List<CommentDto>();
+            Reactions = new List<ReactionDto>();
+            Attachments = new List<ThreadAttachmentDto>();
+        }
+
         public string Title { get; set; }
         public string Text { get; set; }
         public string ImageUrl { get; set; }

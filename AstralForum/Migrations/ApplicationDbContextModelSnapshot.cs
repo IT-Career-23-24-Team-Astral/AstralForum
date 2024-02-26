@@ -160,7 +160,7 @@ namespace AstralForum.Migrations
                     b.Property<int>("ReactionTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ThreadsId")
+                    b.Property<int>("ThreadId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -388,7 +388,6 @@ namespace AstralForum.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Text")
@@ -646,6 +645,40 @@ namespace AstralForum.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("NotificationModel");
+                });
+
+            modelBuilder.Entity("AstralForum.Models.ThreadModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ThreadCategory")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ThreadModel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -995,7 +1028,7 @@ namespace AstralForum.Migrations
             modelBuilder.Entity("AstralForum.Data.Entities.Thread.ThreadAttachment", b =>
                 {
                     b.HasOne("AstralForum.Data.Entities.Thread.Thread", "Thread")
-                        .WithMany()
+                        .WithMany("Attachments")
                         .HasForeignKey("ThreadId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

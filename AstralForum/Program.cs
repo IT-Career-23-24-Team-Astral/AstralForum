@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using SendGrid.Extensions.DependencyInjection;
 using AstralForum.Data.Entities;
 using Microsoft.AspNetCore.Authorization;
+using AstralForum.Services.Thread;
+using AstralForum.Repositories;
+using AstralForum.Services.ThreadCategory;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,15 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddScoped<ThreadRepository>();
+builder.Services.AddScoped<ThreadCategoryRepository>();
+
+builder.Services.AddScoped<IThreadCategoryService, ThreadCategoryService>();
+builder.Services.AddScoped<IThreadService, ThreadService>();
+
+builder.Services.AddScoped<IThreadCategoryFacade, ThreadCategoryFacade>();
+builder.Services.AddScoped<IThreadFacade, ThreadFacade>();
 
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();

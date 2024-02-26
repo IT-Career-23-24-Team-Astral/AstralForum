@@ -22,7 +22,7 @@ namespace AstralForum.Mapping
 
             return comment;
         }
-        public static CommentDto ToDto(this Comment comment)
+        public static CommentDto ToDto(this Comment comment, bool includeReactions = true, bool includeReplies = true, bool includeAttachments = true)
         {
             CommentDto commentDto = new CommentDto();
 
@@ -32,9 +32,9 @@ namespace AstralForum.Mapping
             commentDto.CommentId = comment.CommentId;
             commentDto.CreatedById = comment.CreatedById;
             commentDto.CreatedOn = comment.CreatedOn;
-            commentDto.Comments = comment.Comments.Select(c => c.ToDto()).ToList();
-            commentDto.Reactions = comment.Reactions.Select(c => c.ToDto()).ToList();
-            commentDto.Attachments = comment.Attachments.Select(c => c.ToDto()).ToList();
+            commentDto.Comments = includeReplies ? comment.Comments.Select(c => c.ToDto()).ToList() : null;
+            commentDto.Reactions = includeReactions ? comment.Reactions.Select(c => c.ToDto()).ToList() : null;
+            commentDto.Attachments = includeAttachments ? comment.Attachments.Select(c => c.ToDto()).ToList() : null;
 
             return commentDto;
         }

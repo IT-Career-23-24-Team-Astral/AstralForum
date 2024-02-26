@@ -5,6 +5,8 @@ namespace AstralForum.Models.Thread
 {
     public class ThreadTableViewModel
     {
+        public int Id { get; set; }
+
         [Display(Name = "Title")]
         public string Title { get; set; }
 

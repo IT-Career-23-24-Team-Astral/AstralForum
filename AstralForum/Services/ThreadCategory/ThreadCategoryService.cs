@@ -4,7 +4,7 @@ using AstralForum.ServiceModels;
 
 namespace AstralForum.Services.ThreadCategory
 {
-    public class ThreadCategoryService
+    public class ThreadCategoryService : IThreadCategoryService
     {
         private readonly ThreadCategoryRepository _threadCategoryRepository;
 
@@ -12,9 +12,15 @@ namespace AstralForum.Services.ThreadCategory
         {
             _threadCategoryRepository = threadCategoryRepository;
         }
+
         public IQueryable<ThreadCategoryDto> GetAllThreadCategories()
         {
             return (IQueryable<ThreadCategoryDto>)_threadCategoryRepository.GetAll();
+        }
+
+        public ThreadCategoryDto GetThreadCategoryById(int id)
+        {
+            return _threadCategoryRepository.GetThreadCategoryById(id).ToDto();
         }
 
         public async Task<ThreadCategoryDto> CreateThreadCategory(ThreadCategoryDto threadCategoryDto)
