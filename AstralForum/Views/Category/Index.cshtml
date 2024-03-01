@@ -56,12 +56,12 @@
 								</span>
 							</div>
 							<div class="col d-flex justify-content-end">
-								<img src="profilePicture.JPG" class="rounded-4 object-fit-cover" width="40" height="40">
+								<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-4 object-fit-cover" width="40" height="40">
 							</div>
 						</div>
 					</td>
 					<td>
-						@if(item.LastComment == default)
+						@if (item.LastComment == default)
 						{
 							<p class="fst-italic fw-semibold">No comments have been made on this thread yet</p>
 						}
@@ -72,7 +72,7 @@
 								<div class="row">
 									<div class="col">
 										<span class="font-monospace">
-											by @item.LastComment.Author.UserName
+											by @item.LastComment.CreatedBy.UserName
 										</span>
 										<br>
 										<span class="fw-light">
@@ -80,7 +80,7 @@
 										</span>
 									</div>
 									<div class="col d-flex justify-content-end">
-										<img src="profilePicture.JPG" class="rounded-4 object-fit-cover" width="45"
+										<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-4 object-fit-cover" width="45"
 											 height="45">
 									</div>
 								</div>
@@ -95,10 +95,10 @@
 
 <script>
 	$(document).ready(function () {
-		$("#threadsTable tr").click(function() {
+		$("#threadsTable tr").click(function () {
 			var id = $(this).attr("thread-id");
-			
-			window.location.href = url;
+			var action = "/Thread/Index/" + id;
+			window.location.href = window.location.origin + action;
 		})
 	})
 </script>

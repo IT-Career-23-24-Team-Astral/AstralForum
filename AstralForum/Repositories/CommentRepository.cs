@@ -27,15 +27,15 @@ namespace AstralForum.Repositories
             ThreadId = x.ThreadId,
             CreatedOn = x.CreatedOn,
             Text = x.Text,
-            CommentId = (int)x.CommentId
+            ParentCommentId = (int)x.ParentCommentId
         }).ToList();
-        public IEnumerable<CommentModel> GetCommentsByCommentId(int id) => context.Comments.Where(c => c.CommentId == id).Select(x => new CommentModel()
+        public IEnumerable<CommentModel> GetCommentsByCommentId(int id) => context.Comments.Where(c => c.ParentCommentId == id).Select(x => new CommentModel()
         {
             Id = x.Id,
             ThreadId = x.ThreadId,
             CreatedOn = x.CreatedOn,
             Text = x.Text,
-            CommentId = (int)x.CommentId
+            ParentCommentId = (int)x.ParentCommentId
         }).ToList();
 
         /*public void AddComment(CommentModel model)
@@ -45,7 +45,7 @@ namespace AstralForum.Repositories
                 Id = model.Id,
                 ThreadId = model.ThreadId,
                 Text = model.Text,
-                CommentId = model.CommentId,
+                ParentCommentId = model.ParentCommentId,
                 CreatedById = model.CreatedById
             };
             context.Comments.Add(coment);

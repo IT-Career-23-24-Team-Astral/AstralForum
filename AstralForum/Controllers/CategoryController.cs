@@ -7,7 +7,7 @@ namespace AstralForum.Controllers
 {
 	public class CategoryController : Controller
 	{
-
+		
 		private readonly IThreadCategoryFacade threadCategoryFacade;
 
 		public CategoryController(IThreadCategoryFacade threadCategoryFacade)
@@ -16,7 +16,7 @@ namespace AstralForum.Controllers
 		}
 
 
-		public async Task<IActionResult> Index(int id)
+		public IActionResult Index(int id)
 		{
 			CategoryThreadsViewModel model = threadCategoryFacade.GetAllThreadsByCategoryId(id);
 

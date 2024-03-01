@@ -12,14 +12,14 @@ namespace AstralForum.Repositories
         {
             Comment comment = await context.Comments
                 .Include(e => e.Attachments)
-                .FirstAsync(p => p.Id == id); //или CommentId
+                .FirstAsync(p => p.Id == id); //или ParentCommentId
             return comment.Attachments;
         }
        /* public void AddAttachment(CommentAttachmentModel model)
         {
             CommentAttachment comentAttachment = new CommentAttachment()
             {
-                CommentId = model.CommentId,
+                ParentCommentId = model.ParentCommentId,
                 AttachmentUrl = model.AttachmentUrl
             };
             context.CommentsAttachment.Add(comentAttachment);
@@ -32,7 +32,7 @@ namespace AstralForum.Repositories
             context.SaveChanges();
         }
 
-        public IEnumerable<CommentAttachmentModel> GetCommentAttachmentByCommentId(int id) => context.CommentsAttachment.Where(c => c.CommentId == id).Select(x => new CommentAttachmentModel()
+        public IEnumerable<CommentAttachmentModel> GetCommentAttachmentByCommentId(int id) => context.CommentsAttachment.Where(c => c.ParentCommentId == id).Select(x => new CommentAttachmentModel()
         {
             AttachmentUrl=x.AttachmentUrl
         }).ToList();*/

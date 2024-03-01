@@ -21,16 +21,6 @@ namespace AstralForum.Data
         {
         }
 
-        /*protected override void OnModelCreating(ModelBuilder builder)
-        {
-            builder.Entity<Reaction>()
-                .HasOne(r => r.Thread)
-                .WithMany(t => t.Reactions)
-                .HasForeignKey(r => r.ThreadId);
-
-            base.OnModelCreating(builder);
-        }*/
-
         public DbSet<Ban> Bans { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentAttachment> CommentsAttachment { get; set; }
@@ -53,7 +43,6 @@ namespace AstralForum.Data
         public DbSet<ReplyReport> ReplyReports { get; set; }
 
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<AstralForum.Models.ThreadModel> ThreadModel { get; set; } = default!;
 
         // public DbSet<UserFollower> UsersFollowers { get; set; }
 

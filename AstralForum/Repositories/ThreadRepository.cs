@@ -1,44 +1,26 @@
-﻿using AstralForum.Data.Entities.ThreadCategory;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Thread = AstralForum.Data.Entities.Thread.Thread;
 
 namespace AstralForum.Repositories
 {
-    public class ThreadRepository :CommonRepository<Data.Entities.Thread.Thread>
+    public class ThreadRepository : CommonRepository<Data.Entities.Thread.Thread>
     {
         public ThreadRepository(ApplicationDbContext context) : base(context) { }
-        public async Task<List<Data.Entities.Thread.Thread>> GetThreadsByThreadCategoryId(int id)
-        {
-            ThreadCategory category =  await context.ThreadCategory
-                .Include(e => e.Threads)
-                .FirstAsync(p => p.Id == id);
 
-            return category.Threads;
-        }
-        /*public void AddThread(ThreadModel model, User id)
+        public Thread GetThreadById(int id)
         {
-            Post thread = new Post()
-            {
-                Title = model.Title,
-                Text = model.Text,
-                ImageUrl = model.ImageUrl,
-                ThreadCategoryId = model.ThreadCategory,
-                CreatedById = model.CreatedById
-            };
-            context.Threads.Add(thread);
-            context.SaveChanges();
+            return context.Threads
+                .Include(t => t.ThreadCategory)
+                .Include(t => t.CreatedBy)
+                .Include(t => t.Comments)
+                    .ThenInclude(c => c.CreatedBy)
+                .Include(t => t.Reactions)
+                .Include(t => t.Attachments)
+                .Where(t => t.Id == id)
+                .Single();
         }
-        public List<ThreadModel> GetAllThreadsByThreadCategory(int ThreadCategory)
-        {
-            return context.Threads.Where(x => x.ThreadCategoryId == ThreadCategory).Select(x => new ThreadModel()
-            {
-                Id = x.Id,
-                Title = x.Title,
-                Text = x.Text,
-                ImageUrl = x.ImageUrl,
-                CreatedById = x.CreatedById,
-                CreatedOn = x.CreatedOn
-            }).ToList();
-        }
+        
+        /*
         public void Edit(Post thread, ThreadModel model)
         {
             thread.Title = model.Title;

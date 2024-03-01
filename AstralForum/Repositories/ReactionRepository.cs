@@ -27,7 +27,7 @@ namespace AstralForum.Repositories
             Reaction reaction = new Reaction()
             {
                 ThreadId = model.ThreadId,
-                CommentId = model.CommentId,
+                ParentCommentId = model.ParentCommentId,
                 ReactionId = model.ReactionId,
                 CreatedById = id.Id,
             };
@@ -41,7 +41,7 @@ namespace AstralForum.Repositories
             context.SaveChanges();
         }
 
-        public IEnumerable<ReactionModel> GetReactionsByCommentId(int id) => context.Comments.Where(c => c.CommentId == id).Select(x => new ReactionModel()
+        public IEnumerable<ReactionModel> GetReactionsByCommentId(int id) => context.Comments.Where(c => c.ParentCommentId == id).Select(x => new ReactionModel()
         {
             ReactionId = x.Id,
         }).ToList();

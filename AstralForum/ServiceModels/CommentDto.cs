@@ -7,10 +7,12 @@ namespace AstralForum.ServiceModels
     {
         public int ThreadId { get; set; }
         public string Text { get; set; }
-        public int? CommentId { get; set; }
-        public List<CommentDto> Comments { get; set; }
-        public List<ReactionDto> Reactions { get; set; }
-        public List<CommentAttachmentDto> Attachments { get; set; }
+        public int? ParentCommentId { get; set; }
+        public List<CommentDto> Comments { get; set; } = new List<CommentDto>();
+        public List<ReactionDto> Reactions { get; set; } = new List<ReactionDto>();
+        public List<CommentAttachmentDto> Attachments { get; set; } = new List<CommentAttachmentDto>();
+
+        //TODO: Author is redundant use CreatedBy instead
         public UserDto Author { get; set; }
     }
 }

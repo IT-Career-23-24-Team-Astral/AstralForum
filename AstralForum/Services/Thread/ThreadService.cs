@@ -32,12 +32,11 @@ namespace AstralForum.Services.Thread
             return (await _threadRepository.Edit(thread)).ToDto();
         }
 
-        public async Task<List<ThreadDto>> GetAllThreadsByThreadCategoryId(int id)
+        public ThreadDto GetThreadById(int id)
         {
-            List<Data.Entities.Thread.Thread> threads = await _threadRepository.GetThreadsByThreadCategoryId(id);
-            List<ThreadDto> threadDtos = threads.Select(thread => thread.ToDto()).ToList();
+            ThreadDto threadDto = _threadRepository.GetThreadById(id).ToDto(includeCommentReplies: false);
 
-            return threadDtos;
+            return threadDto;
         }
     }
 }
