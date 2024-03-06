@@ -1,0 +1,78 @@
+﻿<div class="modal" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="loginModalLabel">Log in</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<div class="alert alert-success d-none" role="alert" id="SuccessfulLoginAlert">
+					Successful login! Redirecting...
+				</div>
+				<form asp-controller="Authentication" asp-action="Login" id="loginForm">
+					@Html.AntiForgeryToken()
+					<div class="mb-3">
+						<label for="LoginEmail" class="form-label">Email address</label>
+						<input name="Email" type="email" class="form-control" id="LoginEmail">
+						<span id="EmailLoginValidation" class="text-danger"></span>
+					</div>
+					<div class="mb-3">
+						<label for="LoginPassword" class="form-label">Password</label>
+						<input name="Password" type="password" class="form-control" id="LoginPassword">
+						<span id="PasswordLoginValidation" class="text-danger"></span>
+					</div>
+					<div class="mb-3 form-check">
+						<input name="RememberMe" type="checkbox" class="form-check-input" id="LoginInputRememberMe">
+						<label for="LoginRememberMe" class="form-check-label">Remember me</label>
+					</div>
+					<div class="mb-3">
+						Don't have an account?
+						<a href="#" id="linkRegisterNow">Register now</a>
+					</div>
+					<div class="mb-3">
+						<span id="FailedLoginValidation" class="text-danger"></span>
+					</div>
+					<div class="alert alert-secondary d-none" role="alert" id="LoadingLoginAlert">
+						<i class="bi bi-hourglass-split"></i> Logging you in...
+					</div>
+					<button type="submit" class="btn btn-primary">Log in</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$("#linkRegisterNow").on('click', function () {
+		$("#loginModal").modal('hide');
+		$("#registerModal").modal('show');
+	});
+
+	$("#loginModal").on('shown.bs.modal', function () {
+		$("#LoginEmail").focus();
+	});
+
+	$(document).ready(function () {
+		$('#loginForm').submit(function (event) {
+			event.preventDefault();
+			$('#LoadingLoginAlert').removeClass('d-none');
+
+			var formData = $(this).serialize();
+
+			$.post(this.action, formData, function (response) {
+				$('#LoadingLoginAlert').addClass('d-none');
+				if (response.success == false) {
+					$.each(response.errors, function (fieldName, errorMessages) {
+						var $field = $('#' + fieldName + 'LoginValidation');
+						$field.text(errorMessages.join('\n'));
+					});
+				} else {
+					$('#SuccessfulLoginAlert').removeClass('d-none');
+					setTimeout(function () {
+						$("#loginModal").modal('hide');
+					}, 1000);
+				}
+			});
+		});
+	})
+</script>
