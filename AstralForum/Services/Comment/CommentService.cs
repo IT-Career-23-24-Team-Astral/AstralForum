@@ -5,7 +5,10 @@ using AstralForum.Models;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
 using AstralForum.Services.Comment;
+<<<<<<<< HEAD:Services/Comment/CommentService.cs
 using System.Xml.Linq;
+========
+>>>>>>>> 08aa2d3331c8e3f81d0a8537ca3cc50e586d735e:AstralForum/Services/Comment/CommentService.cs
 
 namespace AstralForum.Services
 {
@@ -37,7 +40,7 @@ namespace AstralForum.Services
 
             return commentDtos;
         }
-        
+
         public async Task<List<CommentDto>> GetAllRepliesByCommentId(int id)
         {
             List<Data.Entities.Comment.Comment> comments = await _commentRepository.GetRepliesByCommentId(id);

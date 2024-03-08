@@ -1,6 +1,6 @@
 ﻿namespace AstralForum.Data.Entities._Notifications
 {
-    public class NotiComment : MetadataBaseEntity
+    public class NotiComment : BaseEntity
     {
         public int NotificationId { get; set; }
         public int ThreadId { get; set; }

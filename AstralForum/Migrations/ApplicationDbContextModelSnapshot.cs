@@ -63,6 +63,9 @@ namespace AstralForum.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("AuthorId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("CommentId")
                         .HasColumnType("int");
 
@@ -80,6 +83,8 @@ namespace AstralForum.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("CommentId");
 
@@ -193,6 +198,9 @@ namespace AstralForum.Migrations
                     b.Property<string>("ImageUrl")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReactionId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -510,11 +518,18 @@ namespace AstralForum.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("ThreadCategory");
+                    b.ToTable("ThreadCategories");
                 });
 
             modelBuilder.Entity("AstralForum.Data.Entities.User", b =>
@@ -802,6 +817,12 @@ namespace AstralForum.Migrations
 
             modelBuilder.Entity("AstralForum.Data.Entities.Comment.Comment", b =>
                 {
+                    b.HasOne("AstralForum.Data.Entities.User", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("AstralForum.Data.Entities.Comment.Comment", null)
                         .WithMany("Comments")
                         .HasForeignKey("CommentId");
@@ -818,7 +839,11 @@ namespace AstralForum.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Author");
+
                     b.Navigation("CreatedBy");
+
+                    b.Navigation("Thread");
                 });
 
             modelBuilder.Entity("AstralForum.Data.Entities.Comment.CommentAttachment", b =>
@@ -1137,7 +1162,11 @@ namespace AstralForum.Migrations
 
                     b.Navigation("Comments");
 
+                    b.Navigation("Notifications");
+
                     b.Navigation("Reactions");
+
+                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("AstralForum.Data.Entities.ThreadCategory.ThreadCategory", b =>

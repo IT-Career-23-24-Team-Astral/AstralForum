@@ -26,11 +26,11 @@ namespace AstralForum.Repositories
             context.SaveChanges();
         }
 
-        public void Delete(CommentAttachment model)
-        {
-            context.CommentsAttachment.Remove(model);
-            context.SaveChanges();
-        }
+         public void Delete(CommentAttachment model)
+         {
+             context.CommentsAttachment.Remove(model);
+             context.SaveChanges();
+         }
 
         public IEnumerable<CommentAttachmentModel> GetCommentAttachmentByCommentId(int id) => context.CommentsAttachment.Where(c => c.ParentCommentId == id).Select(x => new CommentAttachmentModel()
         {

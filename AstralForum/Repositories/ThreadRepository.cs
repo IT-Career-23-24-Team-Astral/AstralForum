@@ -39,5 +39,5 @@ namespace AstralForum.Repositories
             context.Threads.Remove(thread);
             context.SaveChanges();
         }*/
-    }
+	}
 }

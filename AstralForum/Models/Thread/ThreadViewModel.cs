@@ -1,4 +1,6 @@
 ﻿using AstralForum.ServiceModels;
+using AstralForum.Models.Comment;
+using System.Collections.Generic;
 
 namespace AstralForum.Models
 {

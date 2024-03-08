@@ -1,0 +1,20 @@
+﻿@model AstralForum.Models.ThreadCategory.CategoryIndexViewModel
+@{
+    ViewData["Title"] = "Delete Category";
+   
+}
+
+<div class="container">
+    <h2>Delete Category</h2>
+    <hr />
+    <div>
+        <p>Are you sure you want to delete the category <strong>@Model.CategoryName</strong>?</p>
+        <p>This action cannot be undone.</p>
+        <form asp-controller="Category" asp-action="Delete" method="post">
+            <input type="hidden" asp-for="CategoryId" />
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a asp-controller="Category" asp-action="Specify" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+

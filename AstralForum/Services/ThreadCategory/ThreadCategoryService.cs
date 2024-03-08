@@ -1,6 +1,7 @@
 ﻿using AstralForum.Mapping;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Services.ThreadCategory
 {
@@ -13,14 +14,21 @@ namespace AstralForum.Services.ThreadCategory
             _threadCategoryRepository = threadCategoryRepository;
         }
 
-        public IQueryable<ThreadCategoryDto> GetAllThreadCategories()
+        public List<ThreadCategoryDto> GetAllThreadCategories()
         {
-            return (IQueryable<ThreadCategoryDto>)_threadCategoryRepository.GetAll();
+            return _threadCategoryRepository
+                .GetAll()
+                .Include(tc => tc.Threads)
+                .Include(tc => tc.CreatedBy)
+                .Select(tc => tc.ToDto())
+                .ToList();
         }
 
         public ThreadCategoryDto GetThreadCategoryById(int id)
         {
-            return _threadCategoryRepository.GetThreadCategoryById(id).ToDto();
+            ThreadCategoryDto threadCategoryDto = _threadCategoryRepository.GetThreadCategoryById(id).ToDto();
+            return threadCategoryDto;
+            //return _threadCategoryRepository.GetThreadCategoryById(id).ToDto();
         }
 
         public async Task<ThreadCategoryDto> CreateThreadCategory(ThreadCategoryDto threadCategoryDto)
@@ -35,7 +43,7 @@ namespace AstralForum.Services.ThreadCategory
 
             return (await _threadCategoryRepository.Edit(category)).ToDto();
         }
-        public async Task<ThreadCategoryDto> DeleteThread(ThreadCategoryDto threadCategoryDto)
+        public async Task<ThreadCategoryDto> DeleteThreadCategory(ThreadCategoryDto threadCategoryDto)
         {
             Data.Entities.ThreadCategory.ThreadCategory category = threadCategoryDto.ToEntity();
             return (await _threadCategoryRepository.Delete(category)).ToDto();

@@ -9,28 +9,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AstralForum.Controllers
 {
-	public class ThreadController : Controller
-	{
-		private readonly IThreadFacade threadFacade;
-		private readonly IThreadService threadService;
-		private readonly UserManager<User> userManager;
+    public class ThreadController : Controller
+    {
+        private readonly IThreadFacade threadFacade;
+        private readonly IThreadService threadService;
+        private readonly UserManager<User> userManager;
 
-		public ThreadController(IThreadFacade threadFacade, IThreadService threadService, UserManager<User> userManager)
+        public ThreadController(IThreadFacade threadFacade, IThreadService threadService, UserManager<User> userManager)
         {
             this.threadFacade = threadFacade;
-			this.threadService = threadService;
+            this.threadService = threadService;
             this.userManager = userManager;
         }
 
         public IActionResult Index(int id)
-		{
-			// TODO: remove this check
+        {
+            // TODO: remove this check
+            
 			if (id == 0)
 			{
 				return null;
 			}
-			ThreadDto databaseModel = threadService.GetThreadById(id);
-			/*ThreadDto model = new ThreadDto()
+            ThreadDto databaseModel = threadService.GetThreadById(id);
+            /*ThreadDto model = new ThreadDto()
 			{
 				Title = "Test thread title",
 				Text = "Sample intresting thread test",
@@ -71,45 +72,45 @@ namespace AstralForum.Controllers
 
 			model.Comments = comments;*/
 
-			ThreadViewModel viewModel = new ThreadViewModel()
-			{
-				ThreadDto = databaseModel,
-				CommentForm = new CommentAndReplyCreationFormModel()
-			};
+            ThreadViewModel viewModel = new ThreadViewModel()
+            {
+                ThreadDto = databaseModel,
+                CommentForm = new CommentAndReplyCreationFormModel()
+            };
 
-			return View(viewModel);
-		}
+            return View(viewModel);
+        }
 
         [Authorize]
         public IActionResult Create(int id)
-		{
-			ThreadCreationFormModel model = new ThreadCreationFormModel()
-			{
-				CategoryId = id
-			};
-			return View(model);
-		}
+        {
+            ThreadCreationFormModel model = new ThreadCreationFormModel()
+            {
+                CategoryId = id
+            };
+            return View(model);
+        }
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		[Authorize]
-		public async Task<IActionResult> Create(ThreadCreationFormModel threadForm)
-		{
-			await threadFacade.CreateThread(threadForm, await userManager.GetUserAsync(User));
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> Create(ThreadCreationFormModel threadForm)
+        {
+            await threadFacade.CreateThread(threadForm, await userManager.GetUserAsync(User));
 
-			return RedirectToAction("Index", "Category", new { id = threadForm.CategoryId });
-		}
+            return RedirectToAction("Index", "Category", new { id = threadForm.CategoryId });
+        }
 
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		[Authorize]
-		public IActionResult AddComment(ThreadViewModel threadViewModel)
-		{
-			CommentAndReplyCreationFormModel formData = threadViewModel.CommentForm;
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public IActionResult AddComment(ThreadViewModel threadViewModel)
+        {
+            CommentAndReplyCreationFormModel formData = threadViewModel.CommentForm;
 
 
-			
-			return RedirectToAction("Index", new { id = threadViewModel.ThreadDto.Id});
-		}
-	}
+
+            return RedirectToAction("Index", new { id = threadViewModel.ThreadDto.Id });
+        }
+    }
 }
