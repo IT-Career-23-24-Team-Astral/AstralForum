@@ -1,0 +1,37 @@
+﻿@model AstralForum.Models.ThreadCategory.CategoryIndexViewModel
+
+@{
+    ViewData["Title"] = "Edit Category";
+   
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-primary">
+                <div class="card-body">
+                    <h2 class="card-title text-center mb-4 text-primary">Edit Category</h2>
+                    <form asp-controller="Category" asp-action="Edit" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="CategoryName" class="form-label">Category Name</label>
+                            <input type="text" class="form-control" id="CategoryName" name="CategoryName" value="@Model.CategoryName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="Description" class="form-label">Description</label>
+                            <textarea class="form-control" id="Description" name="Description" rows="5">@Model.Description</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ImageUrl" class="form-label">Category Image</label>
+                            <input type="file" class="form-control" id="ImageUrl" name="ImageUrl">
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+                            <a asp-controller="Category" asp-action="Specify" class="btn btn-secondary btn-block mt-2">Back to List</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

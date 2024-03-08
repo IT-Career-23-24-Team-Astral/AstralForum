@@ -3,7 +3,7 @@ using AstralForum.Data.Entities.Reply;
 
 namespace AstralForum.Data.Entities._Notifications
 {
-    public class NotiReaction
+    public class NotiReaction : BaseEntity
     {
         public int NotificationId { get; set; }
         public int ThreadId { get; set; }

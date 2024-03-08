@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
-    public class CommentRepository : CommonRepository<Comment> 
+    public class CommentRepository : CommonRepository<Comment>
     {
         public CommentRepository(ApplicationDbContext context) : base(context) { }
         public async Task<List<Comment>> GetCommentsByThreadId(int id)
@@ -34,7 +34,7 @@ namespace AstralForum.Repositories
             Text = x.Text,
             ParentCommentId = (int)x.ParentCommentId
         }).ToList();
-        public IEnumerable<CommentModel> GetRepliesByCommentId(int id) => context.Comments.Where(c => c.ParentCommentId == id).Select(x => new CommentModel()
+        public IEnumerable<CommentModel> GetCommentsByCommentId(int id) => context.Comments.Where(c => c.ParentCommentId == id).Select(x => new CommentModel()
         {
             Id = x.Id,
             ThreadId = x.ThreadId,

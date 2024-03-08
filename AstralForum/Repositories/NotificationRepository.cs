@@ -1,5 +1,7 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Data.Entities.Comment;
+using AstralForum.Data.Entities.Reaction;
+using AstralForum.Data.Entities.Tag;
 using AstralForum.Models;
 using AstralForum.Models.Notification;
 using AstralForum.Repositories.Interfaces;
@@ -20,7 +22,43 @@ namespace AstralForum.Repositories
             this.context = context;
         }
 
-        public void CreateNotification(NotificationModel model, User Id)
+        public async Task<List<Notification>> GetNotificationsByThreadId(int id)
+        {
+            Data.Entities.Thread.Thread thread = await context.Threads
+                .Include(e => e.Notifications)
+                .FirstAsync(p => p.Id == id);
+            return thread.Notifications;
+        }
+        public async Task<List<Notification>> GetNotificationsByCommentId(int id)
+        {
+            Comment comment = await context.Comments
+                .Include(e => e.Notifications)
+                .FirstAsync(p => p.Id == id);
+            return comment.Notifications;
+        }
+        public async Task<List<Notification>> GetNotificationsByTagId(int id)
+        {
+            Tag tag = await context.Tags
+                .Include(e => e.Notifications)
+                .FirstAsync(p => p.Id == id);
+            return tag.Notifications;
+        }
+
+        public async Task<List<Notification>> GetNotificationsByReactionId(int id)
+        {
+            Reaction reaction = await context.Reactions
+                .Include(e => e.Notifications)
+                .FirstAsync(p => p.Id == id);
+            return reaction.Notifications;
+        }
+        public async Task<List<Notification>> GetNotificationsByNotificationId(int id)
+        {
+            Notification notification = await context.Notifications
+                .Include(e => e.Notifications)
+                .FirstAsync(p => p.Id == id);
+            return notification.Notifications;
+        }
+        /*public void CreateNotification(NotificationModel model, User Id)
         {
             Notification notification = new Notification()
             {
@@ -48,7 +86,7 @@ namespace AstralForum.Repositories
             Id = a.Id,
             Date = DateTime.Now,
             Text = a.Text,
-            NotificationId = a.NotificationId
+            Id = a.Id
         }).ToList();
 
         public void ReadNotification(int notificationId, string userId)
@@ -59,6 +97,6 @@ namespace AstralForum.Repositories
             notifications.IsRead = true;
             context.UserNotifications.Update(notifications);
             context.SaveChanges();
-        }
+        }*/
     }
 }

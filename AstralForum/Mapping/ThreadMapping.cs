@@ -4,11 +4,11 @@ using AstralForum.ServiceModels;
 
 namespace AstralForum.Mapping
 {
-    public static class ThreadMapping
-    {
-        public static Data.Entities.Thread.Thread ToEntity(this ThreadDto threadDto)
-        {
-            Data.Entities.Thread.Thread thread = new Data.Entities.Thread.Thread();
+	public static class ThreadMapping
+	{
+		public static Data.Entities.Thread.Thread ToEntity(this ThreadDto threadDto)
+		{
+			Data.Entities.Thread.Thread thread = new Data.Entities.Thread.Thread();
 
             thread.Id = threadDto.Id;
             thread.Title = threadDto.Title;
@@ -41,7 +41,7 @@ namespace AstralForum.Mapping
             threadDto.Reactions = includeReactions ? thread.Reactions.Select(r => r.ToDto()).ToList() : new List<ReactionDto>();
             threadDto.Attachments = includeAttachments ? thread.Attachments.Select(a => a.ToDto()).ToList() : new List<ThreadAttachmentDto>();
 
-            return threadDto;
-        }
-    }
+			return threadDto;
+		}
+	}
 }

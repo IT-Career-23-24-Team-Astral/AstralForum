@@ -8,6 +8,6 @@ namespace AstralForum.Models
         [Required]
         public string Text { get; set; }
         public DateTime CreatedOn { get; set; } = DateTime.Now;
-		public IEnumerable<IFormFile> Attachments { get; set; }
-	}
+        public IEnumerable<IFormFile> Attachments { get; set; }
+    }
 }

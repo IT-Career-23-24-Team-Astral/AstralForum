@@ -21,16 +21,15 @@ namespace AstralForum.Data
         {
         }
 
-        public DbSet<Ban> Bans { get; set; }
+		public DbSet<Ban> Bans { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentAttachment> CommentsAttachment { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
         public DbSet<ReactionType> ReactionsType { get; set; }
         public DbSet<Thread> Threads { get; set; }
         public DbSet<ThreadAttachment> ThreadsAttachment { get; set; }
-        public DbSet<ThreadCategory> ThreadCategory { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
-        public DbSet<NotificationApplicationUser> UserNotifications { get; set; }
+        public DbSet<Entities.ThreadCategory.ThreadCategory> ThreadCategories { get; set; }
+		public DbSet<Notification> Notifications { get; set; }
         public DbSet<PostReaction> PostReactions { get; set; }
 
         public DbSet<ThreadReport> PostReports { get; set; }
@@ -44,7 +43,6 @@ namespace AstralForum.Data
 
         public DbSet<Tag> Tags { get; set; }
 
-        // public DbSet<UserFollower> UsersFollowers { get; set; }
 
     }
 }
