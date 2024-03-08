@@ -28,3 +28,14 @@ else
 <partial name="_LoginModalPartial" />
 <partial name="_RegisterModalPartial" />
 <partial name="_LogoutModalPartial" />
+
+<script>
+    $(document).ready(function () {
+        var url = window.location.href;
+
+        if(url.includes("authenticate")) {
+            $("#loginModal").modal('show');
+            $("#loginModalLabel").text("To continue, please log in");
+        }
+    });
+</script>

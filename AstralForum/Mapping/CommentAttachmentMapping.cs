@@ -11,6 +11,7 @@ namespace AstralForum.Mapping
 
             commentAttachment.Id = commentAttachmentDto.Id;
             commentAttachment.CommentId = commentAttachmentDto.CommentId;
+            commentAttachment.Comment = commentAttachmentDto.Comment;
             commentAttachment.AttachmentUrl = commentAttachmentDto.AttachmentUrl;
 
             return commentAttachment;
@@ -22,6 +23,7 @@ namespace AstralForum.Mapping
 
             commentAttachmentDto.Id = commentAttachment.Id;
             commentAttachmentDto.CommentId = commentAttachment.CommentId;
+            commentAttachmentDto.Comment = commentAttachment.Comment;
             commentAttachmentDto.AttachmentUrl = commentAttachment.AttachmentUrl;
 
             return commentAttachmentDto;

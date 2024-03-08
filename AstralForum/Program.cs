@@ -5,6 +5,11 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using SendGrid.Extensions.DependencyInjection;
 using AstralForum.Data.Entities;
+using Microsoft.AspNetCore.Authorization;
+using AstralForum.Services.Thread;
+using AstralForum.Repositories;
+using AstralForum.Services.ThreadCategory;
+using AstralForum.Services.Comment;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,16 +19,32 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services.AddScoped<ThreadRepository>();
+builder.Services.AddScoped<ThreadCategoryRepository>();
+builder.Services.AddScoped<CommentRepository>();
+
+builder.Services.AddScoped<IThreadCategoryService, ThreadCategoryService>();
+builder.Services.AddScoped<IThreadService, ThreadService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+
+builder.Services.AddScoped<IThreadCategoryFacade, ThreadCategoryFacade>();
+builder.Services.AddScoped<IThreadFacade, ThreadFacade>();
+builder.Services.AddScoped<ICommentFacade, CommentFacade>();
+
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
 // Email Sending Service
 builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGridSettings"));
 builder.Services.AddSendGrid(options =>
 {
     options.ApiKey = builder.Configuration.GetSection("SendGridSettings").GetValue<string>("ApiKey");
 });
-builder.Services.AddScoped<IEmailSender, EmailSenderService>(); ;
+builder.Services.AddScoped<IEmailSender, EmailSenderService>();
+
+// Custom authentication middleware
+builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, AstralForumAuthorizationMiddlewareResultHandler>();
 
 var app = builder.Build();
 

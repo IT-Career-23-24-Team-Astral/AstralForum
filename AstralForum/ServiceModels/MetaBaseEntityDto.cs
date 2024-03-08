@@ -6,10 +6,8 @@ namespace AstralForum.ServiceModels
 {
     public class MetaBaseEntityDto : BaseEntityDto
     {
-        [DeleteBehavior(DeleteBehavior.Restrict)]
-        public User CreatedBy { get; set; } = null!;
+        public UserDto CreatedBy { get; set; } = null!;
 
-        [ForeignKey(nameof(CreatedBy))]
         public int CreatedById { get; set; }
         public DateTime CreatedOn { get; set; }
 

@@ -20,3 +20,9 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/* Profile picture styles */
+
+.comment-profile-picture {
+    object-fit: cover;
+}

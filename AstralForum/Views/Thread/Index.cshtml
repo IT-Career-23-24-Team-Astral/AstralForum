@@ -1,0 +1,249 @@
+﻿@using AstralForum.Data.Entities
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@model AstralForum.Models.ThreadViewModel
+
+@{
+	ViewData["Title"] = "Thread " + Model.ThreadDto.Title;
+	Layout = "../Shared/_Layout.cshtml";
+}
+
+<h5>
+	Thread in category <a asp-controller="Category" asp-route-id="@Model.ThreadDto.ThreadCategoryId">@Model.ThreadDto.ThreadCategoryName</a>
+</h5>
+
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<div class="row">
+				<div class="col">
+					<h2>
+						@Model.ThreadDto.Title
+					</h2>
+				</div>
+				<div class="col col-3 d-flex justify-content-end">
+					<span class="fw-light">
+						Posted at @Model.ThreadDto.CreatedOn.ToString("g")
+					</span>
+				</div>
+			</div>
+
+			<p>
+				@Model.ThreadDto.Text
+			</p>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			Reaction section
+		</div>
+		<div class="col-2">
+			<span class="font-monospace">
+				by @Model.ThreadDto.CreatedBy.UserName
+			</span>
+			<br>
+			<span class="fw-light">
+				Member since: @Model.ThreadDto.CreatedBy.DateOfCreation.ToString("g")
+			</span>
+		</div>
+		<div class="col col-1 d-flex justify-content-end align-items-end">
+			<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-3 comment-profile-picture" width="45" height="45">
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col">
+			@if (Model.ThreadDto.Comments.Count == 0)
+			{
+				<h3 class="fst-italic fw-semibold">No comments have been made on this thread yet</h3>
+				<p>Be the first one to comment on this thread!</p>
+			}
+			else
+			{
+				<h2>Comments</h2>
+			}
+		</div>
+		<div class="col d-flex justify-content-end">
+			@if (SignInManager.IsSignedIn(User))
+			{
+				<btn class="btn btn-primary btn-comment align-self-center">Add a comment</btn>
+			}
+			else
+			{
+				<p class="text-danger">To post a comment, please log in</p>
+			}
+		</div>
+	</div>
+
+	@foreach (var item in Model.ThreadDto.Comments)
+	{
+		<div class="border border-secondary bg-secondary bg-opacity-10 rounded px-2 py-2 mb-3">
+			<div class="row">
+				<div class="col">
+					<span class="fw-light">
+						Posted at @item.CreatedOn.ToString("g")
+					</span>
+				</div>
+				<div class="col-2 d-flex justify-content-end">
+					<btn class="btn btn-primary btn-reply" onclick="btnAddReply(@item.Id)">Reply to this comment</btn>
+				</div>
+			</div>
+
+			<p>
+				@item.Text
+			</p>
+
+			<div class="row">
+				<div class="col col-2">
+					<div class="row">
+						<div class="col-8">
+							<span class="font-monospace">
+								by @item.CreatedBy.UserName
+							</span>
+							<br>
+							<span class="fw-light">
+								Member since: @item.CreatedBy.DateOfCreation.ToString("g")
+							</span>
+						</div>
+						<div class="col d-flex justify-content-end align-items-end">
+							<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-3 comment-profile-picture" width="40" height="40">
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					Reaction section
+				</div>
+				<div class="col col-2 d-flex justify-content-end align-self-center">
+					<btn class="btn btn-light btn-show-replies" onclick="btnShowReplies(@item.Id)">Show replies</btn>
+				</div>
+			</div>
+
+			<form id="replyWritingForm-@item.Id" class="d-none" method="post">
+				<div class="mb-3">
+					<label asp-for="CommentForm.Text" class="form-label">Reply text</label>
+					<textarea asp-for="CommentForm.Text" class="form-control" rows="2"></textarea>
+					<div class="form-text">This comment will be posted publicly. Make sure it follows our code of conduct.</div>
+				</div>
+				<div class="mb-3">
+					<label asp-for="CommentForm.Attachments" class="form-label">Attachments</label>
+					<input asp-for="CommentForm.Attachments" class="form-control" type="file" multiple>
+				</div>
+				<button type="submit" class="btn btn-primary" asp-controller="Comment" asp-action="AddCommentReply"
+						asp-route-commentId="@item.Id" asp-route-threadId="@Model.ThreadDto.Id">
+					Post your reply
+				</button>
+			</form>
+
+			<div id="repliesToCommentId-@item.Id" class="mt-3">
+			</div>
+		</div>
+	}
+
+	<form id="commentWritingForm" class="d-none" method="post">
+		<div class="mb-3">
+			<label asp-for="CommentForm.Text" class="form-label">Comment text</label>
+			<textarea asp-for="CommentForm.Text" class="form-control" rows="4"></textarea>
+		</div>
+		<div class="mb-3">
+			<label asp-for="CommentForm.Attachments" class="form-label">Attachments</label>
+			<input asp-for="CommentForm.Attachments" class="form-control" type="file" multiple>
+		</div>
+		<button type="submit" class="btn btn-primary" asp-controller="Comment" asp-action="AddThreadComment" asp-route-threadId="@Model.ThreadDto.Id">Post your comment</button>
+	</form>
+</div>
+
+<script>
+	const replyTemplate = `
+				<div class="border border-secondary bg-secondary bg-opacity-10 rounded px-2 py-2 mb-3">
+					<div class="row">
+						<div class="col">
+							<span class="fw-light">
+								Posted at {commentCreatedOn}
+							</span>
+						</div>
+						<div class="col-2 d-flex justify-content-end">
+								<btn class="btn btn-primary btn-reply" onclick="btnAddReply({commentId})">Reply to this comment</btn>
+						</div>
+					</div>
+
+					<p>
+						{commentText}
+					</p>
+
+					<div class="row">
+						<div class="col col-2">
+							<div class="row">
+								<div class="col-8">
+									<span class="font-monospace">
+										by {commentCreatedBy}
+									</span>
+									<br>
+									<span class="fw-light">
+										Member since: {commentCreatedByDateOfCreation}
+									</span>
+								</div>
+								<div class="col d-flex justify-content-end align-items-end">
+									<img src="{commentCreatedByProfilePicture}" class="rounded-3 comment-profile-picture" width="40" height="40">
+								</div>
+							</div>
+						</div>
+						<div class="col">
+							Reaction section
+						</div>
+						<div class="col col-2 d-flex justify-content-end align-self-center">
+								<btn class="btn btn-light btn-show-replies" onclick="btnShowReplies({commentId})">Show replies</btn>
+						</div>
+					</div>
+
+					<form id="replyWritingForm-{commentId}" class="d-none" method="post" action="/Comment/AddCommentReply?commentId={commentId}&threadId=${@Model.ThreadDto.Id}">
+						
+						<div class="mb-3">
+							<label for="CommentForm_Text" class="form-label">Reply text</label>
+							<textarea for="CommentForm_Text" class="form-control" rows="2"></textarea>
+							<div class="form-text">This comment will be posted publicly. Make sure it follows our code of conduct.</div>
+						</div>
+						<div class="mb-3">
+							<label for="CommentForm_Attachments" class="form-label">Attachments</label>
+							<input for="CommentForm_Attachments" class="form-control" type="file" multiple>
+						</div>
+						<button type="submit" class="btn btn-primary">
+							Post your reply
+						</button>
+					</form>
+
+					<div id="repliesToCommentId-{commentId}" class="mt-3">
+						
+					</div>
+				</div>
+				`;
+
+	function btnAddReply(replyToCommentId) {
+		document.getElementById(`replyWritingForm-${replyToCommentId}`).classList.remove("d-none");
+	}
+
+	function btnShowReplies(commentId) {
+		fetch(`/Comment/CommentReplies?commentId=${commentId}`)
+			.then(response => response.json())
+			.then(comments =>
+				comments.forEach(function (comment) {
+					var commentDiv = replyTemplate
+						.replaceAll('{commentId}', comment.id)
+						.replaceAll('{commentCreatedBy}', comment.createdBy.userName)
+						.replaceAll('{commentCreatedByDateOfCreation}', comment.createdBy.dateOfCreation)
+						.replaceAll('{commentCreatedByProfilePicture}', 'https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg')
+						.replaceAll('{commentText}', comment.text)
+						.replaceAll('{commentCreatedOn}', comment.createdOn);
+					$(`#repliesToCommentId-${commentId}`).append(commentDiv);
+				})
+			);
+	}
+
+	$(document).ready(function () {
+		$(".btn-comment").click(function () {
+			$("#commentWritingForm").removeClass("d-none");
+			$(window).scrollTop($("#commentWritingForm").position().top);
+		});
+	});
+</script>

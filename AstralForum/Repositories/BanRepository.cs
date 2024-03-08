@@ -1,17 +1,10 @@
 ﻿using AstralForum.Data.Entities;
-using AstralForum.Repositories.Interfaces;
 
 namespace AstralForum.Repositories
 {
-    public class BanRepository : CommonRepository<Ban>, IBanRepository
+    public class BanRepository : CommonRepository<Ban>
     {
-        private readonly ApplicationDbContext context;
-
-        public BanRepository(ApplicationDbContext context) : base(context)
-        {
-            this.context = context;
-        }
-
+        public BanRepository(ApplicationDbContext context) : base(context) { }
         // TODO: Resolve possible issue with timezones
         public List<Ban> GetActiveBansByAffectedUserId(int affectedUserId)
         {
