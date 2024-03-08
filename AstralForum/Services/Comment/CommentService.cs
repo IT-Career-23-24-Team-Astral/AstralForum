@@ -38,10 +38,10 @@ namespace AstralForum.Services
             return commentDtos;
         }
         
-        public async Task<List<CommentDto>> GetAllCommentsByCommentId(int id)
+        public async Task<List<CommentDto>> GetAllRepliesByCommentId(int id)
         {
-            List<Data.Entities.Comment.Comment> comments = await _commentRepository.GetCommentsByCommentId(id);
-            List<CommentDto> commentDtos = comments.Select(comment => comment.ToDto()).ToList();
+            List<Data.Entities.Comment.Comment> comments = await _commentRepository.GetRepliesByCommentId(id);
+            List<CommentDto> commentDtos = comments.Select(comment => comment.ToDto(includeReplies: false)).ToList();
 
             return commentDtos;
         }

@@ -11,8 +11,5 @@ namespace AstralForum.ServiceModels
         public List<CommentDto> Comments { get; set; } = new List<CommentDto>();
         public List<ReactionDto> Reactions { get; set; } = new List<ReactionDto>();
         public List<CommentAttachmentDto> Attachments { get; set; } = new List<CommentAttachmentDto>();
-
-        //TODO: Author is redundant use CreatedBy instead
-        public UserDto Author { get; set; }
     }
 }

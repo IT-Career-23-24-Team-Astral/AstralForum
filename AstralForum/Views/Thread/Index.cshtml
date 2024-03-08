@@ -47,8 +47,8 @@
 				Member since: @Model.ThreadDto.CreatedBy.DateOfCreation.ToString("g")
 			</span>
 		</div>
-		<div class="col col-1 d-flex justify-content-end">
-			<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-4 object-fit-cover" width="45" height="45">
+		<div class="col col-1 d-flex justify-content-end align-items-end">
+			<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-3 comment-profile-picture" width="45" height="45">
 		</div>
 	</div>
 
@@ -87,7 +87,7 @@
 					</span>
 				</div>
 				<div class="col-2 d-flex justify-content-end">
-					<btn class="btn btn-primary btn-reply" reply-to-comment-id="@item.Id">Reply to this comment</btn>
+					<btn class="btn btn-primary btn-reply" onclick="btnAddReply(@item.Id)">Reply to this comment</btn>
 				</div>
 			</div>
 
@@ -107,8 +107,8 @@
 								Member since: @item.CreatedBy.DateOfCreation.ToString("g")
 							</span>
 						</div>
-						<div class="col d-flex justify-content-end">
-							<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-4 object-fit-cover" width="40" height="40">
+						<div class="col d-flex justify-content-end align-items-end">
+							<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-3 comment-profile-picture" width="40" height="40">
 						</div>
 					</div>
 				</div>
@@ -116,7 +116,7 @@
 					Reaction section
 				</div>
 				<div class="col col-2 d-flex justify-content-end align-self-center">
-					<btn class="btn btn-light btn-show-replies" comment-id="@item.Id">Show replies</btn>
+					<btn class="btn btn-light btn-show-replies" onclick="btnShowReplies(@item.Id)">Show replies</btn>
 				</div>
 			</div>
 
@@ -124,7 +124,7 @@
 				<div class="mb-3">
 					<label asp-for="CommentForm.Text" class="form-label">Reply text</label>
 					<textarea asp-for="CommentForm.Text" class="form-control" rows="2"></textarea>
-					<div class="form-text">This commet will be posted publicly. Make sure it follows our code of conduct.</div>
+					<div class="form-text">This comment will be posted publicly. Make sure it follows our code of conduct.</div>
 				</div>
 				<div class="mb-3">
 					<label asp-for="CommentForm.Attachments" class="form-label">Attachments</label>
@@ -136,7 +136,7 @@
 				</button>
 			</form>
 
-			<div id="repliesToCommentId-@item.Id">
+			<div id="repliesToCommentId-@item.Id" class="mt-3">
 			</div>
 		</div>
 	}
@@ -155,13 +155,95 @@
 </div>
 
 <script>
+	const replyTemplate = `
+				<div class="border border-secondary bg-secondary bg-opacity-10 rounded px-2 py-2 mb-3">
+					<div class="row">
+						<div class="col">
+							<span class="fw-light">
+								Posted at {commentCreatedOn}
+							</span>
+						</div>
+						<div class="col-2 d-flex justify-content-end">
+								<btn class="btn btn-primary btn-reply" onclick="btnAddReply({commentId})">Reply to this comment</btn>
+						</div>
+					</div>
+
+					<p>
+						{commentText}
+					</p>
+
+					<div class="row">
+						<div class="col col-2">
+							<div class="row">
+								<div class="col-8">
+									<span class="font-monospace">
+										by {commentCreatedBy}
+									</span>
+									<br>
+									<span class="fw-light">
+										Member since: {commentCreatedByDateOfCreation}
+									</span>
+								</div>
+								<div class="col d-flex justify-content-end align-items-end">
+									<img src="{commentCreatedByProfilePicture}" class="rounded-3 comment-profile-picture" width="40" height="40">
+								</div>
+							</div>
+						</div>
+						<div class="col">
+							Reaction section
+						</div>
+						<div class="col col-2 d-flex justify-content-end align-self-center">
+								<btn class="btn btn-light btn-show-replies" onclick="btnShowReplies({commentId})">Show replies</btn>
+						</div>
+					</div>
+
+					<form id="replyWritingForm-{commentId}" class="d-none" method="post" action="/Comment/AddCommentReply?commentId={commentId}&threadId=${@Model.ThreadDto.Id}">
+						
+						<div class="mb-3">
+							<label for="CommentForm_Text" class="form-label">Reply text</label>
+							<textarea for="CommentForm_Text" class="form-control" rows="2"></textarea>
+							<div class="form-text">This comment will be posted publicly. Make sure it follows our code of conduct.</div>
+						</div>
+						<div class="mb-3">
+							<label for="CommentForm_Attachments" class="form-label">Attachments</label>
+							<input for="CommentForm_Attachments" class="form-control" type="file" multiple>
+						</div>
+						<button type="submit" class="btn btn-primary">
+							Post your reply
+						</button>
+					</form>
+
+					<div id="repliesToCommentId-{commentId}" class="mt-3">
+						
+					</div>
+				</div>
+				`;
+
+	function btnAddReply(replyToCommentId) {
+		document.getElementById(`replyWritingForm-${replyToCommentId}`).classList.remove("d-none");
+	}
+
+	function btnShowReplies(commentId) {
+		fetch(`/Comment/CommentReplies?commentId=${commentId}`)
+			.then(response => response.json())
+			.then(comments =>
+				comments.forEach(function (comment) {
+					var commentDiv = replyTemplate
+						.replaceAll('{commentId}', comment.id)
+						.replaceAll('{commentCreatedBy}', comment.createdBy.userName)
+						.replaceAll('{commentCreatedByDateOfCreation}', comment.createdBy.dateOfCreation)
+						.replaceAll('{commentCreatedByProfilePicture}', 'https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg')
+						.replaceAll('{commentText}', comment.text)
+						.replaceAll('{commentCreatedOn}', comment.createdOn);
+					$(`#repliesToCommentId-${commentId}`).append(commentDiv);
+				})
+			);
+	}
+
 	$(document).ready(function () {
 		$(".btn-comment").click(function () {
 			$("#commentWritingForm").removeClass("d-none");
 			$(window).scrollTop($("#commentWritingForm").position().top);
-		})
-		$(".btn-reply").click(function () {
-			$("#replyWritingForm-" + $(this).attr("reply-to-comment-id")).removeClass("d-none");
-		})
-	})
+		});
+	});
 </script>

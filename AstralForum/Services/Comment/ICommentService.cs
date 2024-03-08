@@ -8,7 +8,7 @@ namespace AstralForum.Services.Comment
         Task<CommentDto> AddComment(CommentDto model);
         Task<CommentDto> EditComment(CommentDto commentDto);
         Task<List<CommentDto>> GetAllCommentsByThreadId(int id);
-        Task<List<CommentDto>> GetAllCommentsByCommentId(int id);
+        Task<List<CommentDto>> GetAllRepliesByCommentId(int id);
         Task<CommentDto> DeleteComment(CommentDto commentDto);
     }
 }

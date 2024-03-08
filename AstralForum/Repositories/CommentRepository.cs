@@ -14,11 +14,16 @@ namespace AstralForum.Repositories
                 .FirstAsync(p => p.ThreadCategoryId == id);
             return thread.Comments;
         }
-        public async Task<List<Comment>> GetCommentsByCommentId(int id)
+        public async Task<List<Comment>> GetRepliesByCommentId(int id)
         {
             Comment comment = await context.Comments
-                .Include(e => e.Comments)
-                .FirstAsync(p => p.Id == id);
+                .Include(c => c.Comments)
+                    .ThenInclude(cc => cc.CreatedBy)
+                .Include(c => c.Comments)
+                    .ThenInclude(cc => cc.Attachments)
+                .Include(c => c.Comments)
+                    .ThenInclude(cc => cc.Reactions)
+                .FirstAsync(c => c.Id == id);
             return comment.Comments;
         }
         /*public IEnumerable<CommentModel> GetCommentsByThreadId(int id) => context.Comments.Where(c => c.ThreadId == id).Select(x => new CommentModel()
@@ -29,7 +34,7 @@ namespace AstralForum.Repositories
             Text = x.Text,
             ParentCommentId = (int)x.ParentCommentId
         }).ToList();
-        public IEnumerable<CommentModel> GetCommentsByCommentId(int id) => context.Comments.Where(c => c.ParentCommentId == id).Select(x => new CommentModel()
+        public IEnumerable<CommentModel> GetRepliesByCommentId(int id) => context.Comments.Where(c => c.ParentCommentId == id).Select(x => new CommentModel()
         {
             Id = x.Id,
             ThreadId = x.ThreadId,
