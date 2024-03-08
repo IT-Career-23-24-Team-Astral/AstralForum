@@ -3,7 +3,7 @@ using AstralForum.Repositories.Interfaces;
 
 namespace AstralForum.Repositories
 {
-    public class BanRepository : CommonRepository<Ban>, IBanRepository
+    public class BanRepository : CommonRepository<Ban>
     {
         private readonly ApplicationDbContext context;
 

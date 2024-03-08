@@ -6,7 +6,7 @@ using AstralForum.Models;
 
 namespace AstralForum.Repositories.Interfaces
 {
-    public interface IThreadCategoryRepository : ICommonRepository<ThreadCategory>
+    public interface ThreadCategoryRepository : ICommonRepository<ThreadCategory>
     {
         public void AddThreadCategory(ThreadCategoryModel model, User id);
         public ThreadCategoryModel CategoryDetails(int id);

@@ -9,6 +9,8 @@ using Microsoft.EntityFrameworkCore;
 using AstralForum.Data.Entities.Reply;
 using AstralForum.Models.Notification;
 using AstralForum.Data.Entities.Tag;
+using AstralForum.Models.ThreadCategory;
+using AstralForum.ServiceModels;
 
 namespace AstralForum.Data
 {
@@ -19,20 +21,18 @@ namespace AstralForum.Data
         {
         }
 
-        public DbSet<Ban> Bans { get; set; }
+		public DbSet<Ban> Bans { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentAttachment> CommentsAttachment { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
         public DbSet<ReactionType> ReactionsType { get; set; }
         public DbSet<Entities.Thread.Thread> Threads { get; set; }
         public DbSet<ThreadAttachment> ThreadsAttachment { get; set; }
-        public DbSet<ThreadCategory> ThreadCategory { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
-        public DbSet<NotificationApplicationUser> UserNotifications { get; set; }
+        public DbSet<Entities.ThreadCategory.ThreadCategory> ThreadCategories { get; set; }
+		public DbSet<Notification> Notifications { get; set; }
         public DbSet<PostReaction> PostReactions { get; set; }
 
         public DbSet<PostReport> PostReports { get; set; }
-        public DbSet<PostTag> PostsTags { get; set; }
 
         public DbSet<Reply> Replies { get; set; }
 
@@ -42,7 +42,6 @@ namespace AstralForum.Data
 
         public DbSet<Tag> Tags { get; set; }
 
-        public DbSet<UserFollower> UsersFollowers { get; set; }
 
     }
 }

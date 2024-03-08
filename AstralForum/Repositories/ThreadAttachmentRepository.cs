@@ -6,7 +6,7 @@ using AstralForum.Repositories.Interfaces;
 
 namespace AstralForum.Repositories
 {
-    public class ThreadAttachmentRepository : CommonRepository<ThreadAttachment>, IThreadAttachmentRepository
+    public class ThreadAttachmentRepository : CommonRepository<ThreadAttachment>
     {
         private readonly ApplicationDbContext context;
         public ThreadAttachmentRepository(ApplicationDbContext context) : base(context)

@@ -1,19 +1,12 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Data.Entities.Comment;
-using AstralForum.Data.Entities.Thread;
-using AstralForum.Models;
-using AstralForum.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
-    public class CommentRepository : CommonRepository<Comment> //, ICommentRepository
+    public class CommentRepository : CommonRepository<Comment>
     {
-        private readonly ApplicationDbContext context;
-        public CommentRepository(ApplicationDbContext context) : base(context)
-        {
-            //this.context = context;
-        }
+        public CommentRepository(ApplicationDbContext context) : base(context) { }
         public async Task<List<Comment>> GetCommentsByThreadId(int id)
         {
             Data.Entities.Thread.Thread thread = await context.Threads
@@ -34,15 +27,15 @@ namespace AstralForum.Repositories
             ThreadId = x.ThreadId,
             CreatedOn = x.CreatedOn,
             Text = x.Text,
-            CommentId = (int)x.CommentId
+            ParentCommentId = (int)x.ParentCommentId
         }).ToList();
-        public IEnumerable<CommentModel> GetCommentsByCommentId(int id) => context.Comments.Where(c => c.CommentId == id).Select(x => new CommentModel()
+        public IEnumerable<CommentModel> GetCommentsByCommentId(int id) => context.Comments.Where(c => c.ParentCommentId == id).Select(x => new CommentModel()
         {
             Id = x.Id,
             ThreadId = x.ThreadId,
             CreatedOn = x.CreatedOn,
             Text = x.Text,
-            CommentId = (int)x.CommentId
+            ParentCommentId = (int)x.ParentCommentId
         }).ToList();
 
         /*public void AddComment(CommentModel model)
@@ -52,7 +45,7 @@ namespace AstralForum.Repositories
                 Id = model.Id,
                 ThreadId = model.ThreadId,
                 Text = model.Text,
-                CommentId = model.CommentId,
+                ParentCommentId = model.ParentCommentId,
                 CreatedById = model.CreatedById
             };
             context.Comments.Add(coment);

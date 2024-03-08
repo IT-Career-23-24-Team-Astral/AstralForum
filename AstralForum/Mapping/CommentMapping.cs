@@ -1,5 +1,6 @@
 ﻿using AstralForum.Data.Entities.Comment;
 using AstralForum.ServiceModels;
+using AstralForum.Mapping;
 
 namespace AstralForum.Mapping
 {
@@ -12,23 +13,29 @@ namespace AstralForum.Mapping
             comment.Id = commentDto.Id;
             comment.ThreadId = commentDto.ThreadId;
             comment.Text = commentDto.Text;
-            comment.CommentId = commentDto.CommentId;
+            comment.CommentId = commentDto.ParentCommentId;
             comment.CreatedById = commentDto.CreatedById;
             comment.CreatedOn = commentDto.CreatedOn;
+            comment.Comments = commentDto.Comments.Select(c => c.ToEntity()).ToList();
+            comment.Reactions = commentDto.Reactions.Select(c => c.ToEntity()).ToList();
+            comment.Attachments = commentDto.Attachments.Select(c => c.ToEntity()).ToList();
 
             return comment;
         }
-
-        public static CommentDto ToDto(this Comment comment)
+        public static CommentDto ToDto(this Comment comment, bool includeReactions = true, bool includeAttachments = true, bool includeReplies = true)
         {
             CommentDto commentDto = new CommentDto();
 
             commentDto.Id = comment.Id;
             commentDto.ThreadId = comment.ThreadId;
             commentDto.Text = comment.Text;
-            commentDto.CommentId = comment.CommentId;
+            commentDto.ParentCommentId = comment.CommentId;
             commentDto.CreatedById = comment.CreatedById;
+            commentDto.CreatedBy = comment.CreatedBy.ToDto();
             commentDto.CreatedOn = comment.CreatedOn;
+            commentDto.Comments = includeReplies ? comment.Comments.Select(c => c.ToDto()).ToList() : new List<CommentDto>();
+            commentDto.Reactions = includeReactions ? comment.Reactions?.Select(c => c.ToDto()).ToList() : new List<ReactionDto>();
+            commentDto.Attachments = includeAttachments ? comment.Attachments?.Select(c => c.ToDto()).ToList() : new List<CommentAttachmentDto>();
 
             return commentDto;
         }

@@ -1,0 +1,125 @@
+﻿@model AstralForum.Models.ThreadCategory.CategoryViewModel
+
+@{
+    ViewData["Title"] = "Categories";
+    
+}
+
+<style>
+    .header {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .btn-create {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: #fff;
+        border: 2px solid #007bff;
+        font-weight: bold;
+    }
+
+    .categories {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .category {
+        width: 350px; 
+        height: 350px; 
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+        .category:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+    .category-image img {
+        width: 100%;
+        border-radius: 10px;
+    }
+
+    .category-details {
+        flex-grow: 1;
+    }
+
+    h2 {
+        color: #0056b3;
+        margin-top: 0;
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+
+    p {
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .category-actions {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .btn-join-discussion {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: #fff;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+        .btn-join-discussion:hover {
+            transform: scale(1.05);
+        }
+</style>
+
+<div class="container">
+    <header class="header">
+        <h1>Explore Categories</h1>
+        <div class="row justify-content-end">
+            <div class="col-auto">
+                <form asp-controller="Category" asp-action="Create" method="get">
+                    <button type="submit" class="btn btn-create">Create Category</button>
+                </form>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="categories">
+            @foreach (var category in Model.Categories)
+            {
+                <div class="category">
+                    <div class="category-image">
+                        <img src="@category.ImageUrl" alt="Category Image">
+                    </div>
+                    <h2>@category.CategoryName</h2>
+                    <p>@category.Description</p>
+                    <p>Author: @category.Author.UserName</p>
+                    <form asp-controller="Category" asp-action="Specify" method="post">
+                        <input type="hidden" name="categoryName" value="@category.CategoryName" />
+                        <div class="category-actions">
+                            <button type="submit" class="btn btn-primary">Join Discussion</button>
+                        </div>
+                    </form>
+                </div>
+            }
+        </div>
+    </main>
+</div>
