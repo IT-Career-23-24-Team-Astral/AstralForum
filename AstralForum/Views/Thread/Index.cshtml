@@ -120,26 +120,31 @@
 				</div>
 			</div>
 
-			<form id="replyWritingForm-@item.Id" class="d-none" method="post">
-				<div class="mb-3">
-					<label asp-for="CommentForm.Text" class="form-label">Reply text</label>
-					<textarea asp-for="CommentForm.Text" class="form-control" rows="2"></textarea>
-					<div class="form-text">This comment will be posted publicly. Make sure it follows our code of conduct.</div>
-				</div>
-				<div class="mb-3">
-					<label asp-for="CommentForm.Attachments" class="form-label">Attachments</label>
-					<input asp-for="CommentForm.Attachments" class="form-control" type="file" multiple>
-				</div>
-				<button type="submit" class="btn btn-primary" asp-controller="Comment" asp-action="AddCommentReply"
-						asp-route-commentId="@item.Id" asp-route-threadId="@Model.ThreadDto.Id">
-					Post your reply
-				</button>
-			</form>
+			<div id="replyWritingForm-@item.Id">
+			
+			</div>
 
 			<div id="repliesToCommentId-@item.Id" class="mt-3">
+			
 			</div>
 		</div>
 	}
+
+	<form id="replyWritingForm" class="d-none" method="post">
+		<input type="hidden" asp-for="CommentForm.CommentId" />
+		<div class="mb-3">
+			<label asp-for="CommentForm.Text" class="form-label">Reply text</label>
+			<textarea asp-for="CommentForm.Text" class="form-control" rows="2"></textarea>
+			<div class="form-text">This comment will be posted publicly. Make sure it follows our code of conduct.</div>
+		</div>
+		<div class="mb-3">
+			<label asp-for="CommentForm.Attachments" class="form-label">Attachments</label>
+			<input asp-for="CommentForm.Attachments" class="form-control" type="file" multiple>
+		</div>
+		<button type="submit" class="btn btn-primary" asp-controller="Comment" asp-action="AddCommentReply" asp-route-threadId="@Model.ThreadDto.Id">
+			Post your reply
+		</button>
+	</form>
 
 	<form id="commentWritingForm" class="d-none" method="post">
 		<div class="mb-3">
@@ -197,21 +202,9 @@
 						</div>
 					</div>
 
-					<form id="replyWritingForm-{commentId}" class="d-none" method="post" action="/Comment/AddCommentReply?commentId={commentId}&threadId=${@Model.ThreadDto.Id}">
-						
-						<div class="mb-3">
-							<label for="CommentForm_Text" class="form-label">Reply text</label>
-							<textarea for="CommentForm_Text" class="form-control" rows="2"></textarea>
-							<div class="form-text">This comment will be posted publicly. Make sure it follows our code of conduct.</div>
-						</div>
-						<div class="mb-3">
-							<label for="CommentForm_Attachments" class="form-label">Attachments</label>
-							<input for="CommentForm_Attachments" class="form-control" type="file" multiple>
-						</div>
-						<button type="submit" class="btn btn-primary">
-							Post your reply
-						</button>
-					</form>
+					<div id="replyWritingForm-{commentId}">
+
+					</div>
 
 					<div id="repliesToCommentId-{commentId}" class="mt-3">
 						
@@ -220,7 +213,9 @@
 				`;
 
 	function btnAddReply(replyToCommentId) {
-		document.getElementById(`replyWritingForm-${replyToCommentId}`).classList.remove("d-none");
+		document.getElementById(`replyWritingForm-${replyToCommentId}`).append(document.getElementById("replyWritingForm"));
+		document.getElementById("replyWritingForm").classList.remove("d-none");
+		
 	}
 
 	function btnShowReplies(commentId) {
