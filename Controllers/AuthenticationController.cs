@@ -91,8 +91,8 @@ namespace AstralForum.Controllers
 					}
 					else*/
 					//{
-						await _signInManager.SignInAsync(user, isPersistent: false);
-						return Json(new { success = true });
+					await _signInManager.SignInAsync(user, isPersistent: false);
+					return Json(new { success = true });
 					//}
 				}
 				foreach (var error in result.Errors)
@@ -106,7 +106,7 @@ namespace AstralForum.Controllers
 				kvp => kvp.Key,
 				kvp => kvp.Value?.Errors.Select(e => e.ErrorMessage).ToList()
 			);
-			return Json(new { success = false,  errors });
+			return Json(new { success = false, errors });
 		}
 	}
 }

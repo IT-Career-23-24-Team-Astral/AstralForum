@@ -8,6 +8,6 @@ namespace AstralForum.Services.Thread
     {
         ThreadTableViewModel GetThreadTableViewModel(ThreadDto threadDto);
 
-		Task<ThreadDto> CreateThread(ThreadCreationFormModel threadForm, User createdById);
+        Task<ThreadDto> CreateThread(ThreadCreationFormModel threadForm, User createdById);
     }
 }

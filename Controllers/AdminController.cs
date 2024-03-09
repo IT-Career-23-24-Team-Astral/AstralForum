@@ -20,20 +20,20 @@ namespace AstralForum.Controllers
             this.roleManager = roleManager;
             this.userManager = userManager;
         }
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             AllUsersViewModel model = await userFacade.GetAllUsers();
 
             return View(model);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public IActionResult CreateRole()
         {
             return View();
         }
-		//[Authorize(Roles = "Admin")]
+	    [Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> DeleteRole(int id)
         {
@@ -52,7 +52,7 @@ namespace AstralForum.Controllers
                 return View("ListRoles");
             }
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
@@ -70,14 +70,14 @@ namespace AstralForum.Controllers
             }
             return View(model);
         }
-		//[Authorize(Roles = "Admin")]
+	    [Authorize(Roles = "Admin")]
 		[HttpGet]
         public IActionResult ListRoles()
         {
             var roles = roleManager.Roles;
             return View(roles);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> EditRole(string id)
         {
@@ -100,7 +100,7 @@ namespace AstralForum.Controllers
             }
             return View(model);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<IActionResult> EditRole(EditRoleViewModel model)
 		{
@@ -123,7 +123,7 @@ namespace AstralForum.Controllers
 				}
             }
 		}
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> EditUsersInRole(string id)
         {
@@ -155,7 +155,7 @@ namespace AstralForum.Controllers
 			}
             return View(model);
 		}
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpPost] 
         public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string id)
         {

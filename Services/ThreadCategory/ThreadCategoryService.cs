@@ -1,6 +1,8 @@
-﻿using AstralForum.Mapping;
+﻿using AstralForum.Data.Entities;
+using AstralForum.Mapping;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Services.ThreadCategory
 {
@@ -13,31 +15,44 @@ namespace AstralForum.Services.ThreadCategory
             _threadCategoryRepository = threadCategoryRepository;
         }
 
-        public IQueryable<ThreadCategoryDto> GetAllThreadCategories()
+        public List<ThreadCategoryDto> GetAllThreadCategories()
         {
-            return (IQueryable<ThreadCategoryDto>)_threadCategoryRepository.GetAll();
+            return _threadCategoryRepository
+                .GetAll()
+                .Include(tc => tc.Threads)
+                    .ThenInclude(t => t.CreatedBy)
+                .Include(tc => tc.CreatedBy)
+                .Select(tc => tc.ToDto(false))
+                .ToList();
         }
 
         public ThreadCategoryDto GetThreadCategoryById(int id)
         {
-            return _threadCategoryRepository.GetThreadCategoryById(id).ToDto();
+            ThreadCategoryDto threadCategoryDto = _threadCategoryRepository.GetThreadCategoryById(id).ToDto();
+            return threadCategoryDto;
+            //return _threadCategoryRepository.GetThreadCategoryById(id).ToDto();
         }
 
-        public async Task<ThreadCategoryDto> CreateThreadCategory(ThreadCategoryDto threadCategoryDto)
+        public async Task<ThreadCategoryDto> CreateThreadCategory(ThreadCategoryDto threadCategoryDto, User createdBy)
         {
             Data.Entities.ThreadCategory.ThreadCategory category = threadCategoryDto.ToEntity();
+            category.CreatedBy = createdBy;
 
             return (await _threadCategoryRepository.Create(category)).ToDto();
         }
-        public async Task<ThreadCategoryDto> EditThreadCategory(ThreadCategoryDto threadCategoryDto)
+        public async Task<ThreadCategoryDto> EditThreadCategory(ThreadCategoryDto threadCategoryDto, User createdBy)
         {
             Data.Entities.ThreadCategory.ThreadCategory category = threadCategoryDto.ToEntity();
+            category.CreatedBy = createdBy;
 
             return (await _threadCategoryRepository.Edit(category)).ToDto();
         }
-        public async Task<ThreadCategoryDto> DeleteThread(ThreadCategoryDto threadCategoryDto)
+        public async Task<ThreadCategoryDto> DeleteThreadCategory(ThreadCategoryDto threadCategoryDto, User createdBy)
         {
             Data.Entities.ThreadCategory.ThreadCategory category = threadCategoryDto.ToEntity();
+
+            category.CreatedBy = createdBy;
+
             return (await _threadCategoryRepository.Delete(category)).ToDto();
         }
     }

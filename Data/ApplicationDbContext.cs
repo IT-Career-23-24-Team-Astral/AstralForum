@@ -21,17 +21,7 @@ namespace AstralForum.Data
         {
         }
 
-        /*protected override void OnModelCreating(ModelBuilder builder)
-        {
-            builder.Entity<Reaction>()
-                .HasOne(r => r.Thread)
-                .WithMany(t => t.Reactions)
-                .HasForeignKey(r => r.ThreadId);
-
-            base.OnModelCreating(builder);
-        }*/
-
-        public DbSet<Ban> Bans { get; set; }
+		public DbSet<Ban> Bans { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentAttachment> CommentsAttachment { get; set; }
         public DbSet<Role> Roles { get; set; }
@@ -39,13 +29,9 @@ namespace AstralForum.Data
         public DbSet<ReactionType> ReactionsType { get; set; }
         public DbSet<Thread> Threads { get; set; }
         public DbSet<ThreadAttachment> ThreadsAttachment { get; set; }
-        public DbSet<ThreadCategory> ThreadCategory { get; set; }
-        public DbSet<Notification> Notifications { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<NotificationApplicationUser> UserNotifications { get; set; }
+        public DbSet<Entities.ThreadCategory.ThreadCategory> ThreadCategories { get; set; }
+		public DbSet<Notification> Notifications { get; set; }
         public DbSet<PostReaction> PostReactions { get; set; }
-
-        public DbSet<ThreadReport> PostReports { get; set; }
         public DbSet<ThreadTag> PostsTags { get; set; }
 
         public DbSet<Reply> Replies { get; set; }
@@ -55,9 +41,7 @@ namespace AstralForum.Data
         public DbSet<ReplyReport> ReplyReports { get; set; }
 
         public DbSet<Tag> Tags { get; set; }
-        public DbSet<AstralForum.Models.ThreadModel> ThreadModel { get; set; } = default!;
 
-        // public DbSet<UserFollower> UsersFollowers { get; set; }
 
     }
 }

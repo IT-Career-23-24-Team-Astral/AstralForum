@@ -1,6 +1,7 @@
 ﻿using AstralForum.Models.Admin;
 using AstralForum.Models.User;
 using AstralForum.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 
@@ -16,12 +17,6 @@ namespace AstralForum.Controllers
         {
             _context = context;
             this.userFacade = userFacade;
-        }
-
-        [HttpGet("register")]
-        public String Register(String name)
-        {
-            return $"Hello world {name}!";
         }
 
         [HttpPost("register")]
@@ -153,7 +148,9 @@ namespace AstralForum.Controllers
         {
             return View();
         }*/
+        
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(int id)
         {
             UserInfoModel model = await userFacade.GetUser(id);

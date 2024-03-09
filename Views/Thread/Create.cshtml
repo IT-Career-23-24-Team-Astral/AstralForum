@@ -8,7 +8,7 @@
 <h5>To post a new thread in @Model.CategoryName you need to fill out the following:</h5>
 
 <form method="post">
-    <input asp-for="CategoryId" type="hidden" value="@Model.CategoryId"/>
+    <input asp-for="CategoryId" type="hidden" value="@Model.CategoryId" />
     <div class="mb-3">
         <label asp-for="Title" class="form-label">Title</label>
         <input asp-for="Title" type="text" class="form-control" aria-describedby="threadTitleHelp">
