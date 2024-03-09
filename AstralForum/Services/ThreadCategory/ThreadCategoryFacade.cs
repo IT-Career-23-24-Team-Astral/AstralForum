@@ -75,7 +75,7 @@ namespace AstralForum.Services.ThreadCategory
                 CreatedBy = createdBy.ToDto()
             };
 
-            return await threadCategoryService.DeleteThreadCategory(threadCategoryDto);
+            return await threadCategoryService.DeleteThreadCategory(threadCategoryDto, createdBy);
         }
 
         public CategoryThreadsViewModel GetAllThreadsByCategoryId(int categoryId)
@@ -88,7 +88,8 @@ namespace AstralForum.Services.ThreadCategory
                 CategoryId = threadCategoryDto.Id,
                 Threads = threadCategoryDto.Threads
                     .OrderByDescending(t => t.CreatedOn)
-                    .Select(t => threadFacade.GetThreadTableViewModel(t))
+                    .Select(t => threadFacade.GetThreadTableViewModel(t)),
+                Description = threadCategoryDto.Description
             };
 
             return model;

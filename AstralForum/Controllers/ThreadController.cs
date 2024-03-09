@@ -50,6 +50,11 @@ namespace AstralForum.Controllers
         [Authorize]
         public async Task<IActionResult> Create(ThreadCreationFormModel threadForm)
         {
+            if (threadForm.Text == null || threadForm.Description == null)
+            {
+				return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
+			}
+
             await threadFacade.CreateThread(threadForm, await userManager.GetUserAsync(User));
 
             return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });

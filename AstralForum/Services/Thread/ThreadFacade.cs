@@ -41,7 +41,7 @@ namespace AstralForum.Services.Thread
                 CreatedBy = createdBy.ToDto()
             };
 
-            return await threadService.CreateThread(threadDto);
+            return await threadService.CreateThread(threadDto, createdBy);
         }
     }
 }

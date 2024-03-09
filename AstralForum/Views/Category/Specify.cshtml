@@ -1,4 +1,7 @@
-﻿@model AstralForum.Models.Thread.CategoryThreadsViewModel
+﻿@using AstralForum.Data.Entities
+@using Microsoft.AspNetCore.Identity
+@model AstralForum.Models.Thread.CategoryThreadsViewModel
+@inject SignInManager<User> SignInManager
 
 @{
     ViewData["Title"] = "Threads in " + Model.CategoryName;
@@ -13,11 +16,18 @@
             </h2>
             <p>@ViewData["CategoryDescription"]</p>
         </div>
-        <div class="col-auto">
-            <a asp-controller="Category" asp-action="Edit" asp-route-id="@Model.CategoryId" class="btn btn-primary">Edit Category</a>
-            <a asp-controller="Category" asp-action="Delete" asp-route-id="@Model.CategoryId" class="btn btn-danger">Delete Category</a>
-        </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="col-auto">
+                <a asp-controller="Category" asp-action="Edit" asp-route-id="@Model.CategoryId" class="btn btn-primary">Edit Category</a>
+                <a asp-controller="Category" asp-action="Delete" asp-route-id="@Model.CategoryId" class="btn btn-danger">Delete Category</a>
+            </div>
+        }
     </div>
+
+    <p>
+        What goes in this category: @Model.Description
+    </p>
 
     <form asp-controller="Thread" asp-action="Create" asp-route-id="@Model.CategoryId" method="get">
         <button type="submit" class="btn btn-success mt-3">

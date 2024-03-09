@@ -25,7 +25,7 @@ namespace AstralForum.Services.Comment
                 CreatedById = createdBy.Id
             };
 
-            return await _commentService.AddComment(commentDto);
+            return await _commentService.AddComment(commentDto, createdBy);
         }
     }
 }

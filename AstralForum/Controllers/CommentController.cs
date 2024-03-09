@@ -46,6 +46,11 @@ namespace AstralForum.Controllers
 		// TODO: fix attachments not to be shown as null
 		public async Task<IActionResult> AddThreadComment(ThreadViewModel viewModel, int threadId)
 		{
+			if (viewModel.CommentForm.Text == null)
+			{
+				return RedirectToAction("Index", "Thread", new { id = threadId });
+			}
+
 			await _commentFacade.CreateComment(viewModel.CommentForm, threadId, await _userManager.GetUserAsync(User));
 
 			return RedirectToAction("Index", "Thread", new { id = threadId });
@@ -57,6 +62,11 @@ namespace AstralForum.Controllers
 		// TODO: fix attachments not to be shown as null
 		public async Task<IActionResult> AddCommentReply(ThreadViewModel viewModel, int threadId)
 		{
+			if (viewModel.CommentForm.Text == null)
+			{
+				return RedirectToAction("Index", "Thread", new { id = threadId });
+			}
+
 			int commentId = viewModel.CommentForm.CommentId;
 			
 			await _commentFacade.CreateComment(viewModel.CommentForm, threadId, await _userManager.GetUserAsync(User), commentId);

@@ -1,5 +1,6 @@
 
-﻿using AstralForum.Data.Entities.Comment;
+using AstralForum.Data.Entities;
+using AstralForum.Data.Entities.Comment;
 using AstralForum.Mapping;
 using AstralForum.Models;
 using AstralForum.Repositories;
@@ -16,9 +17,11 @@ namespace AstralForum.Services
         {
 			_commentRepository = commentRepository;
         }
-        public async Task<CommentDto> AddComment(CommentDto commentDto)
+        public async Task<CommentDto> AddComment(CommentDto commentDto, User createdBy)
         {
             Data.Entities.Comment.Comment comment = commentDto.ToEntity();
+
+            comment.CreatedBy = createdBy;
 
             return (await _commentRepository.Create(comment)).ToDto();
         }

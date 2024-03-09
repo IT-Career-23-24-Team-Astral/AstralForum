@@ -150,6 +150,7 @@
 		<div class="mb-3">
 			<label asp-for="CommentForm.Text" class="form-label">Comment text</label>
 			<textarea asp-for="CommentForm.Text" class="form-control" rows="4"></textarea>
+			<span asp-validation-for="CommentForm.Text" class="text-danger"></span>
 		</div>
 		<div class="mb-3">
 			<label asp-for="CommentForm.Attachments" class="form-label">Attachments</label>

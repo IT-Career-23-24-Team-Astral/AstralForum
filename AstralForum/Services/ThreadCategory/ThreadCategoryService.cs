@@ -47,9 +47,11 @@ namespace AstralForum.Services.ThreadCategory
 
             return (await _threadCategoryRepository.Edit(category)).ToDto();
         }
-        public async Task<ThreadCategoryDto> DeleteThreadCategory(ThreadCategoryDto threadCategoryDto)
+        public async Task<ThreadCategoryDto> DeleteThreadCategory(ThreadCategoryDto threadCategoryDto, User createdBy)
         {
             Data.Entities.ThreadCategory.ThreadCategory category = threadCategoryDto.ToEntity();
+
+            category.CreatedBy = createdBy;
 
             return (await _threadCategoryRepository.Delete(category)).ToDto();
         }

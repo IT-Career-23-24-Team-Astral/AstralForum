@@ -17,47 +17,6 @@ namespace AstralForum.Controllers
 {
     public class CategoryController : Controller
     {
-        /*public IActionResult Index(int id)
-        {
-            CategoryThreadsViewModel model = new CategoryThreadsViewModel()
-            {
-                CategoryName = "Main category",
-                CategoryId = id
-            };
-
-            List<ThreadTableViewModel> list = new List<ThreadTableViewModel>();
-            ThreadTableViewModel thread = new ThreadTableViewModel()
-            {
-                Author = new UserDto()
-                {
-                    Username = "Rocky47",
-                    DateOfCreation = DateTime.Now
-                },
-                DateOfCreation = DateTime.Now,
-                Title = "Lorem ipsum dolor sit amet",
-                LastComment = new CommentDto()
-                {
-                    Text = "Comment text lorem ipsum",
-                    CreatedOn = DateTime.Now.AddHours(2.3),
-                    Author = new UserDto()
-                    {
-                        Username = "Rocky47",
-                        DateOfCreation = DateTime.Now
-                    }
-                }
-            };
-            list.Add(thread);
-
-            model.Threads = list;
-
-            return View(model);
-        }*/
-
-        /*private readonly ApplicationDbContext _db;
-        public CategoryController(ApplicationDbContext db)
-        {
-            this._db = db;
-        }*/
         private readonly IThreadCategoryFacade threadCategoryFacade;
         private readonly IThreadCategoryService threadCategoryService;
         private readonly UserManager<User> userManager;
@@ -75,6 +34,7 @@ namespace AstralForum.Controllers
         }
 
         [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Create(int id)
         {
             CategoryCreateViewModel model = new CategoryCreateViewModel()
@@ -86,7 +46,7 @@ namespace AstralForum.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CategoryCreateViewModel threadCategoryForm)
         {
             User loggedInUser = await userManager.GetUserAsync(User);
@@ -97,23 +57,30 @@ namespace AstralForum.Controllers
         }
 
         [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id)
         {
+            // TODO: find a better way to handle getting thread category data
+            CategoryThreadsViewModel categoryModel = threadCategoryFacade.GetAllThreadsByCategoryId(id);
+
             CategoryIndexViewModel model = new CategoryIndexViewModel()
             {
-                CategoryId = id
+                CategoryId = id,
+                CategoryName = categoryModel.CategoryName,
+                Description = categoryModel.Description
             };
             return View(model);
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(CategoryIndexViewModel threadCategoryForm)
         {
             await threadCategoryFacade.EditThreadCategory(threadCategoryForm, await userManager.GetUserAsync(User));
 
             return RedirectToAction("Specify", "Category", new { id = threadCategoryForm.CategoryId });
         }
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {
             CategoryIndexViewModel model = new CategoryIndexViewModel()
@@ -124,6 +91,7 @@ namespace AstralForum.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(CategoryIndexViewModel threadCategoryForm)
         {
             await threadCategoryFacade.DeleteThreadCategory(threadCategoryForm, await userManager.GetUserAsync(User));

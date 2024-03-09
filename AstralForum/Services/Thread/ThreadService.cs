@@ -3,6 +3,7 @@ using AstralForum.Mapping;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
 using AstralForum.Data.Entities.Thread;
+using AstralForum.Data.Entities;
 
 namespace AstralForum.Services.Thread
 {
@@ -14,9 +15,10 @@ namespace AstralForum.Services.Thread
 		{
 			_threadRepository = threadRepository;
 		}
-		public async Task<ThreadDto> CreateThread(ThreadDto threadDto)
+		public async Task<ThreadDto> CreateThread(ThreadDto threadDto, User createdBy)
 		{
 			Data.Entities.Thread.Thread thread = threadDto.ToEntity();
+			thread.CreatedBy = createdBy;
 			return (await _threadRepository.Create(thread)).ToDto();
 		}
 

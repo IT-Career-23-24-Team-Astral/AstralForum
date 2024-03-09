@@ -14,6 +14,6 @@ namespace AstralForum.Services.ThreadCategory
 
         Task<ThreadCategoryDto> EditThreadCategory(ThreadCategoryDto threadCategoryDto, User createdBy);
 
-        Task<ThreadCategoryDto> DeleteThreadCategory(ThreadCategoryDto threadCategoryDto);
+        Task<ThreadCategoryDto> DeleteThreadCategory(ThreadCategoryDto threadCategoryDto, User createdBy);
     }
 }
