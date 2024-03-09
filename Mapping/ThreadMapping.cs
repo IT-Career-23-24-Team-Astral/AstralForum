@@ -4,16 +4,15 @@ using AstralForum.ServiceModels;
 
 namespace AstralForum.Mapping
 {
-    public static class ThreadMapping
-    {
-        public static Data.Entities.Thread.Thread ToEntity(this ThreadDto threadDto)
-        {
-            Data.Entities.Thread.Thread thread = new Data.Entities.Thread.Thread();
+	public static class ThreadMapping
+	{
+		public static Data.Entities.Thread.Thread ToEntity(this ThreadDto threadDto)
+		{
+			Data.Entities.Thread.Thread thread = new Data.Entities.Thread.Thread();
 
             thread.Id = threadDto.Id;
             thread.Title = threadDto.Title;
             thread.Text = threadDto.Text;
-            thread.ImageUrl = threadDto.ImageUrl;
             thread.ThreadCategoryId = threadDto.ThreadCategoryId;
             thread.CreatedById = threadDto.CreatedById;
             thread.CreatedBy = threadDto.CreatedBy.ToEntity();
@@ -24,23 +23,25 @@ namespace AstralForum.Mapping
 
             return thread;
         }
-        public static ThreadDto ToDto(this Data.Entities.Thread.Thread thread, bool includeComments = true, bool includeReactions = true, bool includeAttachments = true)
+        public static ThreadDto ToDto(this Data.Entities.Thread.Thread thread, bool includeComments = true, bool includeReactions = true, bool includeAttachments = true,
+            bool includeCommentReactions = true, bool includeCommentAttachments = true, bool includeCommentReplies = true)
         {
             ThreadDto threadDto = new ThreadDto();
 
             threadDto.Id = thread.Id;
             threadDto.Title = thread.Title;
             threadDto.Text = thread.Text;
-            threadDto.ImageUrl = thread.ImageUrl;
             threadDto.ThreadCategoryId = thread.ThreadCategoryId;
+            threadDto.ThreadCategoryName = thread.ThreadCategory != null ? thread.ThreadCategory.CategoryName : "";
             threadDto.CreatedById = thread.CreatedById;
             threadDto.CreatedBy = thread.CreatedBy.ToDto();
             threadDto.CreatedOn = thread.CreatedOn;
-            threadDto.Comments = includeComments ? thread.Comments.Select(c => c.ToDto()).ToList() : null;
-            threadDto.Reactions = includeReactions ? thread.Reactions.Select(r => r.ToDto()).ToList() : null;
-            threadDto.Attachments = includeAttachments ? thread.Attachments.Select(a => a.ToDto()).ToList() : null;
+            // include only top level comments in the dto
+            threadDto.Comments = includeComments ? thread.Comments.Select(c => c.ToDto(includeCommentReactions, includeCommentAttachments, includeCommentReplies)).Where(c => c.ParentCommentId == null).ToList() : new List<CommentDto>();
+            threadDto.Reactions = includeReactions ? thread.Reactions.Select(r => r.ToDto()).ToList() : new List<ReactionDto>();
+            threadDto.Attachments = includeAttachments ? thread.Attachments.Select(a => a.ToDto()).ToList() : new List<ThreadAttachmentDto>();
 
-            return threadDto;
-        }
-    }
+			return threadDto;
+		}
+	}
 }

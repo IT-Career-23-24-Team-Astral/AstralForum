@@ -2,7 +2,7 @@
 
 namespace AstralForum.Data.Entities.Thread
 {
-    public class PostReaction : MetadataBaseEntity
+    public class PostReaction : BaseEntity
     {
         public ReactionType ReactionType { get; set; }
 

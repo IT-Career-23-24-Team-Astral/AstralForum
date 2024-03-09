@@ -13,17 +13,13 @@ namespace AstralForum.Services
             {
                 var referer = context.Request.Headers["Referer"];
 
-                if (!referer.Contains("&authenticate"))
+                if (!referer.Contains("?authenticate=true"))
                 {
-                    context.Response.Redirect(referer + "&authenticate");
+                    context.Response.Redirect(referer + "?authenticate=true");
                 }
+            }
 
-                return;
-            }
-            else
-            {
-                await next(context);
-            }
+            await next(context);
         }
     }
 }

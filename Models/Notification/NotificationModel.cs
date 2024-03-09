@@ -8,6 +8,5 @@ namespace AstralForum.Models.Notification
         public string Text { get; set; }
         public DateTime Date { get; set; }
         public int NotificationId {  get; set; }
-        public List<NotificationApplicationUser> NotificationApplicationUsers { get; set; }
     }
 }

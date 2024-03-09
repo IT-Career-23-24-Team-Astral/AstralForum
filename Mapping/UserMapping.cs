@@ -14,7 +14,7 @@ namespace AstralForum.Mapping
             user.Email = userDto.Email;
             user.FirstName = userDto.FirstName;
             user.LastName = userDto.LastName;
-			user.DateOfCreation = userDto.DateOfCreation;
+            user.DateOfCreation = userDto.DateOfCreation;
 
             return user;
         }
@@ -28,7 +28,7 @@ namespace AstralForum.Mapping
             userDto.Email = user.Email;
             userDto.FirstName = user.FirstName;
             userDto.LastName = user.LastName;
-			userDto.DateOfCreation = user.DateOfCreation;
+            userDto.DateOfCreation = user.DateOfCreation;
 
             return userDto;
         }
