@@ -9,7 +9,7 @@
 }
 
 <h5>
-	Thread in category <a asp-controller="Category" asp-route-id="@Model.ThreadDto.ThreadCategoryId">@Model.ThreadDto.ThreadCategoryName</a>
+	Thread in category <a asp-controller="Category" asp-action="Specify" asp-route-id="@Model.ThreadDto.ThreadCategoryId">@Model.ThreadDto.ThreadCategoryName</a>
 </h5>
 
 <div class="container">
@@ -131,7 +131,7 @@
 	}
 
 	<form id="replyWritingForm" class="d-none" method="post">
-		<input type="hidden" asp-for="CommentForm.CommentId" />
+		<input type="hidden" asp-for="CommentForm.CommentId" id="commentIdFormInput" />
 		<div class="mb-3">
 			<label asp-for="CommentForm.Text" class="form-label">Reply text</label>
 			<textarea asp-for="CommentForm.Text" class="form-control" rows="2"></textarea>
@@ -215,7 +215,7 @@
 	function btnAddReply(replyToCommentId) {
 		document.getElementById(`replyWritingForm-${replyToCommentId}`).append(document.getElementById("replyWritingForm"));
 		document.getElementById("replyWritingForm").classList.remove("d-none");
-		
+		document.getElementById("commentIdFormInput").value = replyToCommentId;
 	}
 
 	function btnShowReplies(commentId) {

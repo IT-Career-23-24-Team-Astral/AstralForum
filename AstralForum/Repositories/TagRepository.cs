@@ -7,14 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
-    public class TagRepository : CommonRepository<Tag>, ITagRepository
+    public class TagRepository : CommonRepository<Tag>
     {
         private readonly ApplicationDbContext context;
         public TagRepository(ApplicationDbContext context) : base(context)
         {
             //this.context = context;
         }
-        public async Task<List<Tag>> GetTagsByThreadId(int id)
+        /*public async Task<List<Tag>> GetTagsByThreadId(int id)
         {
             Data.Entities.Thread.Thread thread = await context.Threads
                 .Include(e => e.Tags)
@@ -34,7 +34,7 @@ namespace AstralForum.Repositories
                 .Include(e => e.Tags)
                 .FirstAsync(p => p.Id == id);
             return tag.Tags;
-        }
+        }*/
 
     }
 }

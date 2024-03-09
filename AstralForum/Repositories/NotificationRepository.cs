@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace AstralForum.Repositories
 {
-    public class NotificationRepository : CommonRepository<Notification>, INotificationRepository
+    public class NotificationRepository : CommonRepository<Notification>
     {
         private ApplicationDbContext context;
 
@@ -22,13 +22,13 @@ namespace AstralForum.Repositories
             this.context = context;
         }
 
-        public async Task<List<Notification>> GetNotificationsByThreadId(int id)
+        /*public async Task<List<Notification>> GetNotificationsByThreadId(int id)
         {
             Data.Entities.Thread.Thread thread = await context.Threads
                 .Include(e => e.Notifications)
                 .FirstAsync(p => p.Id == id);
             return thread.Notifications;
-        }
+        }*/
         public async Task<List<Notification>> GetNotificationsByCommentId(int id)
         {
             Comment comment = await context.Comments
@@ -44,13 +44,13 @@ namespace AstralForum.Repositories
             return tag.Notifications;
         }
 
-        public async Task<List<Notification>> GetNotificationsByReactionId(int id)
+        /*public async Task<List<Notification>> GetNotificationsByReactionId(int id)
         {
             Reaction reaction = await context.Reactions
                 .Include(e => e.Notifications)
                 .FirstAsync(p => p.Id == id);
             return reaction.Notifications;
-        }
+        }*/
         public async Task<List<Notification>> GetNotificationsByNotificationId(int id)
         {
             Notification notification = await context.Notifications

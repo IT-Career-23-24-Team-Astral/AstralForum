@@ -26,12 +26,15 @@ builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<IThreadCategoryService, ThreadCategoryService>();
 builder.Services.AddScoped<IThreadService, ThreadService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IThreadCategoryFacade, ThreadCategoryFacade>();
 builder.Services.AddScoped<IThreadFacade, ThreadFacade>();
 builder.Services.AddScoped<ICommentFacade, CommentFacade>();
+builder.Services.AddScoped<IUserFacade, UserFacade>();
 
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 

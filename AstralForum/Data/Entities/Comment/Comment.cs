@@ -13,8 +13,7 @@ namespace AstralForum.Data.Entities.Comment
         public List<CommentAttachment> Attachments { get; set; }
         public List<Comment> Comments { get; set; }
         public List<Tag.Tag> Tags { get; set; }
-        public virtual Thread.Thread Thread { get; set; } 
-        public virtual User Author { get; set; } 
+        public Thread.Thread Thread { get; set; }
         public List<Notification> Notifications { get; set; }
     }
 }

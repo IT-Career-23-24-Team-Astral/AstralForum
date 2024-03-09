@@ -11,8 +11,8 @@ namespace AstralForum.Repositories
 
 		public ThreadCategory GetThreadCategoryById(int id)
 		{
-			ThreadCategory category = context.ThreadCategory
-                .Include(category => category.CreatedBy)
+			ThreadCategory category = context.ThreadCategories
+				.Include(category => category.CreatedBy)
                 .Include(category => category.Threads)
                     .ThenInclude(thread => thread.CreatedBy)
 				.Include(category => category.Threads)

@@ -42,10 +42,11 @@ namespace AstralForum.Services.ThreadCategory
                 CategoryName = threadCategoryForm.CategoryName,
                 Description = threadCategoryForm.Description,
                 Id = threadCategoryForm.CategoryId,
-                CreatedBy = createdBy.ToDto()
+                CreatedBy = createdBy.ToDto(),
+                CreatedById = createdBy.Id
             };
 
-            return await threadCategoryService.CreateThreadCategory(threadCategoryDto);
+            return await threadCategoryService.CreateThreadCategory(threadCategoryDto, createdBy);
         }
         public async Task<ThreadCategoryDto> EditThreadCategory(CategoryIndexViewModel threadCategoryForm, User createdBy)
         {
@@ -59,7 +60,7 @@ namespace AstralForum.Services.ThreadCategory
                 CreatedBy = createdBy.ToDto()
             };
 
-            return await threadCategoryService.EditThreadCategory(threadCategoryDto);
+            return await threadCategoryService.EditThreadCategory(threadCategoryDto, createdBy);
         }
 
         public async Task<ThreadCategoryDto> DeleteThreadCategory(CategoryIndexViewModel threadCategoryForm, User createdBy)
@@ -96,15 +97,13 @@ namespace AstralForum.Services.ThreadCategory
         {
             List<ThreadCategoryDto> allCategories = threadCategoryService.GetAllThreadCategories();
 
-            // Filter categories based on the specified categoryId
-            
-
             // Map ThreadCategoryDto to CategoryIndexViewModel
             List<CategoryIndexViewModel> categoryViewModels = allCategories.Select(tc => new CategoryIndexViewModel
             {
                 CategoryName = tc.CategoryName,
                 Description = tc.Description,
-                Author = tc.CreatedBy
+                Author = tc.CreatedBy,
+                CategoryId = tc.Id
             }).ToList();
 
             // Construct the view model

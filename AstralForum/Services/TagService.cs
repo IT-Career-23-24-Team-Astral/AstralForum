@@ -8,7 +8,7 @@ using Azure;
 
 namespace AstralForum.Services
 {
-    public class TagService : ITagService
+    public class TagService/* : ITagService*/
     {
         private readonly TagRepository _tagRepository;
 
@@ -23,15 +23,15 @@ namespace AstralForum.Services
             return (await _tagRepository.Create(tag)).ToDto();
         }
 
-        public async Task<List<TagDto>> GetAllTagsByThreadId(int id)
+        /*public async Task<List<TagDto>> GetAllTagsByThreadId(int id)
         {
             List<Tag> tags = await _tagRepository.GetTagsByThreadId(id);
             List<TagDto> tagDtos = tags.Select(tag => tag.ToDto()).ToList();
 
             return tagDtos;
-        }
+        }*/
 
-        public async Task<List<TagDto>> GetAllTagsByCommentId(int id)
+       /* public async Task<List<TagDto>> GetAllTagsByCommentId(int id)
         {
             List<Tag> tags = await _tagRepository.GetTagsByCommentId(id);
             List<TagDto> tagDtos = tags.Select(tag => tag.ToDto()).ToList();
@@ -44,7 +44,7 @@ namespace AstralForum.Services
             List<TagDto> tagDtos = tags.Select(tag => tag.ToDto()).ToList();
 
             return tagDtos;
-        }
+        }*/
 
     }
 }

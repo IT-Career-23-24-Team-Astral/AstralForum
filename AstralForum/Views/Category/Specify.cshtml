@@ -14,8 +14,8 @@
             <p>@ViewData["CategoryDescription"]</p>
         </div>
         <div class="col-auto">
-            <a asp-controller="Category" asp-action="Edit" class="btn btn-primary">Edit Category</a>
-            <a asp-controller="Category" asp-action="Delete" class="btn btn-danger">Delete Category</a>
+            <a asp-controller="Category" asp-action="Edit" asp-route-id="@Model.CategoryId" class="btn btn-primary">Edit Category</a>
+            <a asp-controller="Category" asp-action="Delete" asp-route-id="@Model.CategoryId" class="btn btn-danger">Delete Category</a>
         </div>
     </div>
 

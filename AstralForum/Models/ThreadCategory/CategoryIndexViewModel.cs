@@ -14,6 +14,5 @@ namespace AstralForum.Models.ThreadCategory
         [Display(Name = "Created by")]
         public UserDto Author { get; set; }
 		public string? ImageUrl { get; set; }
-		public List<CategoryThreadsViewModel> Categories { get; set; }
 	}
 }

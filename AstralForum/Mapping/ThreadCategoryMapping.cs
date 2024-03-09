@@ -22,14 +22,14 @@ namespace AstralForum.Mapping
             return threadCategory;
 		}
 
-		public static ThreadCategoryDto ToDto(this ThreadCategory threadCategory)
+		public static ThreadCategoryDto ToDto(this ThreadCategory threadCategory, bool includeThreadComments = true)
 		{
 			ThreadCategoryDto threadCategoryDto = new ThreadCategoryDto();
 
 			threadCategoryDto.Id = threadCategory.Id;
 			threadCategoryDto.CategoryName = threadCategory.CategoryName;
             // only have to include the comments in the threads of a category
-            threadCategoryDto.Threads = threadCategory.Threads.Select(t => t.ToDto(true, false, false, false, false, false)).ToList();
+            threadCategoryDto.Threads = threadCategory.Threads.Select(t => t.ToDto(includeThreadComments, false, false, false, false, false)).ToList();
             threadCategoryDto.CreatedById = threadCategory.CreatedById;
             threadCategoryDto.CreatedBy = threadCategory.CreatedBy.ToDto();
             threadCategoryDto.CreatedOn = threadCategory.CreatedOn;

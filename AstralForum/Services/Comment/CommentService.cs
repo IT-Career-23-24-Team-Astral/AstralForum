@@ -5,10 +5,6 @@ using AstralForum.Models;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
 using AstralForum.Services.Comment;
-<<<<<<<< HEAD:Services/Comment/CommentService.cs
-using System.Xml.Linq;
-========
->>>>>>>> 08aa2d3331c8e3f81d0a8537ca3cc50e586d735e:AstralForum/Services/Comment/CommentService.cs
 
 namespace AstralForum.Services
 {
@@ -18,7 +14,7 @@ namespace AstralForum.Services
 
         public CommentService(CommentRepository commentRepository)
         {
-            _commentRepository = commentRepository;
+			_commentRepository = commentRepository;
         }
         public async Task<CommentDto> AddComment(CommentDto commentDto)
         {

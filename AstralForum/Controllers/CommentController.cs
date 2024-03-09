@@ -55,8 +55,10 @@ namespace AstralForum.Controllers
 		[ValidateAntiForgeryToken]
 		[Authorize]
 		// TODO: fix attachments not to be shown as null
-		public async Task<IActionResult> AddCommentReply(ThreadViewModel viewModel, int commentId, int threadId)
+		public async Task<IActionResult> AddCommentReply(ThreadViewModel viewModel, int threadId)
 		{
+			int commentId = viewModel.CommentForm.CommentId;
+			
 			await _commentFacade.CreateComment(viewModel.CommentForm, threadId, await _userManager.GetUserAsync(User), commentId);
 
 			return RedirectToAction("Index", "Thread", new { id = threadId });

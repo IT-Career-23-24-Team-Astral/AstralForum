@@ -24,53 +24,7 @@ namespace AstralForum.Controllers
 
         public IActionResult Index(int id)
         {
-            // TODO: remove this check
-            
-			if (id == 0)
-			{
-				return null;
-			}
             ThreadDto databaseModel = threadService.GetThreadById(id);
-            /*ThreadDto model = new ThreadDto()
-			{
-				Title = "Test thread title",
-				Text = "Sample intresting thread test",
-				ThreadCategoryId = 2,
-				ThreadCategoryName = "A niche category",
-				CreatedBy = new UserDto()
-				{
-					UserName = "interestingThreadCreator",
-					DateOfCreation = DateTime.Now.AddHours(0.15)
-				}
-			};
-
-			CommentDto comment = new CommentDto()
-			{
-				Id = 58,
-				Text = "An angry comment",
-				CreatedBy = new UserDto()
-				{
-					UserName = "interestingName",
-					DateOfCreation = DateTime.Now
-				}
-			};
-
-			CommentDto comment1 = new CommentDto()
-			{
-				Id = 59,
-				Text = "An angry comment",
-				CreatedBy = new UserDto()
-				{
-					UserName = "interestingName",
-					DateOfCreation = DateTime.Now
-				}
-			};
-
-			List<CommentDto> comments = new List<CommentDto>();
-			comments.Add(comment);
-			comments.Add(comment1);
-
-			model.Comments = comments;*/
 
             ThreadViewModel viewModel = new ThreadViewModel()
             {
@@ -98,7 +52,7 @@ namespace AstralForum.Controllers
         {
             await threadFacade.CreateThread(threadForm, await userManager.GetUserAsync(User));
 
-            return RedirectToAction("Index", "Category", new { id = threadForm.CategoryId });
+            return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
         }
 
         [HttpPost]

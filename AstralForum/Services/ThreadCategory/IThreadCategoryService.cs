@@ -1,4 +1,5 @@
-﻿using AstralForum.ServiceModels;
+﻿using AstralForum.Data.Entities;
+using AstralForum.ServiceModels;
 using System.Threading.Tasks;
 
 namespace AstralForum.Services.ThreadCategory
@@ -9,9 +10,9 @@ namespace AstralForum.Services.ThreadCategory
 
         ThreadCategoryDto GetThreadCategoryById(int id);
 
-        Task<ThreadCategoryDto> CreateThreadCategory(ThreadCategoryDto model);
+        Task<ThreadCategoryDto> CreateThreadCategory(ThreadCategoryDto model, User createdBy);
 
-        Task<ThreadCategoryDto> EditThreadCategory(ThreadCategoryDto threadCategoryDto);
+        Task<ThreadCategoryDto> EditThreadCategory(ThreadCategoryDto threadCategoryDto, User createdBy);
 
         Task<ThreadCategoryDto> DeleteThreadCategory(ThreadCategoryDto threadCategoryDto);
     }

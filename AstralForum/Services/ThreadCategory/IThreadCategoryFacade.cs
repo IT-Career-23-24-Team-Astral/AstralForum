@@ -11,7 +11,7 @@ namespace AstralForum.Services.ThreadCategory
 
             CategoryTableViewModel GetThreadCategoryTableViewModel(ThreadCategoryDto threadCategoryDto);
 
-            Task<ThreadCategoryDto> CreateThreadCategory(CategoryCreateViewModel threadCategoryForm, User createdById);
+            Task<ThreadCategoryDto> CreateThreadCategory(CategoryCreateViewModel threadCategoryForm, User createdBy);
             Task<ThreadCategoryDto> EditThreadCategory(CategoryIndexViewModel threadCategoryForm, User createdById);
         Task<ThreadCategoryDto> DeleteThreadCategory(CategoryIndexViewModel threadCategoryForm, User createdById);
         CategoryThreadsViewModel GetAllThreadsByCategoryId(int categoryId);

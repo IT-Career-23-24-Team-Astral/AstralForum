@@ -15,7 +15,7 @@ using System.Collections.Generic;
 
 namespace AstralForum.Controllers
 {
-	public class CategoryController : Controller
+    public class CategoryController : Controller
     {
         /*public IActionResult Index(int id)
         {
@@ -58,75 +58,50 @@ namespace AstralForum.Controllers
         {
             this._db = db;
         }*/
-            private readonly IThreadCategoryFacade threadCategoryFacade;
-            private readonly IThreadCategoryService threadCategoryService;
-            private readonly UserManager<User> userManager;
-            public CategoryController(IThreadCategoryFacade threadFacade,IThreadCategoryService threadCategoryService, UserManager<User> userManager)
-                {
-                    this.threadCategoryFacade = threadFacade;
-                    this.threadCategoryService = threadCategoryService;
-                    this.userManager = userManager;
-                }
-        
-            public IActionResult Index(int id)
-            {
-            /*CategoryIndexViewModel model = threadCategoryFacade.GetAllThreadCategoriesByCategoryId(id);
-
-            return View(model);*/
-            CategoryViewModel categoryViewModel = threadCategoryFacade.GetAllThreadCategories();
-            return View(categoryViewModel);
-
-            /*CategoryIndexViewModel model = new CategoryIndexViewModel()
-			    {
-
-                CategoryName = "Category",
-                Description = "Description",
-                Author = new UserDto()
-                {
-                    UserName = "yesSir",
-                    DateOfCreation = DateTime.Now
-                },
-            };
-
-			    
-			    List<CategoryThreadsViewModel> list = new List<CategoryThreadsViewModel>();
-            CategoryThreadsViewModel thread = new CategoryThreadsViewModel()
-			    {
-				
-				
-			    };
-			    list.Add(thread);
-
-			    model.Categories = list;
-
-			    return View(model);*/
+        private readonly IThreadCategoryFacade threadCategoryFacade;
+        private readonly IThreadCategoryService threadCategoryService;
+        private readonly UserManager<User> userManager;
+        public CategoryController(IThreadCategoryFacade threadFacade, IThreadCategoryService threadCategoryService, UserManager<User> userManager)
+        {
+            this.threadCategoryFacade = threadFacade;
+            this.threadCategoryService = threadCategoryService;
+            this.userManager = userManager;
         }
 
-            [Authorize]
-            public IActionResult Create(int id)
+        public IActionResult Index()
+        {
+            CategoryViewModel categoryViewModel = threadCategoryFacade.GetAllThreadCategories();
+            return View(categoryViewModel);
+        }
+
+        [Authorize]
+        public IActionResult Create(int id)
+        {
+            CategoryCreateViewModel model = new CategoryCreateViewModel()
             {
-                CategoryCreateViewModel model = new CategoryCreateViewModel()
-                {
-                    CategoryId = id
-                };
-                return View(model);
-            }
+                CategoryId = id
+            };
+            return View(model);
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<IActionResult> Create(CategoryCreateViewModel threadCategoryForm)
-            {
-                await threadCategoryFacade.CreateThreadCategory(threadCategoryForm, await userManager.GetUserAsync(User));
+        {
+            User loggedInUser = await userManager.GetUserAsync(User);
 
-                return RedirectToAction("Index", "Category", new { id = threadCategoryForm.CategoryId });
-            }
+            await threadCategoryFacade.CreateThreadCategory(threadCategoryForm, loggedInUser);
+
+            return RedirectToAction("Index", "Category", new { id = threadCategoryForm.CategoryId });
+        }
+
         [Authorize]
         public IActionResult Edit(int id)
         {
             CategoryIndexViewModel model = new CategoryIndexViewModel()
             {
-				CategoryId = id
+                CategoryId = id
             };
             return View(model);
         }
@@ -157,42 +132,10 @@ namespace AstralForum.Controllers
         }
 
         public IActionResult Specify(int id)
-		    {
-			/*CategoryThreadsViewModel model = threadCategoryFacade.GetAllThreadsByCategoryId(id);
+        {
+            CategoryThreadsViewModel model = threadCategoryFacade.GetAllThreadsByCategoryId(id);
 
-			return View(model);*/
-			CategoryThreadsViewModel model = new CategoryThreadsViewModel()
-			{
-				CategoryName = "Main category",
-				CategoryId = id
-			};
-
-			List<ThreadTableViewModel> list = new List<ThreadTableViewModel>();
-			ThreadTableViewModel thread = new ThreadTableViewModel()
-			{
-				Author = new UserDto()
-				{
-					UserName = "Rocky47",
-					DateOfCreation = DateTime.Now
-				},
-				DateOfCreation = DateTime.Now,
-				Title = "Lorem ipsum dolor sit amet",
-				LastComment = new CommentDto()
-				{
-					Text = "Comment text lorem ipsum",
-					CreatedOn = DateTime.Now.AddHours(2.3),
-					Author = new UserDto()
-					{
-						UserName = "Rocky47",
-						DateOfCreation = DateTime.Now
-					}
-				}
-			};
-			list.Add(thread);
-
-			model.Threads = list;
-
-			return View(model);
-		}
-	}
+            return View(model);
+        }
+    }
 }

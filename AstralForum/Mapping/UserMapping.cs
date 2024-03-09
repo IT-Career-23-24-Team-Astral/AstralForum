@@ -9,6 +9,7 @@ namespace AstralForum.Mapping
         {
             User user = new User();
 
+            user.Id = userDto.Id;
             user.UserName = userDto.UserName;
             user.Email = userDto.Email;
             user.FirstName = userDto.FirstName;
@@ -22,6 +23,7 @@ namespace AstralForum.Mapping
         {
             UserDto userDto = new UserDto();
 
+            userDto.Id = user.Id;
             userDto.UserName = user.UserName;
             userDto.Email = user.Email;
             userDto.FirstName = user.FirstName;

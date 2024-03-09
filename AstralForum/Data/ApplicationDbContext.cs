@@ -24,6 +24,7 @@ namespace AstralForum.Data
 		public DbSet<Ban> Bans { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentAttachment> CommentsAttachment { get; set; }
+        public DbSet<Role> Roles { get; set; }
         public DbSet<Reaction> Reactions { get; set; }
         public DbSet<ReactionType> ReactionsType { get; set; }
         public DbSet<Thread> Threads { get; set; }
@@ -31,8 +32,6 @@ namespace AstralForum.Data
         public DbSet<Entities.ThreadCategory.ThreadCategory> ThreadCategories { get; set; }
 		public DbSet<Notification> Notifications { get; set; }
         public DbSet<PostReaction> PostReactions { get; set; }
-
-        public DbSet<ThreadReport> PostReports { get; set; }
         public DbSet<ThreadTag> PostsTags { get; set; }
 
         public DbSet<Reply> Replies { get; set; }

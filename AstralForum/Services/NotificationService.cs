@@ -21,13 +21,13 @@ namespace AstralForum.Services
             return (await _notificationRepository.Create(notification)).ToDto();
         }
 
-        public async Task<List<NotificationDto>> GetAllNotificationsByThreadId(int id)
+        /*public async Task<List<NotificationDto>> GetAllNotificationsByThreadId(int id)
         {
             List<Notification> notifications = await _notificationRepository.GetNotificationsByThreadId(id);
             List<NotificationDto> notificationDto = notifications.Select(notification => notification.ToDto()).ToList();
 
             return notificationDto;
-        }
+        }*/
 
         public async Task<List<NotificationDto>> GetAllNotificationsByCommentId(int id)
         {
@@ -43,13 +43,13 @@ namespace AstralForum.Services
 
             return notificationDto;
         }
-        public async Task<List<NotificationDto>> GetAllNotificationsByReactionId(int id)
+        /*public async Task<List<NotificationDto>> GetAllNotificationsByReactionId(int id)
         {
             List<Notification> notifications = await _notificationRepository.GetNotificationsByReactionId(id);
             List<NotificationDto> notificationDto = notifications.Select(notification => notification.ToDto()).ToList();
 
             return notificationDto;
-        }
+        }*/
         public async Task<List<NotificationDto>> GetAllNotificationsByNotificationId(int id)
         {
             List<Notification> notifications = await _notificationRepository.GetNotificationsByNotificationId(id);
