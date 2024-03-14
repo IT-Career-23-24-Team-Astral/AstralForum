@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AstralForum.ServiceModels;
+using Microsoft.EntityFrameworkCore;
 using Thread = AstralForum.Data.Entities.Thread.Thread;
 
 namespace AstralForum.Repositories
@@ -23,7 +24,13 @@ namespace AstralForum.Repositories
                 .Where(t => t.Id == id)
                 .Single();
         }
-        
+        public Thread HideThread(int id)
+        {
+            var thread = context.Threads.FirstOrDefault(t => t.Id == id);
+            thread.IsHidden = true;
+            context.SaveChanges();
+            return thread;
+        }
         /*
         public void Edit(Post thread, ThreadModel model)
         {
@@ -39,5 +46,5 @@ namespace AstralForum.Repositories
             context.Threads.Remove(thread);
             context.SaveChanges();
         }*/
-	}
+    }
 }

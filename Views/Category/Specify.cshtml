@@ -55,7 +55,9 @@
         <tbody class="table-group-divider">
             @foreach (var item in Model.Threads)
             {
-                <tr id="tableRow" thread-id="@item.Id">
+                if(item.IsHidden == false)
+                {
+                    <tr id="tableRow" thread-id="@item.Id">
                     <td>
                         @item.Title
                     </td>
@@ -72,7 +74,7 @@
                                 </span>
                             </div>
                             <div class="col d-flex justify-content-end">
-                                <img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-circle" width="40" height="40">
+                                <img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-circle"  width="40" height="40">
                             </div>
                         </div>
                     </td>
@@ -80,37 +82,54 @@
                         @if (item.LastComment == null)
                         {
                             <p class="fst-italic fw-semibold">No comments have been made on this thread yet</p>
-                        }
-                        else
-                        {
-                            <div>
-                                <div class="row">
-                                    <div class="col">
-                                        @if (item.LastComment.CreatedBy == null)
-                                        {
-                                            <span class="font-monospace">
-                                                by [Unknown]
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span class="font-monospace">
-                                                by @item.LastComment.CreatedBy.UserName
-                                            </span>
-                                        }
-                                        <br>
-                                        <span class="fw-light">
-                                            on @item.LastComment.CreatedOn.ToString("g")
-                                        </span>
-                                    </div>
-                                    <div class="col d-flex justify-content-end">
-                                        <img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-circle" width="45" height="45">
-                                    </div>
+                            <div class="col d-flex justify-content-end">
+                            @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                            {
+                                <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" asp-route-categoryId="@Model.CategoryId" method="get">
+                                    <button type="submit" class="btn btn-danger adminButton" style="margin: -34px 0px 0px 0px">Hide</button>
+                                </form>
+                            }
                                 </div>
+                            }
+                            else
+                            {
+                            <div>
+                                @if (item.IsHidden == false)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            @if (item.LastComment.CreatedBy == null)
+                                            {
+											    <span class="font-monospace">by [Unknown]</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="font-monospace">
+                                                    by @item.LastComment.CreatedBy.UserName
+                                                </span>
+                                            }
+                                            <br>
+                                                <span class="fw-light">
+                                                    on @item.LastComment.CreatedOn.ToString("g")
+                                                </span>
+                                        </div>
+                                        <div class="col d-flex justify-content-end">
+                                            <img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-circle" style="margin: 13px 0px 0px 10px" width="45" height="45">
+                                            @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                                            {
+                                            <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
+                                                <button type="submit" class="btn btn-danger adminButton" style="margin: 15px 0px 0px 10px">Hide</button>
+                                            </form>
+                                            }
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         }
                     </td>
                 </tr>
+                }
+                
             }
         </tbody>
     </table>

@@ -5,6 +5,7 @@ using AstralForum.Models.Thread;
 using AstralForum.Models.ThreadCategory;
 using AstralForum.ServiceModels;
 using AstralForum.Services;
+using AstralForum.Services.Thread;
 using AstralForum.Services.ThreadCategory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -18,13 +19,15 @@ namespace AstralForum.Controllers
     public class CategoryController : Controller
     {
         private readonly IThreadCategoryFacade threadCategoryFacade;
-        private readonly IThreadCategoryService threadCategoryService;
+        private readonly IThreadService threadService;
         private readonly UserManager<User> userManager;
-        public CategoryController(IThreadCategoryFacade threadFacade, IThreadCategoryService threadCategoryService, UserManager<User> userManager)
+        private readonly ApplicationDbContext context;
+        public CategoryController(IThreadCategoryFacade threadFacade, IThreadService threadService, UserManager<User> userManager, ApplicationDbContext context)
         {
             this.threadCategoryFacade = threadFacade;
-            this.threadCategoryService = threadCategoryService;
+            this.threadService = threadService;
             this.userManager = userManager;
+            this.context = context;
         }
 
         public IActionResult Index()
@@ -104,6 +107,18 @@ namespace AstralForum.Controllers
             CategoryThreadsViewModel model = threadCategoryFacade.GetAllThreadsByCategoryId(id);
 
             return View(model);
+        }
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Moderator")]
+        [HttpGet]
+        public IActionResult HideThread(int id, int categoryId)
+        {
+            //var thread = threadService.HideThread(id);
+            var thread = context.Threads.FirstOrDefault(t => t.Id == id);
+            thread.IsHidden = true;
+            context.SaveChanges();
+            return Redirect($"/Category/Specify/{categoryId}");
+
         }
     }
 }

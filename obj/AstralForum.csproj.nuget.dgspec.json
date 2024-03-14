@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\IT-Career\\IT-Career-2023-2024\\AstralForum\\AstralForum.csproj": {}
+    "C:\\Users\\Neychev\\Desktop\\AstralForum\\AstralForum.csproj": {}
   },
   "projects": {
-    "D:\\IT-Career\\IT-Career-2023-2024\\AstralForum\\AstralForum.csproj": {
+    "C:\\Users\\Neychev\\Desktop\\AstralForum\\AstralForum.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\IT-Career\\IT-Career-2023-2024\\AstralForum\\AstralForum.csproj",
+        "projectUniqueName": "C:\\Users\\Neychev\\Desktop\\AstralForum\\AstralForum.csproj",
         "projectName": "AstralForum",
-        "projectPath": "D:\\IT-Career\\IT-Career-2023-2024\\AstralForum\\AstralForum.csproj",
-        "packagesPath": "C:\\Users\\Iavor Vassilev\\.nuget\\packages\\",
-        "outputPath": "D:\\IT-Career\\IT-Career-2023-2024\\AstralForum\\obj\\",
+        "projectPath": "C:\\Users\\Neychev\\Desktop\\AstralForum\\AstralForum.csproj",
+        "packagesPath": "C:\\Users\\Neychev\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Neychev\\Desktop\\AstralForum\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Iavor Vassilev\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Neychev\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

@@ -50,7 +50,7 @@ namespace AstralForum.Controllers
         [Authorize]
         public async Task<IActionResult> Create(ThreadCreationFormModel threadForm)
         {
-            if (threadForm.Text == null || threadForm.Description == null)
+            if (threadForm.Text == null || threadForm.Title == null)
             {
 				return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
 			}
@@ -66,9 +66,6 @@ namespace AstralForum.Controllers
         public IActionResult AddComment(ThreadViewModel threadViewModel)
         {
             CommentAndReplyCreationFormModel formData = threadViewModel.CommentForm;
-
-
-
             return RedirectToAction("Index", new { id = threadViewModel.ThreadDto.Id });
         }
     }

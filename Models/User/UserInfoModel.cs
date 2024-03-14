@@ -1,5 +1,4 @@
 ﻿using AstralForum.Data.Entities;
-using AstralForum.Migrations;
 using AstralForum.ServiceModels;
 
 namespace AstralForum.Models.User

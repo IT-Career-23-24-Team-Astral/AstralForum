@@ -23,7 +23,8 @@ namespace AstralForum.Services.Thread
                 Title = threadDto.Title,
                 DateOfCreation = threadDto.CreatedOn,
                 Author = threadDto.CreatedBy,
-                LastComment = threadDto.Comments.OrderByDescending(c => c.CreatedOn).FirstOrDefault()
+                LastComment = threadDto.Comments.OrderByDescending(c => c.CreatedOn).FirstOrDefault(),
+                IsHidden = threadDto.IsHidden,
             };
 
             return model;

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AstralForum.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240309093812_Initial create")]
-    partial class Initialcreate
+    [Migration("20240311150957_qwe")]
+    partial class qwe
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -446,6 +446,12 @@ namespace AstralForum.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsHidden")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -632,6 +638,11 @@ namespace AstralForum.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
+
                     b.Property<string>("Name")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -648,6 +659,10 @@ namespace AstralForum.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole<int>");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -755,6 +770,13 @@ namespace AstralForum.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("AstralForum.Data.Entities.Role", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole<int>");
+
+                    b.HasDiscriminator().HasValue("Role");
                 });
 
             modelBuilder.Entity("AstralForum.Data.Entities.Ban", b =>

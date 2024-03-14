@@ -11,5 +11,7 @@ namespace AstralForum.Data.Entities.Thread
         public List<Comment.Comment> Comments { get; set; }
         public List<Reaction.Reaction> Reactions { get; set; }
         public List<ThreadAttachment> Attachments { get; set; }
+        public bool IsHidden { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
     }
 }

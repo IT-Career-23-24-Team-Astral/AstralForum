@@ -18,5 +18,7 @@ namespace AstralForum.Models.Thread
 
 		[Display(Name = "Last comment")]
 		public CommentDto LastComment { get; set; }
-	}
+        public bool IsHidden { get; set; }
+        public bool IsDeleted { get; set; } 
+    }
 }

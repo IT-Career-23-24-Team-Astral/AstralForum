@@ -20,6 +20,8 @@ namespace AstralForum.Mapping
             thread.Comments = threadDto.Comments.Select(c => c.ToEntity()).ToList();
             thread.Reactions = threadDto.Reactions.Select(c => c.ToEntity()).ToList();
             thread.Attachments = threadDto.Attachments.Select(c => c.ToEntity()).ToList();
+            thread.IsHidden = threadDto.IsHidden;
+            thread.IsDeleted = threadDto.IsDeleted;
 
             return thread;
         }
@@ -40,6 +42,8 @@ namespace AstralForum.Mapping
             threadDto.Comments = includeComments ? thread.Comments.Select(c => c.ToDto(includeCommentReactions, includeCommentAttachments, includeCommentReplies)).Where(c => c.ParentCommentId == null).ToList() : new List<CommentDto>();
             threadDto.Reactions = includeReactions ? thread.Reactions.Select(r => r.ToDto()).ToList() : new List<ReactionDto>();
             threadDto.Attachments = includeAttachments ? thread.Attachments.Select(a => a.ToDto()).ToList() : new List<ThreadAttachmentDto>();
+            threadDto.IsHidden = thread.IsHidden;
+            threadDto.IsDeleted = thread.IsDeleted;
 
 			return threadDto;
 		}
