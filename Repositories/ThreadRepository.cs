@@ -1,5 +1,6 @@
 ﻿using AstralForum.ServiceModels;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using Thread = AstralForum.Data.Entities.Thread.Thread;
 
 namespace AstralForum.Repositories
@@ -24,6 +25,24 @@ namespace AstralForum.Repositories
                 .Where(t => t.Id == id)
                 .Single();
         }
+        public List<Thread> GetAllHiddenThreads()
+        {
+            return context.Threads
+                .Include(t => t.CreatedBy)
+                .Include(t => t.Title)
+                .Include(t => t.Text)
+                .Where(t => t.IsHidden == true)
+                .ToList();
+        }
+        public List<Thread> GetAllDeletedThreads()
+        {
+            return context.Threads
+                .Include(t => t.CreatedBy)
+                .Include(t => t.Title)
+                .Include(t => t.Text)
+                .Where(t => t.IsDeleted == true)
+                .ToList();
+        }
         public Thread HideThread(int id)
         {
             var thread = context.Threads.FirstOrDefault(t => t.Id == id);
@@ -31,6 +50,29 @@ namespace AstralForum.Repositories
             context.SaveChanges();
             return thread;
         }
+        public Thread UnhideThread(int id)
+        {
+            var thread = context.Threads.FirstOrDefault(t => t.Id == id);
+            thread.IsHidden = false;
+            context.SaveChanges();
+            return thread;
+        }
+        public Thread DeleteThread(int id)
+        {
+            var thread = context.Threads.FirstOrDefault(t => t.Id == id);
+            thread.IsDeleted = true;
+            context.SaveChanges();
+            return thread;
+        }
+        public Thread GetDeletedThreadBack(int id)
+        {
+            var thread = context.Threads.FirstOrDefault(t => t.Id == id);
+            thread.IsHidden = false;
+            thread.IsDeleted = false;
+            context.SaveChanges();
+            return thread;
+        }
+
         /*
         public void Edit(Post thread, ThreadModel model)
         {

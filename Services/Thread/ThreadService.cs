@@ -40,11 +40,34 @@ namespace AstralForum.Services.Thread
 
 			return threadDto;
 		}
+		public ThreadDto GetAllHiddenThreads()
+		{
+            return null;
+        }
+        public ThreadDto GetAllDeletedThreads()
+        {
+            return null;
+        }
         public ThreadDto HideThread(int id)
         {
             ThreadDto threadDto = _threadRepository.HideThread(id).ToDto();
             return threadDto;
         }
-
+        public ThreadDto UnhideThread(int id)
+        {
+            ThreadDto threadDto = _threadRepository.UnhideThread(id).ToDto();
+            return threadDto;
+        }
+        public ThreadDto DeleteThread(int id)
+        {
+            ThreadDto threadDto = _threadRepository.DeleteThread(id).ToDto();
+            return threadDto;
+        }
+        public ThreadDto GetDeletedThreadBack(int id)
+        {
+            ThreadDto threadDto = _threadRepository.GetDeletedThreadBack(id).ToDto();
+            return threadDto;
+        }
+        
     }
 }

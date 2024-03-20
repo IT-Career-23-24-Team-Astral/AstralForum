@@ -7,6 +7,9 @@
     ViewData["Title"] = "Threads in " + Model.CategoryName;
     Layout = "../Shared/_Layout.cshtml";
 }
+@{
+    int categoryId = Model.CategoryId;
+}
 
 <div class="container">
     <div class="row">
@@ -85,8 +88,9 @@
                             <div class="col d-flex justify-content-end">
                             @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
                             {
-                                <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" asp-route-categoryId="@Model.CategoryId" method="get">
-                                    <button type="submit" class="btn btn-danger adminButton" style="margin: -34px 0px 0px 0px">Hide</button>
+                                        <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
+                                            <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
+                                            <button type="submit" class="btn btn-danger adminButton" style="margin: -34px 0px 0px 0px">Hide</button>
                                 </form>
                             }
                                 </div>
@@ -117,8 +121,9 @@
                                             <img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-circle" style="margin: 13px 0px 0px 10px" width="45" height="45">
                                             @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
                                             {
-                                            <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
-                                                <button type="submit" class="btn btn-danger adminButton" style="margin: 15px 0px 0px 10px">Hide</button>
+                                                    <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
+                                                    <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
+                                                        <button type="submit" class="btn btn-danger adminButton" style="margin: 15px 0px 0px 10px">Hide</button>
                                             </form>
                                             }
                                         </div>

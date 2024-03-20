@@ -1,7 +1,9 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Models.Admin;
 using AstralForum.Models.Thread;
+using AstralForum.Repositories;
 using AstralForum.Services;
+using AstralForum.Services.Thread;
 using AstralForum.Services.ThreadCategory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,11 +16,19 @@ namespace AstralForum.Controllers
         private readonly IUserFacade userFacade;
         private readonly RoleManager<Role> roleManager;
 		private readonly UserManager<User> userManager;
-		public AdminController(IUserFacade userFacade, RoleManager<Role> roleManager, UserManager<User> userManager)
+        private readonly IThreadFacade threadFacade;
+        private readonly IThreadService threadService;
+        private readonly ThreadRepository threadRepository;
+        private readonly ApplicationDbContext applicationDbContext;
+        public AdminController(IUserFacade userFacade, RoleManager<Role> roleManager, UserManager<User> userManager, IThreadFacade threadFacade, IThreadService threadService, ThreadRepository threadRepository, ApplicationDbContext applicationDbContext)
         {
             this.userFacade = userFacade;
             this.roleManager = roleManager;
             this.userManager = userManager;
+            this.threadFacade = threadFacade;
+            this.threadService = threadService;
+            this.threadRepository = threadRepository;
+            this.applicationDbContext = applicationDbContext;
         }
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
@@ -40,7 +50,7 @@ namespace AstralForum.Controllers
             var role = await roleManager.FindByIdAsync(id.ToString());
             if(role == null)
             {
-                return View("Error");
+                return NotFound();                                                            
             }
             else
             {
@@ -84,7 +94,7 @@ namespace AstralForum.Controllers
             var role = await roleManager.FindByIdAsync(id);
             if (role == null)
             {
-                return View("Error");
+                return NotFound();
             }
             var model = new EditRoleViewModel
             {
@@ -107,7 +117,7 @@ namespace AstralForum.Controllers
 			var role = await roleManager.FindByIdAsync(model.Id);
 			if (role == null)
 			{
-				return View("Error");
+				return NotFound();
 			}
             else
             {
@@ -119,8 +129,8 @@ namespace AstralForum.Controllers
                 }
                 else
                 {
-					return View("Error");
-				}
+					return NotFound();
+                }
             }
 		}
 		//[Authorize(Roles = "Admin")]
@@ -131,8 +141,8 @@ namespace AstralForum.Controllers
             var role = await roleManager.FindByIdAsync(id);
 			if (role == null)
 			{
-				return View("Error");
-			}
+				return NotFound();
+            }
             var model = new List<UserRoleViewModel>();
 
             foreach (var user in userManager.Users)
@@ -162,8 +172,8 @@ namespace AstralForum.Controllers
             var role = await roleManager.FindByIdAsync(id);
 			if (role == null)
 			{
-				return View("Error");
-			}
+				return NotFound();
+            }
             for(int i = 0; i < model.Count; i++)
             {
 				var user = await userManager.FindByIdAsync(model[i].UserId.ToString());
@@ -194,5 +204,44 @@ namespace AstralForum.Controllers
             }
             return RedirectToAction("EditRole", new { Id = id});
 		}
-	}
+        public async Task<IActionResult> Ban(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var user = await applicationDbContext.Users.FindAsync(id);
+            user.LockoutEnabled = true;
+            await applicationDbContext.SaveChangesAsync();
+            return null;
+        }
+        public async Task<IActionResult> Unban(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var user = await applicationDbContext.Users.FindAsync(id);
+            user.LockoutEnabled = false;
+            await applicationDbContext.SaveChangesAsync();
+            return null;
+        }
+        public async Task<IActionResult> TimeOut(int id, DateTime time)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            DateTime maxTimeOut = DateTime.Now.AddHours(24);
+            if(time > maxTimeOut)
+            {
+                return null;
+            }
+            var user = await applicationDbContext.Users.FindAsync(id);
+            user.LockoutEnd = time;
+            await applicationDbContext.SaveChangesAsync();
+            return null;
+        }
+
+    }
 }

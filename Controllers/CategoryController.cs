@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using System.Collections.Generic;
 
@@ -113,11 +114,10 @@ namespace AstralForum.Controllers
         [HttpGet]
         public IActionResult HideThread(int id, int categoryId)
         {
-            //var thread = threadService.HideThread(id);
-            var thread = context.Threads.FirstOrDefault(t => t.Id == id);
-            thread.IsHidden = true;
-            context.SaveChanges();
+            var thread = threadService.HideThread(id);
+            
             return Redirect($"/Category/Specify/{categoryId}");
+            //return RedirectToAction("Specify", "Category", new { id = threadCategoryForm.CategoryId });
 
         }
     }

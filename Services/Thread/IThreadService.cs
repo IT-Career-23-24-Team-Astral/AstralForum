@@ -9,7 +9,12 @@ namespace AstralForum.Services.Thread
 		Task<ThreadDto> EditThread(ThreadDto commentDto);
 		ThreadDto GetThreadById(int id);
 		Task<ThreadDto> DeleteThread(ThreadDto commentDto);
+		ThreadDto GetAllHiddenThreads();
+		ThreadDto GetAllDeletedThreads();
 		ThreadDto HideThread(int id);
+		ThreadDto UnhideThread(int id);
+		ThreadDto DeleteThread(int id);
+		ThreadDto GetDeletedThreadBack(int id);
 
     }
 }

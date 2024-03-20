@@ -892,9 +892,9 @@ C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\staticwebassets.pack.json
 C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\scopedcss\bundle\AstralForum.styles.css
 C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\scopedcss\projectbundle\AstralForum.bundle.scp.css
-C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\AstralForum.csproj.CopyComplete
 C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\AstralForum.dll
 C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\refint\AstralForum.dll
 C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\AstralForum.pdb
 C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\AstralForum.genruntimeconfig.cache
 C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\ref\AstralForum.dll
+C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\AstralFo.8703E9B0.Up2Date

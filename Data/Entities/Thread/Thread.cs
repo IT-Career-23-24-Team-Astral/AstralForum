@@ -1,4 +1,5 @@
 ﻿using AstralForum.Data.Entities;
+using Microsoft.Identity.Client;
 
 namespace AstralForum.Data.Entities.Thread
 {
