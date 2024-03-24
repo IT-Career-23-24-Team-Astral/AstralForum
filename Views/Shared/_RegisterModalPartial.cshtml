@@ -7,7 +7,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form asp-controller="Authentication" asp-action="Register" id="registerForm">
+				<form asp-controller="Authentication" asp-action="Register" id="registerForm" enctype="multipart/form-data">
 					@Html.AntiForgeryToken()
 					<div class="row mb-3">
 						<div class="col">
@@ -56,6 +56,15 @@
 						<span id="ConfirmPasswordRegistrationValidation" class="text-danger"></span>
 					</div>
 					<div class="mb-3">
+						<label for="RegisterProfilePicture" class="form-label">Profile picture</label>
+						<input name="ProfilePicture" type="file" class="form-control" id="RegisterProfilePicture">
+						<div id="profilePictureHelpBlock" class="form-text">
+							Make sure your profile picture follows our code of conduct. 
+							Your account may be blocked if your profile picture is deemed inappropriate
+						</div>
+						<span id="ProfilePictureRegistrationValidation" class="text-danger"></span>
+					</div>
+					<div class="mb-3">
 						Already have an account?
 						<a href="#" id="linkLogIn">Log in</a>
 					</div>
@@ -83,19 +92,23 @@
 		$('#registerForm').submit(function (event) {
 			event.preventDefault();
 
-			var formData = $(this).serialize();
+			var formData = new FormData(event.target);
 
-			$.post(this.action, formData, function (response) {
-				if (response.success == false) {
-					$.each(response.errors, function (fieldName, errorMessages) {
-						var $field = $('#' + fieldName + 'RegistrationValidation');
-						$field.text(errorMessages.join('\n'));
-					});
-				} else {
-					alert("Successful registration!");
-				}
-
-			});
+			fetch(this.action, {
+				method: 'POST',
+				body: formData
+			})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success === false) {
+						$.each(data.errors, function (fieldName, errorMessages) {
+							var $field = $('#' + fieldName + 'RegistrationValidation');
+							$field.text(errorMessages.join('\n'));
+						});
+					} else {
+						alert("Successful registration!");
+					}
+				});
 		});
 	})
 </script>

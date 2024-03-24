@@ -27,6 +27,7 @@ builder.Services.AddScoped<IThreadCategoryService, ThreadCategoryService>();
 builder.Services.AddScoped<IThreadService, ThreadService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 builder.Services.AddScoped<IThreadCategoryFacade, ThreadCategoryFacade>();
 builder.Services.AddScoped<IThreadFacade, ThreadFacade>();

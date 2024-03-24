@@ -6,6 +6,7 @@ namespace AstralForum.Data.Entities
     {
         public string FirstName { get; set; } = string.Empty;
         public string LastName { get; set; } = string.Empty;
+        public string ProfilePictureUrl { get; set; } = string.Empty;
         public DateTime DateOfCreation { get; set; }
 
         public User()

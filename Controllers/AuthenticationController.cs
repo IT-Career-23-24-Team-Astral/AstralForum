@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using System.Text.Encodings.Web;
 using System.Text;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
+using AstralForum.Services;
 
 namespace AstralForum.Controllers
 {
@@ -17,18 +20,21 @@ namespace AstralForum.Controllers
 		private readonly IUserStore<User> _userStore;
 		private readonly IUserEmailStore<User> _emailStore;
 		private readonly IEmailSender _emailSender;
+		private readonly ICloudinaryService _cloudinaryService;
 
 		public AuthenticationController(
 			UserManager<User> userManager,
 			IUserStore<User> userStore,
 			SignInManager<User> signInManager,
-			IEmailSender emailSender)
+			IEmailSender emailSender,
+			ICloudinaryService cloudinaryService)
 		{
 			_userManager = userManager;
 			_userStore = userStore;
 			_emailStore = (IUserEmailStore<User>)_userStore;
 			_signInManager = signInManager;
 			_emailSender = emailSender;
+			_cloudinaryService = cloudinaryService;
 		}
 
 		[HttpPost]
@@ -58,7 +64,7 @@ namespace AstralForum.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Register([FromForm] UserRegisterRequest registerRequest)
 		{
-			string returnUrl = Url.Content("~/");
+            string returnUrl = Url.Content("~/");
 
 			if (ModelState.IsValid)
 			{
@@ -67,14 +73,25 @@ namespace AstralForum.Controllers
 				user.FirstName = registerRequest.FirstName;
 				user.LastName = registerRequest.LastName;
 
+				var cloudinaryResult = _cloudinaryService.UploadImage(registerRequest.ProfilePicture);
+				user.ProfilePictureUrl = cloudinaryResult.SecureUrl.AbsoluteUri;
+
 				await _userStore.SetUserNameAsync(user, registerRequest.Email, CancellationToken.None);
 				await _emailStore.SetEmailAsync(user, registerRequest.Email, CancellationToken.None);
-				var result = await _userManager.CreateAsync(user, registerRequest.Password);
 
-				if (result.Succeeded)
+				var identityResult = await _userManager.CreateAsync(user, registerRequest.Password);
+
+				var result = new
+				{
+					IdentityResult = identityResult,
+					CloudinaryResult = cloudinaryResult
+				};
+
+				if (result.IdentityResult.Succeeded)
 				{
 					var userId = await _userManager.GetUserIdAsync(user);
 					var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
 					/*code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 					var callbackUrl = Url.Page(
 						"/Account/ConfirmEmail",
@@ -95,9 +112,15 @@ namespace AstralForum.Controllers
 					return Json(new { success = true });
 					//}
 				}
-				foreach (var error in result.Errors)
+
+				foreach (var error in result.IdentityResult.Errors)
 				{
 					ModelState.AddModelError("Failed", error.Description);
+				}
+
+				if (result.CloudinaryResult.Error != null)
+				{
+					ModelState.AddModelError("Failed", result.CloudinaryResult.Error.Message);
 				}
 			}
 
