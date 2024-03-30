@@ -108,6 +108,10 @@ namespace AstralForum.Migrations
                     b.Property<int>("CommentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CommentId");

@@ -50,7 +50,8 @@ namespace AstralForum.Controllers
         [Authorize]
         public async Task<IActionResult> Create(ThreadCreationFormModel threadForm)
         {
-            if (threadForm.Text == null || threadForm.Description == null)
+            // TODO: Find a better way to handle serverside input validation
+            if (threadForm.Title == null || threadForm.Text == null)
             {
 				return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
 			}
@@ -58,18 +59,6 @@ namespace AstralForum.Controllers
             await threadFacade.CreateThread(threadForm, await userManager.GetUserAsync(User));
 
             return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        public IActionResult AddComment(ThreadViewModel threadViewModel)
-        {
-            CommentAndReplyCreationFormModel formData = threadViewModel.CommentForm;
-
-
-
-            return RedirectToAction("Index", new { id = threadViewModel.ThreadDto.Id });
         }
     }
 }

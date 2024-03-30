@@ -1,5 +1,6 @@
 ﻿using AstralForum.Data.Entities.Comment;
 using AstralForum.Data.Entities.Reaction;
+using System.Collections.Generic;
 
 namespace AstralForum.ServiceModels
 {

@@ -48,7 +48,7 @@
 			</span>
 		</div>
 		<div class="col col-1 d-flex justify-content-end align-items-end">
-			<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-3 comment-profile-picture" width="45" height="45">
+			<img src="@Model.ThreadDto.CreatedBy.ProfilePictureUrl" class="rounded-3 comment-profile-picture" width="45" height="45">
 		</div>
 	</div>
 
@@ -93,6 +93,12 @@
 
 			<p>
 				@item.Text
+				<br />
+				@foreach (var attachment in item.Attachments)
+				{
+					<a href="@attachment.AttachmentUrl" target="_blank">@attachment.FileName</a>
+					<br />
+				}
 			</p>
 
 			<div class="row">
@@ -108,7 +114,7 @@
 							</span>
 						</div>
 						<div class="col d-flex justify-content-end align-items-end">
-							<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-3 comment-profile-picture" width="40" height="40">
+							<img src="@item.CreatedBy.ProfilePictureUrl" class="rounded-3 comment-profile-picture" width="40" height="40">
 						</div>
 					</div>
 				</div>
@@ -146,7 +152,7 @@
 		</button>
 	</form>
 
-	<form id="commentWritingForm" class="d-none" method="post">
+	<form id="commentWritingForm" class="d-none" method="post" enctype="multipart/form-data">
 		<div class="mb-3">
 			<label asp-for="CommentForm.Text" class="form-label">Comment text</label>
 			<textarea asp-for="CommentForm.Text" class="form-control" rows="4"></textarea>
@@ -228,7 +234,7 @@
 						.replaceAll('{commentId}', comment.id)
 						.replaceAll('{commentCreatedBy}', comment.createdBy.userName)
 						.replaceAll('{commentCreatedByDateOfCreation}', comment.createdBy.dateOfCreation)
-						.replaceAll('{commentCreatedByProfilePicture}', 'https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg')
+						.replaceAll('{commentCreatedByProfilePicture}', comment.createdBy.profilePictureUrl)
 						.replaceAll('{commentText}', comment.text)
 						.replaceAll('{commentCreatedOn}', comment.createdOn);
 					$(`#repliesToCommentId-${commentId}`).append(commentDiv);

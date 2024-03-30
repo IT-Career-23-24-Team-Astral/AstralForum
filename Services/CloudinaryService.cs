@@ -36,5 +36,17 @@ namespace AstralForum.Services
             };
             return cloudinary.Upload(uploadParams);
         }
+
+        public UploadResult UploadFile(IFormFile file)
+        {
+            var fileStream = new MemoryStream();
+            file.CopyTo(fileStream);
+            fileStream.Position = 0;
+            var uploadParams = new RawUploadParams()
+            {
+                File = new FileDescription(file.FileName, fileStream)
+            };
+            return cloudinary.Upload(uploadParams);
+        }
     }
 }

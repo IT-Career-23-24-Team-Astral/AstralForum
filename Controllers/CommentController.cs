@@ -43,7 +43,6 @@ namespace AstralForum.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize]
-		// TODO: fix attachments not to be shown as null
 		public async Task<IActionResult> AddThreadComment(ThreadViewModel viewModel, int threadId)
 		{
 			if (viewModel.CommentForm.Text == null)
@@ -59,7 +58,6 @@ namespace AstralForum.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize]
-		// TODO: fix attachments not to be shown as null
 		public async Task<IActionResult> AddCommentReply(ThreadViewModel viewModel, int threadId)
 		{
 			if (viewModel.CommentForm.Text == null)

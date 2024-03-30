@@ -7,5 +7,6 @@ namespace AstralForum.Data.Entities.Comment
         public int CommentId { get; set; }
         public Comment Comment { get; set; }
         public string AttachmentUrl { get; set; }
-    }
+		public string FileName { get; internal set; }
+	}
 }
