@@ -18,19 +18,18 @@ namespace AstralForum.Services.Comment
 
         public async Task<CommentDto> CreateComment(CommentAndReplyCreationFormModel commentAndReplyCreationFormModel, int threadId, User createdBy, int parentId = 0)
         {
-
             CommentDto commentDto = new CommentDto()
             {
                 ThreadId = threadId,
                 Text = commentAndReplyCreationFormModel.Text,
                 ParentCommentId = parentId != 0 ? parentId : null,
-                Attachments = commentAndReplyCreationFormModel.Attachments.Select(a => new CommentAttachmentDto()
+                Attachments = commentAndReplyCreationFormModel.Attachments != null ? commentAndReplyCreationFormModel.Attachments.Select(a => new CommentAttachmentDto()
 				{
 					CreatedBy = createdBy.ToDto(),
 					CreatedById = createdBy.Id,
 					AttachmentUrl = _cloudinaryService.UploadFile(a).SecureUrl.AbsoluteUri,
                     FileName = a.FileName
-				}).ToList(),
+				}).ToList() : new List<CommentAttachmentDto>(),
 				CreatedBy = createdBy.ToDto(),
                 CreatedById = createdBy.Id
             };

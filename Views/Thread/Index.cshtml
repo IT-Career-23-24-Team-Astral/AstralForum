@@ -93,7 +93,13 @@
 
 			<p>
 				@item.Text
-				<br />
+
+				@if (item.Attachments.Count > 0)
+				{
+					<hr />
+					<h6 class="fst-italic fw-lighter">Attachments: </h6>
+				}
+				
 				@foreach (var attachment in item.Attachments)
 				{
 					<a href="@attachment.AttachmentUrl" target="_blank">@attachment.FileName</a>
@@ -136,7 +142,7 @@
 		</div>
 	}
 
-	<form id="replyWritingForm" class="d-none" method="post">
+	<form id="replyWritingForm" class="d-none" method="post" enctype="multipart/form-data">
 		<input type="hidden" asp-for="CommentForm.CommentId" id="commentIdFormInput" />
 		<div class="mb-3">
 			<label asp-for="CommentForm.Text" class="form-label">Reply text</label>
@@ -182,6 +188,7 @@
 
 					<p>
 						{commentText}
+						{attachmentText}
 					</p>
 
 					<div class="row">
@@ -230,13 +237,24 @@
 			.then(response => response.json())
 			.then(comments =>
 				comments.forEach(function (comment) {
+					var commentAttachments;
+
+					if (Object.keys(comment.attachments).length) {
+						commentAttachments += `<hr /> <h6 class="fst-italic fw-lighter">Attachments: </h6>`
+					}
+
+					comment.attachments.forEach(function (attachment) {
+						commentAttachments += `<a href="${attachment.attachmentUrl}" target="_blank">${attachment.fileName}</a> <br />`
+					});
+
 					var commentDiv = replyTemplate
 						.replaceAll('{commentId}', comment.id)
 						.replaceAll('{commentCreatedBy}', comment.createdBy.userName)
 						.replaceAll('{commentCreatedByDateOfCreation}', comment.createdBy.dateOfCreation)
 						.replaceAll('{commentCreatedByProfilePicture}', comment.createdBy.profilePictureUrl)
 						.replaceAll('{commentText}', comment.text)
-						.replaceAll('{commentCreatedOn}', comment.createdOn);
+						.replaceAll('{commentCreatedOn}', comment.createdOn)
+						.replaceAll{'{commentAttachments}', commentAttachments};
 					$(`#repliesToCommentId-${commentId}`).append(commentDiv);
 				})
 			);

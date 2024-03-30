@@ -44,7 +44,8 @@ namespace AstralForum.Services
             fileStream.Position = 0;
             var uploadParams = new RawUploadParams()
             {
-                File = new FileDescription(file.FileName, fileStream)
+                File = new FileDescription(file.FileName, fileStream),
+                UseFilename = true
             };
             return cloudinary.Upload(uploadParams);
         }
