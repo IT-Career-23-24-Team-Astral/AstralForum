@@ -23,21 +23,10 @@ namespace AstralForum.Repositories
                 .Where(t => t.Id == id)
                 .Single();
         }
-        
-        /*
-        public void Edit(Post thread, ThreadModel model)
-        {
-            thread.Title = model.Title;
-            thread.Text = model.Text;
-            thread.ImageUrl = model.ImageUrl;
-            thread.ThreadCategoryId = model.ThreadCategory;
-            context.Threads.Update(thread);
-            context.SaveChanges();
-        }
-        public void Delete(Post thread)
-        {
-            context.Threads.Remove(thread);
-            context.SaveChanges();
-        }*/
+		
+
+
+
 	}
+
 }

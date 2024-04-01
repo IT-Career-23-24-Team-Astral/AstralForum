@@ -1,13 +1,14 @@
-﻿using AstralForum.Data.Entities.Comment;
+﻿
 using AstralForum.Mapping;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
 using AstralForum.Data.Entities.Thread;
 using AstralForum.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Services.Thread
 {
-    public class ThreadService : IThreadService
+	public class ThreadService : IThreadService
 	{
 		private readonly ThreadRepository _threadRepository;
 
@@ -39,6 +40,71 @@ namespace AstralForum.Services.Thread
 			ThreadDto threadDto = _threadRepository.GetThreadById(id).ToDto(includeCommentReplies: false);
 
 			return threadDto;
+		}
+        public List<ThreadDto> SearchPostsByCreatedBy(int id, string searchQuery)
+        {
+            var threads = _threadRepository
+                .GetAll()
+                .Include(t => t.ThreadCategory)
+                .Include(t => t.CreatedBy)
+                .Include(t => t.Comments)
+                    .ThenInclude(c => c.CreatedBy)
+                .Include(t => t.Comments)
+                    .ThenInclude(c => c.Reactions)
+                .Include(t => t.Comments)
+                    .ThenInclude(c => c.Attachments)
+                .Include(t => t.Reactions)
+                .Include(t => t.Attachments)
+				.AsEnumerable()
+                .Where(t => t.Id == id && (searchQuery == null || t.Comments.Any(c => c.CreatedBy.UserName.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase))))
+                .Select(tc => tc.ToDto(includeCommentReplies: false))
+                .ToList();
+
+            return threads;
+        }
+		public List<ThreadDto> SearchPostsByText(int id, string searchQuery)
+		{
+			var threads = _threadRepository
+				.GetAll()
+				.Include(t => t.ThreadCategory)
+				.Include(t => t.CreatedBy)
+				.Include(t => t.Comments)
+					.ThenInclude(c => c.CreatedBy)
+				.Include(t => t.Comments)
+					.ThenInclude(c => c.Reactions)
+				.Include(t => t.Comments)
+					.ThenInclude(c => c.Attachments)
+				.Include(t => t.Reactions)
+				.Include(t => t.Attachments)
+				.AsEnumerable()
+				.Where(t => t.Id == id && (searchQuery == null ||
+					t.Comments.Any(c => c.Text.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase))))
+				.Select(tc => tc.ToDto(includeCommentReplies: false))
+				.ToList();
+
+			return threads;
+		}
+		public List<ThreadDto> SearchPostsByBoth(int id, string searchQuery)
+		{
+			var threads = _threadRepository
+				.GetAll()
+				.Include(t => t.ThreadCategory)
+				.Include(t => t.CreatedBy)
+				.Include(t => t.Comments)
+					.ThenInclude(c => c.CreatedBy)
+				.Include(t => t.Comments)
+					.ThenInclude(c => c.Reactions)
+				.Include(t => t.Comments)
+					.ThenInclude(c => c.Attachments)
+				.Include(t => t.Reactions)
+				.Include(t => t.Attachments)
+				.AsEnumerable()
+				.Where(t => t.Id == id && (searchQuery == null ||
+					t.Comments.Any(c => c.Text.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase)) ||
+					t.CreatedBy.UserName.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase)))
+				.Select(tc => tc.ToDto(includeCommentReplies: false))
+				.ToList();
+			return threads;
 		}
 	}
 }

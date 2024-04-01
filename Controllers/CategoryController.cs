@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace AstralForum.Controllers
 {
@@ -105,5 +106,17 @@ namespace AstralForum.Controllers
 
             return View(model);
         }
+        public IActionResult NoResults()
+        {
+            if (TempData["CategoryId"] == null)
+            {
+                return RedirectToAction("Index", "Category");
+            }
+            int id = (int)TempData["CategoryId"];
+            CategoryThreadsViewModel model = threadCategoryFacade.NoResults(id);
+            return View(model);
+        }
+
+
     }
 }

@@ -3,6 +3,7 @@ using AstralForum.Data.Entities;
 using AstralForum.Data.Entities.Comment;
 using AstralForum.Mapping;
 using AstralForum.Models;
+using AstralForum.Models.Comment;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
 using AstralForum.Services.Comment;
@@ -52,6 +53,18 @@ namespace AstralForum.Services
             Data.Entities.Comment.Comment comment = commentDto.ToEntity();
 
             return (await _commentRepository.Delete(comment)).ToDto();
+        }
+        public CommentTableViewModel GetCommentTableViewModel(CommentDto commentDto)
+        {
+            CommentTableViewModel model = new CommentTableViewModel()
+			{
+				Id = commentDto.Id,
+				Text = commentDto.Text,
+				Author = commentDto.CreatedBy,
+				DateOfCreation = commentDto.CreatedOn,
+			
+			};
+            return model;
         }
 
     }

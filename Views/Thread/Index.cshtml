@@ -11,6 +11,26 @@
 <h5>
 	Thread in category <a asp-controller="Category" asp-action="Specify" asp-route-id="@Model.ThreadDto.ThreadCategoryId">@Model.ThreadDto.ThreadCategoryName</a>
 </h5>
+<div class="col-auto">
+	<form id="searchForm" class="form-inline" asp-controller="Thread" asp-action="SearchPostsByText" method="get">
+
+		<input type="hidden" name="id" value="@Model.ThreadDto.Id" />
+		<input class="form-control form-control-sm mr-2" type="text" placeholder="Search" aria-label="Search" name="searchQuery">
+		<button type="submit" class="btn btn-primary btn-sm">Search</button>
+	</form>
+</div>
+	<form class="filter-box">
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="filterComment" name="filterComment">
+			<label class="form-check-label" for="filterComment">Filter by Comment</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="filterCreatedBy" name="filterCreatedBy">
+			<label class="form-check-label" for="filterCreatedBy">Filter by Author</label>
+		</div>
+	</form>
+
+
 
 <div class="container">
 	<div class="row">
@@ -240,6 +260,31 @@
 		$(".btn-comment").click(function () {
 			$("#commentWritingForm").removeClass("d-none");
 			$(window).scrollTop($("#commentWritingForm").position().top);
+		});
+	});
+	$(document).ready(function () {
+		$(".btn-comment").click(function () {
+			$("#commentWritingForm").removeClass("d-none");
+			$(window).scrollTop($("#commentWritingForm").position().top);
+		});
+
+		$(".filter-box input[type='checkbox']").change(function () {
+			var commentChecked = $("#filterComment").is(":checked");
+			var createdByChecked = $("#filterCreatedBy").is(":checked");
+
+			if (commentChecked && createdByChecked) {
+				alert("Only one filter can be applied.");
+				$("#filterComment").prop("checked", false);
+				$("#filterCreatedBy").prop("checked", false);
+			} else {
+				var action = "/Thread/SearchPostsByBoth";
+				if (commentChecked) {
+					action = "/Thread/SearchPostsByText";
+				} else if (createdByChecked) {
+					action = "/Thread/SearchPostsByCreatedBy";
+				}
+				$("#searchForm").attr("action", action);
+			}
 		});
 	});
 </script>

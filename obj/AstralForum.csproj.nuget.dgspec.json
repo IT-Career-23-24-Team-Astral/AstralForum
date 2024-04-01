@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\IT-Career\\IT-Career-2023-2024\\AstralForum\\AstralForum.csproj": {}
+    "C:\\it kariera\\11.03.2024 AstralForum\\AstralForum.csproj": {}
   },
   "projects": {
-    "D:\\IT-Career\\IT-Career-2023-2024\\AstralForum\\AstralForum.csproj": {
+    "C:\\it kariera\\11.03.2024 AstralForum\\AstralForum.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\IT-Career\\IT-Career-2023-2024\\AstralForum\\AstralForum.csproj",
+        "projectUniqueName": "C:\\it kariera\\11.03.2024 AstralForum\\AstralForum.csproj",
         "projectName": "AstralForum",
-        "projectPath": "D:\\IT-Career\\IT-Career-2023-2024\\AstralForum\\AstralForum.csproj",
-        "packagesPath": "C:\\Users\\Iavor Vassilev\\.nuget\\packages\\",
-        "outputPath": "D:\\IT-Career\\IT-Career-2023-2024\\AstralForum\\obj\\",
+        "projectPath": "C:\\it kariera\\11.03.2024 AstralForum\\AstralForum.csproj",
+        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
+        "outputPath": "C:\\it kariera\\11.03.2024 AstralForum\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Iavor Vassilev\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
