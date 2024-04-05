@@ -30,6 +30,18 @@
 
 			<p>
 				@Model.ThreadDto.Text
+
+				@if (Model.ThreadDto.Attachments.Count > 0)
+				{
+					<hr />
+					<h6 class="fst-italic fw-lighter">Attachments: </h6>
+				}
+
+				@foreach (var attachment in Model.ThreadDto.Attachments)
+				{
+					<a href="@attachment.AttachmentUrl" target="_blank">@attachment.FileName</a>
+					<br />
+				}
 			</p>
 		</div>
 	</div>

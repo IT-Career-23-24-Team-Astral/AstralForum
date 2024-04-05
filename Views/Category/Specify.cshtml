@@ -29,7 +29,7 @@
         What goes in this category: @Model.Description
     </p>
 
-    <form asp-controller="Thread" asp-action="Create" asp-route-id="@Model.CategoryId" method="get">
+    <form asp-controller="Thread" asp-action="Create" asp-route-categoryId="@Model.CategoryId" asp-route-categoryName="@Model.CategoryName" method="get">
         <button type="submit" class="btn btn-success mt-3">
             New thread
         </button>
@@ -84,6 +84,7 @@
                         else
                         {
                             <div>
+                                @item.LastComment.Text
                                 <div class="row">
                                     <div class="col">
                                         @if (item.LastComment.CreatedBy == null)

@@ -36,11 +36,13 @@ namespace AstralForum.Controllers
         }
 
         [Authorize]
-        public IActionResult Create(int id)
+        [Route("/Thread/Create/{categoryId}/{categoryName}")]
+        public IActionResult Create(int categoryId, string categoryName)
         {
             ThreadCreationFormModel model = new ThreadCreationFormModel()
             {
-                CategoryId = id
+                CategoryId = categoryId,
+                CategoryName = categoryName
             };
             return View(model);
         }
@@ -48,7 +50,8 @@ namespace AstralForum.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create(ThreadCreationFormModel threadForm)
+		[Route("/Thread/Create/{categoryId}/{categoryName}")]
+		public async Task<IActionResult> Create(ThreadCreationFormModel threadForm)
         {
             // TODO: Find a better way to handle serverside input validation
             if (threadForm.Title == null || threadForm.Text == null)
