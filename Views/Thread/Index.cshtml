@@ -111,7 +111,7 @@
 					<hr />
 					<h6 class="fst-italic fw-lighter">Attachments: </h6>
 				}
-				
+
 				@foreach (var attachment in item.Attachments)
 				{
 					<a href="@attachment.AttachmentUrl" target="_blank">@attachment.FileName</a>
@@ -136,8 +136,18 @@
 						</div>
 					</div>
 				</div>
-				<div class="col">
-					Reaction section
+				<div class="col d-flex flex-wrap">
+					@for (int i = 0; i < 100; i++)
+					{
+						<div class="m-1 px-1 border border-1 border-secondary rounded d-flex align-items-center">
+							<img class="me-1" src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.vhv.rs%2Ffile%2Fmax%2F29%2F296247_smiling-emoji-png.png&f=1&nofb=1&ipt=786c90d315795a9c4ec1a4d3b74de76669721d4acba0debfe885749491fe7744&ipo=images" width="20" height="20" />
+							<span class="fw-light">5</span>
+						</div>
+						<div class="m-1 px-1 border border-1 border-secondary rounded d-flex align-items-center">
+							<img class="me-1" src="https://em-content.zobj.net/source/google/387/sparkles_2728.png" width="20" height="20" />
+							<span class="fw-light">5</span>
+						</div>
+					}
 				</div>
 				<div class="col col-2 d-flex justify-content-end align-self-center">
 					<btn class="btn btn-light btn-show-replies" onclick="btnShowReplies(@item.Id)">Show replies</btn>
@@ -145,11 +155,9 @@
 			</div>
 
 			<div id="replyWritingForm-@item.Id">
-			
 			</div>
 
 			<div id="repliesToCommentId-@item.Id" class="mt-3">
-			
 			</div>
 		</div>
 	}
@@ -186,57 +194,57 @@
 
 <script>
 	const replyTemplate = `
-				<div class="border border-secondary bg-secondary bg-opacity-10 rounded px-2 py-2 mb-3">
-					<div class="row">
-						<div class="col">
-							<span class="fw-light">
-								Posted at {commentCreatedOn}
-							</span>
-						</div>
-						<div class="col-2 d-flex justify-content-end">
-								<btn class="btn btn-primary btn-reply" onclick="btnAddReply({commentId})">Reply to this comment</btn>
-						</div>
-					</div>
-
-					<p>
-						{commentText}
-						{commentAttachments}
-					</p>
-
-					<div class="row">
-						<div class="col col-2">
+						<div class="border border-secondary bg-secondary bg-opacity-10 rounded px-2 py-2 mb-3">
 							<div class="row">
-								<div class="col-8">
-									<span class="font-monospace">
-										by {commentCreatedBy}
-									</span>
-									<br>
+								<div class="col">
 									<span class="fw-light">
-										Member since: {commentCreatedByDateOfCreation}
+										Posted at {commentCreatedOn}
 									</span>
 								</div>
-								<div class="col d-flex justify-content-end align-items-end">
-									<img src="{commentCreatedByProfilePicture}" class="rounded-3 comment-profile-picture" width="40" height="40">
+								<div class="col-2 d-flex justify-content-end">
+										<btn class="btn btn-primary btn-reply" onclick="btnAddReply({commentId})">Reply to this comment</btn>
 								</div>
 							</div>
-						</div>
-						<div class="col">
-							Reaction section
-						</div>
-						<div class="col col-2 d-flex justify-content-end align-self-center">
-								<btn class="btn btn-light btn-show-replies" onclick="btnShowReplies({commentId})">Show replies</btn>
-						</div>
-					</div>
 
-					<div id="replyWritingForm-{commentId}">
+							<p>
+								{commentText}
+								{commentAttachments}
+							</p>
 
-					</div>
+							<div class="row">
+								<div class="col col-2">
+									<div class="row">
+										<div class="col-8">
+											<span class="font-monospace">
+												by {commentCreatedBy}
+											</span>
+											<br>
+											<span class="fw-light">
+												Member since: {commentCreatedByDateOfCreation}
+											</span>
+										</div>
+										<div class="col d-flex justify-content-end align-items-end">
+											<img src="{commentCreatedByProfilePicture}" class="rounded-3 comment-profile-picture" width="40" height="40">
+										</div>
+									</div>
+								</div>
+								<div class="col">
+									Reaction section
+								</div>
+								<div class="col col-2 d-flex justify-content-end align-self-center">
+										<btn class="btn btn-light btn-show-replies" onclick="btnShowReplies({commentId})">Show replies</btn>
+								</div>
+							</div>
 
-					<div id="repliesToCommentId-{commentId}" class="mt-3">
-						
-					</div>
-				</div>
-				`;
+							<div id="replyWritingForm-{commentId}">
+
+							</div>
+
+							<div id="repliesToCommentId-{commentId}" class="mt-3">
+
+							</div>
+						</div>
+						`;
 
 	function btnAddReply(replyToCommentId) {
 		document.getElementById(`replyWritingForm-${replyToCommentId}`).append(document.getElementById("replyWritingForm"));
