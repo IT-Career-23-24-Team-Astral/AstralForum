@@ -4,6 +4,7 @@ using AstralForum.Repositories;
 using AstralForum.ServiceModels;
 using AstralForum.Data.Entities.Thread;
 using AstralForum.Data.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace AstralForum.Services.Thread
 {
@@ -40,5 +41,45 @@ namespace AstralForum.Services.Thread
 
 			return threadDto;
 		}
-	}
+        public async Task<List<ThreadDto>> GetAllHiddenThreads()
+        {
+            var hiddenThreads = await _threadRepository.GetAllHiddenThreads();
+
+            var threadDtos = hiddenThreads.Select(thread => thread.ToDto(false, false, false, false, false, false)).ToList();
+
+            return threadDtos;
+        }
+        public async Task<List<ThreadDto>> GetAllDeletedThreads()
+        {
+            var deletedThreads = await _threadRepository.GetAllDeletedThreads();
+
+            var threadDtos = deletedThreads.Select(thread => thread.ToDto(false,false,false,false,false,false)).ToList();
+
+            return threadDtos;
+        }
+        public ThreadDto HideThread(int id)
+        {
+            ThreadDto threadDto = _threadRepository.HideThread(id).ToDto(false, false, false, false, false, false, false);
+            return threadDto;
+        }
+        public ThreadDto UnhideThread(int id)
+        {
+            ThreadDto threadDto = _threadRepository.UnhideThread(id).ToDto(false, false, false, false, false, false, false);
+            return threadDto;
+        }
+        public ThreadDto DeleteThread(int id)
+        {
+            ThreadDto threadDto = _threadRepository.DeleteThread(id).ToDto(false, false, false, false, false, false, false);
+            return threadDto;
+        }
+        public ThreadDto GetDeletedThreadBack(int id)
+        {
+            ThreadDto threadDto = _threadRepository.GetDeletedThreadBack(id).ToDto(false, false, false, false, false, false, false);
+            return threadDto;
+        }
+        public void DeleteAllThreadsByUserId(int id)
+        {
+            _threadRepository.DeleteAllThreadsByUserId(id);
+        }
+    }
 }

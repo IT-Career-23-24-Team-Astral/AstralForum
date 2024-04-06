@@ -7,6 +7,9 @@
     ViewData["Title"] = "Threads in " + Model.CategoryName;
     Layout = "../Shared/_Layout.cshtml";
 }
+@{
+    int categoryId = Model.CategoryId;
+}
 
 <div class="container">
     <div class="row">
@@ -55,7 +58,9 @@
         <tbody class="table-group-divider">
             @foreach (var item in Model.Threads)
             {
-                <tr id="tableRow" thread-id="@item.Id">
+                if(item.IsHidden == false)
+                {
+                    <tr id="tableRow" thread-id="@item.Id">
                     <td>
                         @item.Title
                     </td>
@@ -80,38 +85,57 @@
                         @if (item.LastComment == null)
                         {
                             <p class="fst-italic fw-semibold">No comments have been made on this thread yet</p>
-                        }
-                        else
-                        {
-                            <div>
-                                @item.LastComment.Text
-                                <div class="row">
-                                    <div class="col">
-                                        @if (item.LastComment.CreatedBy == null)
-                                        {
-                                            <span class="font-monospace">
-                                                by [Unknown]
-                                            </span>
-                                        }
-                                        else
-                                        {
-                                            <span class="font-monospace">
-                                                by @item.LastComment.CreatedBy.UserName
-                                            </span>
-                                        }
-                                        <br>
-                                        <span class="fw-light">
-                                            on @item.LastComment.CreatedOn.ToString("g")
-                                        </span>
-                                    </div>
-                                    <div class="col d-flex justify-content-end">
-                                        <img src="@item.LastComment.CreatedBy?.ProfilePictureUrl" class="rounded-circle" width="45" height="45">
-                                    </div>
+                            <div class="col d-flex justify-content-end">
+                            @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                            {
+                                        <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
+                                            <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
+                                            <button type="submit" class="btn btn-danger adminButton" style="margin: -34px 0px 0px 0px">Hide</button>
+                                </form>
+                            }
                                 </div>
+                            }
+                            else
+                            {
+                            <div>
+                                @if (item.IsHidden == false)
+                                {
+                                    @item.LastComment.Text
+                                    <div class="row">
+                                        <div class="col">
+                                            @if (item.LastComment.CreatedBy == null)
+                                            {
+											    <span class="font-monospace">by [Unknown]</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="font-monospace">
+                                                    by @item.LastComment.CreatedBy.UserName
+                                                </span>
+                                            }
+                                            <br>
+                                                <span class="fw-light">
+                                                    on @item.LastComment.CreatedOn.ToString("g")
+                                                </span>
+                                        </div>
+                                        <div class="col d-flex justify-content-end">
+                                            <img src="@item.LastComment.CreatedBy?.ProfilePictureUrl" class="rounded-circle" style="margin: 13px 0px 0px 10px" width="45" height="45">
+                                            @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                                            {
+                                                <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
+                                                    <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
+                                                    <button type="submit" class="btn btn-danger adminButton" style="margin: 15px 0px 0px 10px">Hide</button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         }
                     </td>
                 </tr>
+                }
+                
             }
         </tbody>
     </table>

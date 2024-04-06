@@ -40,9 +40,17 @@ namespace AstralForum.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Login([FromForm] UserLoginRequest loginRequest)
 		{
-			if (ModelState.IsValid)
+            // Проверка дали човекът е баннат
+            if (ModelState.IsValid)
 			{
-				var result = await _signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, loginRequest.RememberMe, lockoutOnFailure: false);
+                var user = await _userManager.FindByEmailAsync(loginRequest.Email);
+
+                if (user != null && user.IsBanned)
+                {
+                    ModelState.AddModelError("Banned", "Your account is banned.");
+                    return Json(new { success = false, errors = ModelState });
+                }
+                var result = await _signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, loginRequest.RememberMe, lockoutOnFailure: false);
 				if (result.Succeeded)
 				{
 					return Json(new { success = true });

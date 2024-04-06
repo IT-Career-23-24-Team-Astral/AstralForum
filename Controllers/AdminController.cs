@@ -1,7 +1,8 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Models.Admin;
-using AstralForum.Models.Thread;
+using AstralForum.Repositories;
 using AstralForum.Services;
+using AstralForum.Services.Thread;
 using AstralForum.Services.ThreadCategory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,33 +15,41 @@ namespace AstralForum.Controllers
         private readonly IUserFacade userFacade;
         private readonly RoleManager<Role> roleManager;
 		private readonly UserManager<User> userManager;
-		public AdminController(IUserFacade userFacade, RoleManager<Role> roleManager, UserManager<User> userManager)
+        private readonly IThreadFacade threadFacade;
+        private readonly IThreadService threadService;
+        private readonly ThreadRepository threadRepository;
+        private readonly ApplicationDbContext applicationDbContext;
+        public AdminController(IUserFacade userFacade, RoleManager<Role> roleManager, UserManager<User> userManager, IThreadFacade threadFacade, IThreadService threadService, ThreadRepository threadRepository, ApplicationDbContext applicationDbContext)
         {
             this.userFacade = userFacade;
             this.roleManager = roleManager;
             this.userManager = userManager;
+            this.threadFacade = threadFacade;
+            this.threadService = threadService;
+            this.threadRepository = threadRepository;
+            this.applicationDbContext = applicationDbContext;
         }
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             AllUsersViewModel model = await userFacade.GetAllUsers();
 
             return View(model);
         }
-		[Authorize(Roles = "Admin")]
+		//[Authorize(Roles = "Admin")]
 		[HttpGet]
         public IActionResult CreateRole()
         {
             return View();
         }
-	    [Authorize(Roles = "Admin")]
+	    //[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> DeleteRole(int id)
         {
             var role = await roleManager.FindByIdAsync(id.ToString());
             if(role == null)
             {
-                return View("Error");
+                return NotFound();                                                            
             }
             else
             {
@@ -52,7 +61,7 @@ namespace AstralForum.Controllers
                 return View("ListRoles");
             }
         }
-		[Authorize(Roles = "Admin")]
+		//[Authorize(Roles = "Admin")]
 		[HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
@@ -70,21 +79,21 @@ namespace AstralForum.Controllers
             }
             return View(model);
         }
-	    [Authorize(Roles = "Admin")]
+	    //[Authorize(Roles = "Admin")]
 		[HttpGet]
         public IActionResult ListRoles()
         {
             var roles = roleManager.Roles;
             return View(roles);
         }
-		[Authorize(Roles = "Admin")]
+		//[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> EditRole(string id)
         {
             var role = await roleManager.FindByIdAsync(id);
             if (role == null)
             {
-                return View("Error");
+                return NotFound();
             }
             var model = new EditRoleViewModel
             {
@@ -100,14 +109,14 @@ namespace AstralForum.Controllers
             }
             return View(model);
         }
-		[Authorize(Roles = "Admin")]
+		//[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<IActionResult> EditRole(EditRoleViewModel model)
 		{
 			var role = await roleManager.FindByIdAsync(model.Id);
 			if (role == null)
 			{
-				return View("Error");
+				return NotFound();
 			}
             else
             {
@@ -119,11 +128,11 @@ namespace AstralForum.Controllers
                 }
                 else
                 {
-					return View("Error");
-				}
+					return NotFound();
+                }
             }
 		}
-		[Authorize(Roles = "Admin")]
+		//[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> EditUsersInRole(string id)
         {
@@ -131,8 +140,8 @@ namespace AstralForum.Controllers
             var role = await roleManager.FindByIdAsync(id);
 			if (role == null)
 			{
-				return View("Error");
-			}
+				return NotFound();
+            }
             var model = new List<UserRoleViewModel>();
 
             foreach (var user in userManager.Users)
@@ -155,15 +164,15 @@ namespace AstralForum.Controllers
 			}
             return View(model);
 		}
-		[Authorize(Roles = "Admin")]
+		//[Authorize(Roles = "Admin")]
 		[HttpPost] 
         public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string id)
         {
             var role = await roleManager.FindByIdAsync(id);
 			if (role == null)
 			{
-				return View("Error");
-			}
+				return NotFound();
+            }
             for(int i = 0; i < model.Count; i++)
             {
 				var user = await userManager.FindByIdAsync(model[i].UserId.ToString());
@@ -194,5 +203,89 @@ namespace AstralForum.Controllers
             }
             return RedirectToAction("EditRole", new { Id = id});
 		}
-	}
+        [HttpGet]
+        public async Task<IActionResult> Ban(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var user = await applicationDbContext.Users.FindAsync(id);
+            user.IsBanned = true;
+            await applicationDbContext.SaveChangesAsync();
+            string returnUrl = HttpContext.Request.Headers["Referer"];
+            return Redirect(returnUrl);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Unban(int id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var user = await applicationDbContext.Users.FindAsync(id);
+            user.IsBanned = false;
+            await applicationDbContext.SaveChangesAsync();
+            string returnUrl = HttpContext.Request.Headers["Referer"];
+            return Redirect(returnUrl);
+        }
+        public async Task<IActionResult> TimeOut(int id, DateTime time)
+        {
+            var user = await applicationDbContext.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound(); 
+            }
+            DateTime maxTimeOut = DateTime.Now.AddHours(24);
+            if (time > maxTimeOut)
+            {
+                return BadRequest("Time exceeds maximum allowed 24 hours timeout.");
+            }
+            user.TimeOut = time;
+            await applicationDbContext.SaveChangesAsync();
+            string returnUrl = HttpContext.Request.Headers["Referer"];
+            return Redirect(returnUrl);
+        }
+        //  Timed out for @((item.TimeOut - DateTime.Now).TotalHours.ToString("0")) hours and @((item.TimeOut - DateTime.Now).Minutes) minutes
+        public async Task<IActionResult> DeleteTimeout(int id, DateTime time)
+        {
+            var user = await applicationDbContext.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            user.TimeOut = time;
+            await applicationDbContext.SaveChangesAsync();
+            string returnUrl = HttpContext.Request.Headers["Referer"];
+            return Redirect(returnUrl);
+        }
+        [HttpGet]
+        public async Task<IActionResult> HiddenThreads()
+        {
+            HiddenThreadsViewModel model = await threadFacade.GetAllHiddenThreads();
+
+            return View(model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> DeleteThread(int id, int CreatedById)
+        {
+            var thread = threadService.DeleteThread(id);
+
+            return RedirectToAction("HiddenThreads");
+        }
+        [HttpGet]
+        public async Task<IActionResult> RecoverThread(int id)
+        {
+            var thread = threadService.GetDeletedThreadBack(id);
+
+            return RedirectToAction("HiddenThreads");
+        }
+        [HttpGet]
+        public async Task<IActionResult> DeleteAllThreads(int id)
+        {
+            threadService.DeleteAllThreadsByUserId(id);
+            string returnUrl = HttpContext.Request.Headers["Referer"];
+            return Redirect(returnUrl);
+        }
+    }
 }

@@ -29,11 +29,11 @@ namespace AstralForum.Repositories
 			await this.context.SaveChangesAsync();
 			return entity;
 		}
-		public IQueryable<T> GetAll()
-		{
-			return context.Set<T>().AsQueryable();
-		}
-		public int Save()
+        public IQueryable<T> GetAll()
+        {
+            return context.Set<T>().AsQueryable();
+        }
+        public int Save()
 		{
 			return context.SaveChanges();
 		}

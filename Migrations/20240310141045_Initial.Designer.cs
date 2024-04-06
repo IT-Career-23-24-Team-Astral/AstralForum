@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AstralForum.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240309113007_Add roles table")]
-    partial class Addrolestable
+    [Migration("20240310141045_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
