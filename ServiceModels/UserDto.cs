@@ -8,5 +8,7 @@
 		public string FirstName { get; set; }
 		public string LastName { get; set; }
 		public DateTime DateOfCreation { get; set; }
-	}
+		public bool IsBanned { get; set; }
+        public DateTime TimeOut { get; set; }
+    }
 }

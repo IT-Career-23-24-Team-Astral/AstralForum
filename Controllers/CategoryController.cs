@@ -22,13 +22,11 @@ namespace AstralForum.Controllers
         private readonly IThreadCategoryFacade threadCategoryFacade;
         private readonly IThreadService threadService;
         private readonly UserManager<User> userManager;
-        private readonly ApplicationDbContext context;
-        public CategoryController(IThreadCategoryFacade threadFacade, IThreadService threadService, UserManager<User> userManager, ApplicationDbContext context)
+        public CategoryController(IThreadCategoryFacade threadFacade, IThreadService threadService, UserManager<User> userManager)
         {
             this.threadCategoryFacade = threadFacade;
             this.threadService = threadService;
             this.userManager = userManager;
-            this.context = context;
         }
 
         public IActionResult Index()

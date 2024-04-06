@@ -1,6 +1,10 @@
-﻿using AstralForum.ServiceModels;
+﻿using AstralForum.Data.Entities.Thread;
+using AstralForum.ServiceModels;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
 using Thread = AstralForum.Data.Entities.Thread.Thread;
 
 namespace AstralForum.Repositories
@@ -25,23 +29,32 @@ namespace AstralForum.Repositories
                 .Where(t => t.Id == id)
                 .Single();
         }
-        public List<Thread> GetAllHiddenThreads()
+        public void DeleteAllThreadsByUserId(int userId)
         {
-            return context.Threads
-                .Include(t => t.CreatedBy)
-                .Include(t => t.Title)
-                .Include(t => t.Text)
-                .Where(t => t.IsHidden == true)
-                .ToList();
+            var threadsToDelete = context.Threads.Where(t => t.CreatedById == userId);
+
+            foreach (var thread in threadsToDelete)
+            {
+                thread.IsHidden = true;
+                thread.IsDeleted = true;
+                context.SaveChanges();
+            }
         }
-        public List<Thread> GetAllDeletedThreads()
+        public async Task<List<Thread>> GetAllHiddenThreads()
         {
-            return context.Threads
+            return await context.Threads
+                .Include(t => t.CreatedBy)
+                .Where(t => t.IsHidden && t.IsDeleted == false)
+                .ToListAsync();
+        }
+        public async Task<List<Thread>> GetAllDeletedThreads()
+        {
+            return await context.Threads
                 .Include(t => t.CreatedBy)
                 .Include(t => t.Title)
                 .Include(t => t.Text)
                 .Where(t => t.IsDeleted == true)
-                .ToList();
+                .ToListAsync();
         }
         public Thread HideThread(int id)
         {

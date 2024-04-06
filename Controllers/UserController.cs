@@ -150,7 +150,6 @@ namespace AstralForum.Controllers
         }*/
         
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(int id)
         {
             UserInfoModel model = await userFacade.GetUser(id);

@@ -1,5 +1,6 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Mapping;
+using AstralForum.Models.Admin;
 using AstralForum.Models.Thread;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
@@ -43,6 +44,28 @@ namespace AstralForum.Services.Thread
             };
 
             return await threadService.CreateThread(threadDto, createdBy);
+        }
+        public async Task<HiddenThreadsViewModel> GetAllHiddenThreads()
+        {
+            List<ThreadDto> threads = await threadService.GetAllHiddenThreads();
+
+            HiddenThreadsViewModel viewModel = new HiddenThreadsViewModel()
+            {
+                Threads = threads
+            };
+
+            return viewModel;
+        }
+        public async Task<HiddenThreadsViewModel> GetAllDeletedThreads()
+        {
+            List<ThreadDto> threads = await threadService.GetAllDeletedThreads();
+
+            HiddenThreadsViewModel viewModel = new HiddenThreadsViewModel()
+            {
+                Threads = threads
+            };
+
+            return viewModel;
         }
     }
 }

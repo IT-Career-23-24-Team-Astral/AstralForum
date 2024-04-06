@@ -1,6 +1,5 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Models.Admin;
-using AstralForum.Models.Thread;
 using AstralForum.Repositories;
 using AstralForum.Services;
 using AstralForum.Services.Thread;
@@ -204,6 +203,7 @@ namespace AstralForum.Controllers
             }
             return RedirectToAction("EditRole", new { Id = id});
 		}
+        [HttpGet]
         public async Task<IActionResult> Ban(int id)
         {
             if (id == null)
@@ -211,10 +211,12 @@ namespace AstralForum.Controllers
                 return NotFound();
             }
             var user = await applicationDbContext.Users.FindAsync(id);
-            user.LockoutEnabled = true;
+            user.IsBanned = true;
             await applicationDbContext.SaveChangesAsync();
-            return null;
+            string returnUrl = HttpContext.Request.Headers["Referer"];
+            return Redirect(returnUrl);
         }
+        [HttpGet]
         public async Task<IActionResult> Unban(int id)
         {
             if (id == null)
@@ -222,26 +224,68 @@ namespace AstralForum.Controllers
                 return NotFound();
             }
             var user = await applicationDbContext.Users.FindAsync(id);
-            user.LockoutEnabled = false;
+            user.IsBanned = false;
             await applicationDbContext.SaveChangesAsync();
-            return null;
+            string returnUrl = HttpContext.Request.Headers["Referer"];
+            return Redirect(returnUrl);
         }
         public async Task<IActionResult> TimeOut(int id, DateTime time)
         {
-            if (id == null)
+            var user = await applicationDbContext.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound(); 
+            }
+            DateTime maxTimeOut = DateTime.Now.AddHours(24);
+            if (time > maxTimeOut)
+            {
+                return BadRequest("Time exceeds maximum allowed 24 hours timeout.");
+            }
+            user.TimeOut = time;
+            await applicationDbContext.SaveChangesAsync();
+            string returnUrl = HttpContext.Request.Headers["Referer"];
+            return Redirect(returnUrl);
+        }
+        //  Timed out for @((item.TimeOut - DateTime.Now).TotalHours.ToString("0")) hours and @((item.TimeOut - DateTime.Now).Minutes) minutes
+        public async Task<IActionResult> DeleteTimeout(int id, DateTime time)
+        {
+            var user = await applicationDbContext.Users.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            DateTime maxTimeOut = DateTime.Now.AddHours(24);
-            if(time > maxTimeOut)
-            {
-                return null;
-            }
-            var user = await applicationDbContext.Users.FindAsync(id);
-            user.LockoutEnd = time;
+            user.TimeOut = time;
             await applicationDbContext.SaveChangesAsync();
-            return null;
+            string returnUrl = HttpContext.Request.Headers["Referer"];
+            return Redirect(returnUrl);
         }
+        [HttpGet]
+        public async Task<IActionResult> HiddenThreads()
+        {
+            HiddenThreadsViewModel model = await threadFacade.GetAllHiddenThreads();
 
+            return View(model);
+        }
+        [HttpGet]
+        public async Task<IActionResult> DeleteThread(int id, int CreatedById)
+        {
+            var thread = threadService.DeleteThread(id);
+
+            return RedirectToAction("HiddenThreads");
+        }
+        [HttpGet]
+        public async Task<IActionResult> RecoverThread(int id)
+        {
+            var thread = threadService.GetDeletedThreadBack(id);
+
+            return RedirectToAction("HiddenThreads");
+        }
+        [HttpGet]
+        public async Task<IActionResult> DeleteAllThreads(int id)
+        {
+            threadService.DeleteAllThreadsByUserId(id);
+            string returnUrl = HttpContext.Request.Headers["Referer"];
+            return Redirect(returnUrl);
+        }
     }
 }
