@@ -5,6 +5,8 @@ using AstralForum.Models;
 using AstralForum.Models.Thread;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
+using AstralForum.Services.Comment;
+using AstralForum.Services.ThreadCategory;
 
 namespace AstralForum.Services.Thread
 {
@@ -12,10 +14,12 @@ namespace AstralForum.Services.Thread
     {
         private readonly IThreadService threadService;
         private readonly ICloudinaryService cloudinaryService;
+        private readonly ICommentService commentService;
 
-        public ThreadFacade(IThreadService threadService, ICloudinaryService cloudinaryService)
+        public ThreadFacade(IThreadService threadService, ICommentService commentService, ICloudinaryService cloudinaryService)
         {
             this.threadService = threadService;
+            this.commentService = commentService;
             this.cloudinaryService = cloudinaryService;
         }
 
@@ -33,7 +37,7 @@ namespace AstralForum.Services.Thread
 
             return model;
         }
-
+     
         public async Task<ThreadDto> CreateThread(ThreadCreationFormModel threadForm, User createdBy)
         {
             // TODO: handle attachment upload and setting urls in the DTO
@@ -55,6 +59,138 @@ namespace AstralForum.Services.Thread
 
             return await threadService.CreateThread(threadDto, createdBy);
         }
+		public ThreadDto SearchPostsByCreatedBy(int id, string searchQuery)
+		{
+			List<ThreadDto> allThreads = threadService.SearchPostsByCreatedBy(id, searchQuery);
+
+			if (allThreads == null || !allThreads.Any())
+			{
+				return null;
+			}
+			else if (searchQuery == null)
+			{
+				return null;
+			}
+			else
+			{
+				ThreadDto selectedThread = allThreads.First();
+
+				
+				var filteredComments = selectedThread.Comments
+					.Where(c => c.CreatedBy.UserName != null &&
+								searchQuery != null &&
+								c.CreatedBy.UserName.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase))
+					.ToList();
+
+				ThreadDto model = new ThreadDto
+				{
+					Id = selectedThread.Id,
+					Title = selectedThread.Title,
+					Text = selectedThread.Text,
+					ThreadCategoryId = selectedThread.ThreadCategoryId,
+					ThreadCategoryName = selectedThread.ThreadCategoryName,
+					Comments = filteredComments,
+					Reactions = selectedThread.Reactions,
+					Attachments = selectedThread.Attachments,
+					CreatedBy = selectedThread.CreatedBy
+				};
+
+				return model;
+			}
+		}
+		public ThreadDto SearchPostsByText(int id, string searchQuery)
+		{
+			List<ThreadDto> allThreads = threadService.SearchPostsByText(id, searchQuery);
+
+			if (allThreads == null || !allThreads.Any())
+			{
+				return null;
+			}
+			else if (searchQuery == null)
+			{ 
+				return null;
+			}
+			else
+			{
+				ThreadDto selectedThread = allThreads.First();
+
+
+				var filteredComments = selectedThread.Comments
+					.Where(c => c.Text.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase))
+					.ToList();
+
+				ThreadDto model = new ThreadDto
+				{
+					Id = selectedThread.Id,
+					Title = selectedThread.Title,
+					Text = selectedThread.Text,
+					ThreadCategoryId = selectedThread.ThreadCategoryId,
+					ThreadCategoryName = selectedThread.ThreadCategoryName,
+					Comments = filteredComments,
+					Reactions = selectedThread.Reactions,
+					Attachments = selectedThread.Attachments,
+					CreatedBy = selectedThread.CreatedBy
+				};
+
+				return model;
+			}
+		}
+		public ThreadDto SearchPostsByBoth(int id, string searchQuery)
+		{
+			List<ThreadDto> allThreads = threadService.SearchPostsByBoth(id, searchQuery);
+
+			if (allThreads == null || !allThreads.Any())
+			{
+				return null;
+			}
+			else if (searchQuery == null)
+			{
+				return null;
+			}
+			else
+			{
+				ThreadDto selectedThread = allThreads.First();
+
+
+				var filteredComments = selectedThread.Comments
+					.Where(c => c.Text.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+								c.CreatedBy.UserName.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase))
+					.ToList();
+
+				ThreadDto model = new ThreadDto
+				{
+					Id = selectedThread.Id,
+					Title = selectedThread.Title,
+					Text = selectedThread.Text,
+					ThreadCategoryId = selectedThread.ThreadCategoryId,
+					ThreadCategoryName = selectedThread.ThreadCategoryName,
+					Comments = filteredComments,
+					Reactions = selectedThread.Reactions,
+					Attachments = selectedThread.Attachments,
+					CreatedBy = selectedThread.CreatedBy
+				};
+
+				return model;
+			}
+		}
+		public ThreadDto NoResultsThread(int id)
+        {
+            ThreadDto threadDto = threadService.GetThreadById(id);
+            ThreadDto model = new ThreadDto
+            {   
+                Id = threadDto.Id,
+                Title = threadDto.Title,
+                Text = threadDto.Text,
+                ThreadCategoryName = threadDto.ThreadCategoryName,
+                CreatedBy = threadDto.CreatedBy,
+				CreatedOn = threadDto.CreatedOn
+            };
+            return model;
+        }
+
+
+
+	}
         public async Task<HiddenThreadsViewModel> GetAllHiddenThreads()
         {
             List<ThreadDto> threads = await threadService.GetAllHiddenThreads();

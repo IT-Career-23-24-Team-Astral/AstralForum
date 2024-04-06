@@ -1,5 +1,6 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Data.Entities.Comment;
+using AstralForum.Models.Comment;
 using AstralForum.ServiceModels;
 
 namespace AstralForum.Services.Comment
@@ -11,5 +12,7 @@ namespace AstralForum.Services.Comment
         Task<List<CommentDto>> GetAllCommentsByThreadId(int id);
         Task<List<CommentDto>> GetAllRepliesByCommentId(int id);
         Task<CommentDto> DeleteComment(CommentDto commentDto);
-    }
+        CommentTableViewModel GetCommentTableViewModel(CommentDto commentDto);
+
+	}
 }

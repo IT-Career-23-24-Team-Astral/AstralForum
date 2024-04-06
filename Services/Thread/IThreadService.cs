@@ -18,4 +18,9 @@ namespace AstralForum.Services.Thread
         void DeleteAllThreadsByUserId(int id);
 
     }
+		List<ThreadDto> SearchPostsByCreatedBy(int id, string searchQuery);
+		List<ThreadDto> SearchPostsByText(int id, string searchQuery);
+		List<ThreadDto> SearchPostsByBoth(int id, string searchQuery);
+
+	}
 }
