@@ -10,6 +10,7 @@ using AstralForum.Services.Thread;
 using AstralForum.Repositories;
 using AstralForum.Services.ThreadCategory;
 using AstralForum.Services.Comment;
+using AstralForum.Services.Reaction;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,12 +27,14 @@ builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<IThreadCategoryService, ThreadCategoryService>();
 builder.Services.AddScoped<IThreadService, ThreadService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IReactionService, ReactionService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
 
 builder.Services.AddScoped<IThreadCategoryFacade, ThreadCategoryFacade>();
 builder.Services.AddScoped<IThreadFacade, ThreadFacade>();
 builder.Services.AddScoped<ICommentFacade, CommentFacade>();
+builder.Services.AddScoped<IReactionFacade, ReactionFacade>();
 builder.Services.AddScoped<IUserFacade, UserFacade>();
 
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)

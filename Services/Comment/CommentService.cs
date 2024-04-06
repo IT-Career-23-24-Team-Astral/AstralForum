@@ -32,7 +32,12 @@ namespace AstralForum.Services
             return (await _commentRepository.Edit(comment)).ToDto();
         }
 
-        public async Task<List<CommentDto>> GetAllCommentsByThreadId(int id)
+		public CommentDto GetCommentByCommentId(int id)
+		{
+            return _commentRepository.GetAll().Single(c => c.Id == id).ToDto();
+		}
+
+		public async Task<List<CommentDto>> GetAllCommentsByThreadId(int id)
         {
             List<Data.Entities.Comment.Comment> comments = await _commentRepository.GetCommentsByThreadId(id);
             List<CommentDto> commentDtos = comments.Select(comment => comment.ToDto()).ToList();
@@ -53,6 +58,5 @@ namespace AstralForum.Services
 
             return (await _commentRepository.Delete(comment)).ToDto();
         }
-
-    }
+	}
 }

@@ -10,7 +10,7 @@ namespace AstralForum.ServiceModels
         public string Text { get; set; }
         public int? ParentCommentId { get; set; }
         public List<CommentDto> Comments { get; set; } = new List<CommentDto>();
-        public List<ReactionDto> Reactions { get; set; } = new List<ReactionDto>();
+        public List<CommentReactionDto> Reactions { get; set; } = new List<CommentReactionDto>();
         public List<CommentAttachmentDto> Attachments { get; set; } = new List<CommentAttachmentDto>();
     }
 }

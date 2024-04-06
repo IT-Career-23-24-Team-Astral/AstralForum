@@ -1,8 +1,10 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Models;
+using AstralForum.Models.Reaction;
 using AstralForum.ServiceModels;
 using AstralForum.Services;
 using AstralForum.Services.Comment;
+using AstralForum.Services.Reaction;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,12 +17,14 @@ namespace AstralForum.Controllers
 	{
 		private readonly ICommentFacade _commentFacade;
 		private readonly ICommentService _commentService;
+		private readonly IReactionFacade _reactionFacade;
 		private readonly UserManager<User> _userManager;
 
-		public CommentController(ICommentFacade commentFacade, ICommentService commentService, UserManager<User> userManager)
+		public CommentController(ICommentFacade commentFacade, ICommentService commentService, IReactionFacade reactionFacade, UserManager<User> userManager)
 		{
 			_commentFacade = commentFacade;
 			_commentService = commentService;
+			_reactionFacade = reactionFacade;
 			_userManager = userManager;
 		}
 
@@ -38,6 +42,16 @@ namespace AstralForum.Controllers
 			};
 
 			return Json(comments, serializeOptions);
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize]
+		public async Task<IActionResult> AddCommentReaction([FromForm] ReactionCommentModel reactionCommentForm)
+		{
+			int updatedReactionCount = _reactionFacade.AddReactionToComment(reactionCommentForm.CommentId, reactionCommentForm.ReactionTypeId, await _userManager.GetUserAsync(User));
+			
+			return Json(new { reactionCount = updatedReactionCount});
 		}
 
 		[HttpPost]

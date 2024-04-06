@@ -4,21 +4,21 @@ using AstralForum.ServiceModels;
 
 namespace AstralForum.Services.Reaction
 {
-    public class ReactionService
+    public class ReactionService : IReactionService
     {
-        private readonly ReactionRepository _reactionRepository;
+        private readonly CommentReactionRepository _commentReactionRepository;
 
-        public ReactionService(ReactionRepository reactionRepository)
+        public ReactionService(CommentReactionRepository commentReactionRepository)
         {
-            _reactionRepository = reactionRepository;
+            _commentReactionRepository = commentReactionRepository;
         }
-        public async Task<ReactionDto> AddReaction(ReactionDto reactionDto)
+        public async Task<CommentReactionDto> AddCommentReaction(CommentReactionDto commentReactionDto)
         {
-            Data.Entities.Reaction.Reaction reaction = reactionDto.ToEntity();
+            Data.Entities.Reaction.CommentReaction commentReaction = commentReactionDto.ToEntity();
 
-            return (await _reactionRepository.Create(reaction)).ToDto();
+            return (await _commentReactionRepository.Create(commentReaction)).ToDto();
         }
-        public async Task<ReactionDto> DeleteReaction(ReactionDto reactionDto)
+        /*public async Task<ReactionDto> DeleteReaction(ReactionDto reactionDto)
         {
             Data.Entities.Reaction.Reaction reaction = reactionDto.ToEntity();
 
@@ -37,6 +37,6 @@ namespace AstralForum.Services.Reaction
             List<ReactionDto> reactionDtos = reactions.Select(c => c.ToDto()).ToList();
 
             return reactionDtos;
-        }
+        }*/
     }
 }

@@ -5,17 +5,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
-    /*public class ReactionRepository : CommonRepository<Reaction>
+    public class CommentReactionRepository : CommonRepository<CommentReaction>
     {
-        public ReactionRepository(ApplicationDbContext context) : base(context) { }
-        public async Task<List<Reaction>> GetReactionsByThreadId(int id)
+        public CommentReactionRepository(ApplicationDbContext context) : base(context) { }
+        public async Task<List<CommentReaction>> GetReactionsByThreadId(int id)
         {
             Data.Entities.Thread.Thread thread = await context.Threads
                 .Include(e => e.Reactions)
                 .FirstAsync(p => p.Id == id);
             return thread.Reactions;
         }
-        public async Task<List<Reaction>> GetReactionsByCommentId(int id)
+        public async Task<List<CommentReaction>> GetReactionsByCommentId(int id)
         {
             Comment comment = await context.Comments
                 .Include(e => e.Reactions)
@@ -49,6 +49,6 @@ namespace AstralForum.Repositories
         public IEnumerable<ReactionModel> GetReactionsByThreadId(int id) => context.Threads.Where(c => c.Id == id).Select(x => new ReactionModel()
         {
             ReactionId = x.Id,
-        }).ToList();
-    }*/
+        }).ToList();*/
+    }
 }
