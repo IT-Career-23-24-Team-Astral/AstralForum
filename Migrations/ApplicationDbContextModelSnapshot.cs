@@ -63,9 +63,6 @@ namespace AstralForum.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
-
                     b.Property<int?>("CommentId")
                         .HasColumnType("int");
 

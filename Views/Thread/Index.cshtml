@@ -64,6 +64,27 @@
 		</div>
 	</div>
 
+	<div class="row mt-1">
+		<div class="col-auto ml-auto">
+			<form id="searchForm" class="form-inline" asp-controller="Thread" asp-action="SearchPostsByText" method="get">
+				<input type="hidden" name="id" value="@Model.ThreadDto.Id" />
+				<div class="input-group mb-2">
+					<input class="form-control form-control-sm" type="text" placeholder="Search" aria-label="Search" name="searchQuery">
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-primary btn-sm">Search</button>
+					</div>
+				</div>
+				<div class="form-check form-check-inline ml-2">
+					<input class="form-check-input" type="checkbox" id="filterComment" name="filterComment">
+					<label class="form-check-label" for="filterComment">Search by Title</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="filterCreatedBy" name="filterCreatedBy">
+					<label class="form-check-label" for="filterCreatedBy">Search by Author</label>
+				</div>
+			</form>
+		</div>
+	</div>
 
 	<div class="row">
 		<div class="col">

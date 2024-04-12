@@ -96,18 +96,36 @@
 </style>
 
 <div class="container">
-    <header class="header">
-        <h1>Explore Categories</h1>
-        <div class="row justify-content-end">
-            <div class="col-auto">
-                @if (User.IsInRole("Admin"))
-                {
-                    <form asp-controller="Category" asp-action="Create" method="get">
-                        <button type="submit" class="btn btn-create">Create Category</button>
-                    </form>
-                }
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="header">Explore Categories</h1>
+            <div class="row justify-content-end">
+                <div class="col-auto">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <form asp-controller="Category" asp-action="Create" method="get">
+                            <button type="submit" class="btn btn-create">Create Category</button>
+                        </form>
+                    }
+                </div>
             </div>
-    </header>
+            <form class="filter-box">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filterCategoryName" name="filterCategoryName">
+                    <label class="form-check-label" for="filterCategoryName">Filter by Category Name</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filterCreatedBy" name="filterCreatedBy">
+                    <label class="form-check-label" for="filterCreatedBy">Filter by Author</label>
+                </div>
+            </form>
+            <form id="searchForm" class="form-inline" asp-controller="Search" asp-action="Search" method="get">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="searchQuery">
+                <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+
     <main>
         <div class="categories">
             @foreach (var category in Model.Categories)

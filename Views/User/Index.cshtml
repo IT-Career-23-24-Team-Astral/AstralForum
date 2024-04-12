@@ -76,8 +76,13 @@
         </div>
     </div>
     <div class="row justify-content-center">
-        <div class="col-3">
-            <h6 class="text-center role">@Model.Roles</h6>
+        <div class="col-3" style="text-align: center;">
+            @foreach (var role in Model.Roles)
+            {
+                <div style="display: inline-block;">
+                    <h6>@role.Name</h6>
+                </div>
+            }
         </div>
         <div class="col-3">
         </div>

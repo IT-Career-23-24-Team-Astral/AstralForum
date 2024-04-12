@@ -16,6 +16,21 @@
             </h2>
             <p>@ViewData["CategoryDescription"]</p>
         </div>
+        <div class="col-auto">
+            <form id="searchForm" class="form-inline" asp-controller="Search" asp-action="SearchThread" method="get">
+                <input type="hidden" name="id" value="@Model.CategoryId" />
+                <input class="form-control form-control-sm mr-2" type="text" placeholder="Search" aria-label="Search" name="searchQuery">
+                <button type="submit" class="btn btn-primary btn-sm">Search</button>
+                <div class="form-check form-check-inline ml-2">
+                    <input class="form-check-input" type="checkbox" id="filterTitle" name="filterTitle">
+                    <label class="form-check-label" for="filterTitle">Search by Title</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="filterCreatedBy" name="filterCreatedBy">
+                    <label class="form-check-label" for="filterCreatedBy">Search by Author</label>
+                </div>
+            </form>
+        </div>
         @if (User.IsInRole("Admin"))
         {
             <div class="col-auto">

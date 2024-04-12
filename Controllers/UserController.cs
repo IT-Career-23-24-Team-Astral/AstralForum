@@ -1,7 +1,9 @@
 ﻿using AstralForum.Models.Admin;
 using AstralForum.Models.User;
+using AstralForum.Data.Entities;
 using AstralForum.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 
@@ -9,14 +11,13 @@ namespace AstralForum.Controllers
 {
     public class UserController : Controller
     {
-
-        private readonly ApplicationDbContext _context;
         private readonly IUserFacade userFacade;
+        private readonly UserManager<User> userManager;
 
-        public UserController(ApplicationDbContext context, IUserFacade userFacade)
+        public UserController(IUserFacade userFacade, UserManager<User> userManager)
         {
-            _context = context;
             this.userFacade = userFacade;
+            this.userManager = userManager;
         }
 
         [HttpPost("register")]
@@ -148,12 +149,19 @@ namespace AstralForum.Controllers
         {
             return View();
         }*/
-        
+
         [HttpGet]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index(int id)
         {
             UserInfoModel model = await userFacade.GetUser(id);
+
+            var user = await userManager.FindByIdAsync(id.ToString());
+            if (user != null)
+            {
+                var roles = await userManager.GetRolesAsync(user);
+                model.Roles = roles.Select(role => new Role { Name = role }).ToList();
+            }
 
             return View(model);
         }
