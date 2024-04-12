@@ -2,11 +2,11 @@
 
 namespace AstralForum.ServiceModels
 {
-	public class ReactionDto : MetaBaseEntityDto
+	public class ThreadReactionDto : MetaBaseEntityDto
 	{
 		public int ThreadId { get; set; }
-		public int CommentId { get; set; }
+		public ThreadDto Thread { get; set; }
 		public int ReactionTypeId { get; set; }
-		public ReactionType ReactionType { get; set; }
+		public ReactionTypeDto ReactionType { get; set; }
 	}
 }
