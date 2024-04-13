@@ -51,8 +51,6 @@ namespace AstralForum.Repositories
         {
             return await context.Threads
                 .Include(t => t.CreatedBy)
-                .Include(t => t.Title)
-                .Include(t => t.Text)
                 .Where(t => t.IsDeleted == true)
                 .ToListAsync();
         }

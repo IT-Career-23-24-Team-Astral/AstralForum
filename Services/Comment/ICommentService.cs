@@ -11,5 +11,12 @@ namespace AstralForum.Services.Comment
         Task<List<CommentDto>> GetAllCommentsByThreadId(int id);
         Task<List<CommentDto>> GetAllRepliesByCommentId(int id);
         Task<CommentDto> DeleteComment(CommentDto commentDto);
+        Task<List<CommentDto>> GetAllHiddenComments();
+        Task<List<CommentDto>> GetAllDeletedComments();
+        CommentDto HideComment(int id);
+        CommentDto UnhideComment(int id);
+        CommentDto DeleteComment(int id);
+        CommentDto GetDeletedCommentBack(int id);
+        void DeleteAllCommentsByUserId(int userId);
     }
 }

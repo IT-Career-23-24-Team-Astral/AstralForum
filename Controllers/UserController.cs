@@ -1,8 +1,12 @@
-﻿using AstralForum.Models.Admin;
+﻿using AstralForum.Data.Entities;
+using AstralForum.Models.Admin;
 using AstralForum.Models.User;
 using AstralForum.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using System.Drawing;
 using System.Security.Cryptography;
 
 namespace AstralForum.Controllers
@@ -10,13 +14,15 @@ namespace AstralForum.Controllers
     public class UserController : Controller
     {
 
-        private readonly ApplicationDbContext _context;
         private readonly IUserFacade userFacade;
+        private readonly UserManager<User> userManager;
+        private readonly RoleManager<Role> roleManager;
 
-        public UserController(ApplicationDbContext context, IUserFacade userFacade)
+        public UserController(IUserFacade userFacade, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-            _context = context;
             this.userFacade = userFacade;
+            this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
         [HttpPost("register")]
@@ -148,11 +154,31 @@ namespace AstralForum.Controllers
         {
             return View();
         }*/
-        
+
         [HttpGet]
         public async Task<IActionResult> Index(int id)
         {
             UserInfoModel model = await userFacade.GetUser(id);
+
+            var user = await userManager.FindByIdAsync(id.ToString());
+            if (user != null)
+            {
+                var roles = await userManager.GetRolesAsync(user);
+                model.Roles = new List<Role>();
+
+                foreach (var roleName in roles)
+                {
+                    var role = await roleManager.FindByNameAsync(roleName);
+                    if (role != null)
+                    {
+                        model.Roles.Add(new Role
+                        {
+                            Name = roleName,
+                            Color = role.Color
+                        });
+                    }
+                }
+            }
 
             return View(model);
         }

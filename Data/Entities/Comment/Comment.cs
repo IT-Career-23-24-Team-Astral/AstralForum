@@ -9,6 +9,8 @@ namespace AstralForum.Data.Entities.Comment
         public string Text { get; set; }
         public int? CommentId { get; set; } //ParentCommentId
         public int AuthorId { get; set; }
+        public bool IsHidden { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
         public List<Reaction.Reaction> Reactions { get; set; }
         public List<CommentAttachment> Attachments { get; set; }
         public List<Comment> Comments { get; set; }

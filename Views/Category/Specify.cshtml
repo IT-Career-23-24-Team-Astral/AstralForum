@@ -82,19 +82,24 @@
                         </div>
                     </td>
                     <td>
-                        @if (item.LastComment == null)
+                        @if (item.LastComment == null || item.LastComment.IsHidden == true)
                         {
                             <p class="fst-italic fw-semibold">No comments have been made on this thread yet</p>
                             <div class="col d-flex justify-content-end">
                             @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
                             {
-                                        <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
-                                            <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
-                                            <button type="submit" class="btn btn-danger adminButton" style="margin: -34px 0px 0px 0px">Hide</button>
+                                <form asp-controller="Admin" asp-action="Timeout" method="get">
+                                    <button type="submit" class="btn btn-warning">Timeout</button>
+                                    <input type="hidden" name="id" value="@item.Author.Id">
+                                    <input type="datetime-local" id="time" name="time" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required>
+                                </form>
+                                <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
+                                    <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
+                                    <button type="submit" class="btn btn-danger adminButton" style="margin: -34px 0px 0px 0px">Hide</button>
                                 </form>
                             }
-                                </div>
-                            }
+                            </div>
+                        }
                             else
                             {
                             <div>

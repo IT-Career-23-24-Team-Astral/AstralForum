@@ -3,6 +3,7 @@ using AstralForum.Models;
 using AstralForum.ServiceModels;
 using AstralForum.Services;
 using AstralForum.Services.Comment;
+using AstralForum.Services.Thread;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -72,6 +73,16 @@ namespace AstralForum.Controllers
 			await _commentFacade.CreateComment(viewModel.CommentForm, threadId, await _userManager.GetUserAsync(User), commentId);
 
 			return RedirectToAction("Index", "Thread", new { id = threadId });
+		}
+		[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Moderator")]
+		[HttpGet]
+		public IActionResult HideComment(int id)
+		{
+			var thread = _commentService.HideComment(id);
+
+			string returnUrl = HttpContext.Request.Headers["Referer"];
+			return Redirect(returnUrl);
 		}
 	}
 }

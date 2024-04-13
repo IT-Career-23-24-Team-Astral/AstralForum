@@ -1,29 +1,29 @@
-﻿@model AstralForum.Models.Admin.HiddenThreadsViewModel
+﻿@model AstralForum.Models.Admin.HiddenCommentsViewModel
 
 @{
     Layout = "../Shared/_Layout.cshtml";
 }
 
-<h1>All Hidden Threads</h1>
+<h1>All Hidden Comments</h1>
 
 <div class="table-responsive">
     <table class="table table-striped">
         <thead>
             <tr>
-                <th scope ="col" style="width: 17%;" class="text-center align-middle">Email</th>
-                <th scope="col" style="width: 20%;" class="text-center align-middle">Thread Title</th>
+                <th scope="col" style="width: 17%;" class="text-center align-middle">Email</th>
+                <th scope="col" style="width: 20%;" class="text-center align-middle">Comment Text</th>
                 <th scope="col" style="width: 10%;" class="text-center align-middle">Created On</th>
                 <th scope="col" style="width: 17%;" class="text-center align-middle">User Status</th>
                 <th scope="col" style="width: 10%;" class="text-center align-middle"></th>
                 <th scope="col" style="width: 26%;" class="text-center align-middle"></th>
             </tr>
         </thead>
-        <tbody>
-            @foreach (var item in Model.Threads)
-            {
+		<tbody>
+			@foreach (var item in Model.Comments)
+			{
                 <tr>
                     <td class="text-center align-middle">@item.CreatedBy.Email</td>
-                    <td class="text-center align-middle">@item.Title</td>
+                    <td class="text-center align-middle">@item.Text</td>
                     <td class="text-center align-middle">@item.CreatedOn</td>
                     <td class="text-center align-middle">
                         @if (item.CreatedBy.IsBanned == true)
@@ -35,7 +35,7 @@
                         else if (item.CreatedBy.TimeOut > DateTime.Now)
                         {
                             <span>
-                                Timed out 
+                                Timed out
                             </span>
                         }
                         else
@@ -47,11 +47,11 @@
                     </td>
                     <td>
                         <div class="btn-group" role="group">
-                            <form asp-controller="Admin" asp-action="RecoverThread" method="get">
-                            <input type="hidden" name="id" value="@item.Id" />
-                            <button type="submit" class="btn btn-success">Recover</button>
+                            <form asp-controller="Admin" asp-action="RecoverComment" method="get">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-success">Recover</button>
                             </form>
-                            <form asp-controller="Admin" asp-action="DeleteThread" method="get">
+                            <form asp-controller="Admin" asp-action="DeleteComment" method="get">
                                 <input type="hidden" name="id" value="@item.Id" />
                                 <button type="submit" class="btn btn-warning">Delete</button>
                             </form>
@@ -93,23 +93,20 @@
                                 @if (item.CreatedBy.IsBanned == false)
                                 {
                                     <form asp-controller="Admin" asp-action="Timeout" method="get">
-                                    <button type="submit" class="btn btn-warning">Timeout</button>
-                                    <input type="hidden" name="id" value="@item.CreatedById">
-                                    <input type="datetime-local" id="time" name="time" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required>
+                                        <button type="submit" class="btn btn-warning">Timeout</button>
+                                        <input type="hidden" name="id" value="@item.CreatedById">
+                                        <input type="datetime-local" id="time" name="time" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required>
                                     </form>
                                 }
                             }
                         </div>
                     </td>
                 </tr>
-            }
+			}
         </tbody>
     </table>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
 
 
 

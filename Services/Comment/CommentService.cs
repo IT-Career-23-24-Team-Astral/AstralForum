@@ -54,5 +54,46 @@ namespace AstralForum.Services
             return (await _commentRepository.Delete(comment)).ToDto();
         }
 
+        public async Task<List<CommentDto>> GetAllHiddenComments()
+        {
+            var hiddenComments = await _commentRepository.GetAllHiddenComments();
+
+            var commentsDtos = hiddenComments.Select(comment => comment.ToDto(false, false, false)).ToList();
+
+            return commentsDtos;
+        }
+        public async Task<List<CommentDto>> GetAllDeletedComments()
+        {
+            var deletedComments = await _commentRepository.GetAllDeletedComments();
+
+            var commetsDtos = deletedComments.Select(comment => comment.ToDto(false, false, false)).ToList();
+
+            return commetsDtos;
+        }
+        public CommentDto HideComment(int id)
+        {
+            CommentDto commentDto = _commentRepository.HideComment(id).ToDto(false, false, false, false);
+            return commentDto;
+        }
+        public CommentDto UnhideComment(int id)
+        {
+            CommentDto commentDto = _commentRepository.UnhideComment(id).ToDto(false, false, false, false);
+            return commentDto;
+        }
+        public CommentDto DeleteComment(int id)
+        {
+            CommentDto commentDto = _commentRepository.DeleteComment(id).ToDto(false, false, false, false);
+            return commentDto;
+        }
+        public CommentDto GetDeletedCommentBack(int id)
+        {
+            CommentDto commentDto = _commentRepository.GetDeletedCommentBack(id).ToDto(false, false, false, false);
+            return commentDto;
+        }
+        public void DeleteAllCommentsByUserId(int userId)
+        {
+            _commentRepository.DeleteAllCommentsByUserId(userId);
+        }
+
     }
 }

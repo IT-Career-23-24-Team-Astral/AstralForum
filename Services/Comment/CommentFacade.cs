@@ -1,7 +1,10 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Mapping;
 using AstralForum.Models;
+using AstralForum.Models.Admin;
+using AstralForum.Models.Comment;
 using AstralForum.ServiceModels;
+using AstralForum.Services.Thread;
 
 namespace AstralForum.Services.Comment
 {
@@ -26,6 +29,28 @@ namespace AstralForum.Services.Comment
             };
 
             return await _commentService.AddComment(commentDto, createdBy);
+        }
+        public async Task<HiddenCommentsViewModel> GetAllHiddenComments()
+        {
+            List<CommentDto> comments = await _commentService.GetAllHiddenComments();
+
+            HiddenCommentsViewModel viewModel = new HiddenCommentsViewModel()
+            {
+                Comments = comments
+            };
+
+            return viewModel;
+        }
+        public async Task<HiddenCommentsViewModel> GetAllDeletedComments()
+        {
+            List<CommentDto> comments = await _commentService.GetAllDeletedComments();
+
+            HiddenCommentsViewModel viewModel = new HiddenCommentsViewModel()
+            {
+                Comments = comments
+            };
+
+            return viewModel;
         }
     }
 }

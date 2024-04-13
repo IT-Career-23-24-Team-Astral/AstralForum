@@ -2,38 +2,38 @@
 @model IEnumerable<Role>
 
 @{
-	Layout = "../Shared/_Layout.cshtml";
+    Layout = "../Shared/_Layout.cshtml";
 }
 
 <h1>All Roles</h1>
 
 @if (Model.Any())
 {
-	<a class="btn btn-primary mb-3" style="width:auto" asp-action="CreateRole" asp-controller="admin">Create Role</a>
-	foreach(var role in Model)
-	{
-		<div class="card mb-3">
-			<div class="card-header">
-				Role Id: @role.Id
-			</div>
-			<div class="card-body">
-				<h5 class="card-title">@role.Name</h5>
-			</div>
-			<div class="card-footer">
-				<a class="btn btn-primary" asp-action="EditRole" asp-controller="admin" asp-route-id="@role.Id">Edit</a>
-				<a class="btn btn-primary" asp-action="DeleteRole" asp-controller="Admin" asp-route-id="@role.Id">Delete</a>
-			</div>
-		</div>
-	}
+    <a class="btn btn-primary mb-3" style="width:auto" asp-action="CreateRole" asp-controller="admin">Create Role</a>
+    @foreach (var role in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                Role Id: @role.Id
+            </div>
+            <div class="card-body">
+                <h5 class="card-title" style="color: @role.Color">@role.Name</h5>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-primary" asp-action="EditRole" asp-controller="admin" asp-route-id="@role.Id">Edit</a>
+                <a class="btn btn-primary" asp-action="DeleteRole" asp-controller="Admin" asp-route-id="@role.Id">Delete</a>
+            </div>
+        </div>
+    }
 }
 else
 {
-	<div class="card">
-		<div class="card-header">
-			No Roles yet
-		</div>
-		<div class="card-body">
-			<a class="btn btn-primary" style="width:auto" asp-controller="admin" asp-action="CreateRole">Create Role</a>
-		</div>
-	</div>
+    <div class="card">
+        <div class="card-header">
+            No Roles yet
+        </div>
+        <div class="card-body">
+            <a class="btn btn-primary" style="width:auto" asp-controller="admin" asp-action="CreateRole">Create Role</a>
+        </div>
+    </div>
 }

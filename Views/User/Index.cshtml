@@ -69,15 +69,16 @@
     <div class="row justify-content-center">
         <div class="col-3">
             <h5 class="text-center">@Model.Users.FirstName @Model.Users.LastName</h5>
-        </div>
-        <div class="col-3">
-        </div>
-        <div class="col-3">
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-3">
-            <h6 class="text-center role">@Model.Roles</h6>
+            <div class="text-center">
+                <div class="d-flex justify-content-center">
+                    @foreach (var role in Model.Roles)
+                    {
+                        <div class="mr-1">
+                            <h5 class="card-title" style="color: @role.Color">@role.Name</h5>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
         <div class="col-3">
         </div>
