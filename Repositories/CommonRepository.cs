@@ -29,9 +29,13 @@ namespace AstralForum.Repositories
 			await this.context.SaveChangesAsync();
 			return entity;
 		}
-		public IQueryable<T> GetAll()
+        public IQueryable<T> GetAll()
+        {
+            return context.Set<T>().AsQueryable();
+        }
+		public IQueryable<T> GetAllAsNoTracking()
 		{
-			return context.Set<T>().AsQueryable();
+			return context.Set<T>().AsNoTracking().AsQueryable();
 		}
 		public int Save()
 		{

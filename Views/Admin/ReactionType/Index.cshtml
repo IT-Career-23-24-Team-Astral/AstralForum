@@ -1,0 +1,99 @@
+﻿@model List<AstralForum.ServiceModels.ReactionTypeDto>
+@{
+	ViewData["Title"] = "Manage reaction types";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+	<h1>Manage reaction types</h1>
+
+	<div class="d-flex justify-content-end">
+		<a class="btn btn-success" asp-controller="ReactionType" asp-action="Create">
+			Add new reaction type
+		</a>
+	</div>
+
+	<div id="deleteModal" class="modal fade" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Confirm delete</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<p>
+						Are you sure that you want to delete the <span class="text-primary" id="reactionTypeName"></span> reaction type.
+						By clicking confirm you agree that all data about reactions made of this reaction type will be deleted.
+					</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+					<form asp-controller="ReactionType" asp-action="Delete" method="post">
+						<input type="hidden" id="reactionTypeId" name="id" />
+						<button type="submit" class="btn btn-danger">Delete</button>
+					</form>
+					
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<table class="table table-striped mt-4" id="threadsTable">
+		<thead>
+			<tr>
+				<th class="col-3">
+					Name
+				</th>
+				<th class="col">
+					Image
+				</th>
+				<th class="col-2">
+					Created by
+				</th>
+				<th class="col-5">
+					Date of creation
+				</th>
+			</tr>
+		</thead>
+
+		<tbody class="table-group-divider">
+			@foreach (var reactionType in Model)
+			{
+				<tr>
+					<td>
+						@reactionType.Name
+					</td>
+					<td>
+						<img src="@reactionType.ImageUrl" width="40" height="40" />
+					</td>
+					<td>
+						@reactionType.CreatedBy.UserName
+					</td>
+					<td>
+						<div class="row">
+							<div class="col">
+								@reactionType.CreatedOn
+							</div>
+							<div class="col d-flex justify-content-end">
+								<button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="deleteReactionType(@reactionType.Id, '@reactionType.Name')">
+									Delete
+								</button>
+							</div>
+						</div>
+					</td>
+				</tr>
+			}
+		</tbody>
+
+	</table>
+
+</div>
+
+<script>
+	function deleteReactionType(id, name) {
+		document.getElementById("reactionTypeName").textContent = name;
+		document.getElementById("reactionTypeId").setAttribute("value", id);
+	}
+</script>
+

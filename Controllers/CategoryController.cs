@@ -5,25 +5,28 @@ using AstralForum.Models.Thread;
 using AstralForum.Models.ThreadCategory;
 using AstralForum.ServiceModels;
 using AstralForum.Services;
+using AstralForum.Services.Thread;
 using AstralForum.Services.ThreadCategory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace AstralForum.Controllers
 {
     public class CategoryController : Controller
     {
         private readonly IThreadCategoryFacade threadCategoryFacade;
-        private readonly IThreadCategoryService threadCategoryService;
+        private readonly IThreadService threadService;
         private readonly UserManager<User> userManager;
-        public CategoryController(IThreadCategoryFacade threadFacade, IThreadCategoryService threadCategoryService, UserManager<User> userManager)
+        public CategoryController(IThreadCategoryFacade threadFacade, IThreadService threadService, UserManager<User> userManager)
         {
             this.threadCategoryFacade = threadFacade;
-            this.threadCategoryService = threadCategoryService;
+            this.threadService = threadService;
             this.userManager = userManager;
         }
 
@@ -105,5 +108,28 @@ namespace AstralForum.Controllers
 
             return View(model);
         }
+        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Moderator")]
+        [HttpGet]
+        public IActionResult HideThread(int id, int categoryId)
+        {
+            var thread = threadService.HideThread(id);
+            
+            return Redirect($"/Category/Specify/{categoryId}");
+            //return RedirectToAction("Specify", "Category", new { id = threadCategoryForm.CategoryId });
+
+        }
+        public IActionResult NoResults()
+        {
+            if (TempData["CategoryId"] == null)
+            {
+                return RedirectToAction("Index", "Category");
+            }
+            int id = (int)TempData["CategoryId"];
+            CategoryThreadsViewModel model = threadCategoryFacade.NoResults(id);
+            return View(model);
+        }
+
+
     }
 }

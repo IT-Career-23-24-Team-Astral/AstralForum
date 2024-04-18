@@ -6,16 +6,23 @@
 <div class="container">
         <br><br>
         <h1 class="text-center">All Users</h1>
+        <div class="btn-group" role="group">
         <form asp-controller="Admin" asp-action="ListRoles" method="get">
             <button type="submit" class="btn btn-outline-secondary">All Roles</button>
         </form>
+        <form asp-controller="Admin" asp-action="HiddenThreads" method="get">
+            <button type="submit" class="btn btn-outline-secondary">Hidden Threads</button>
+        </form>
+        </div>
         <table class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th scope="col" style="width: 1%;" class="align-middle">#</th>
-                    <th scope="col" style="width: 27%;" class="text-center align-middle">First</th>
-                    <th scope="col" style="width: 27%;" class="text-center align-middle">Last</th>
-                    <th scope="col" style="width: 45%;" class="text-center">Gmail</th>
+                    <th scope="col" style="width: 15%;" class="text-center align-middle">First</th>
+                    <th scope="col" style="width: 15%;" class="text-center align-middle">Last</th>
+                    <th scope="col" style="width: 12%;" class="text-center align-middle">Status</th>
+                    <th scope="col" style="width: 20%;" class="text-center">Gmail</th>
+                    <th scope="col" style="width: 20%;" class="text-center">Operations</th>
                 </tr>
             </thead>
             <tbody class="table-group-divider">
@@ -33,16 +40,56 @@
                     <td class="text-center align-middle">
                         @item.LastName
                     </td>
-                    <td class="d-flex justify-content-between align-items-center">
-                        <span style="margin-right: 10px;">
+                    <td class="text-center align-middle">
+                        @if (item.IsBanned == true)
+                        {
+                            <span>
+                                Banned
+                            </span>
+                        }
+                        else if(item.TimeOut > DateTime.Now)
+                        {
+                            <span>
+                                Timed out
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                Active
+                            </span>
+                        }
+                    </td>
+                    <td class="text-center align-middle">
+                        <span>
                             @item.Email
                         </span>
-
-                        <form asp-controller="User" asp-action="Index" method="get">
-                            <input type="hidden" name="id" value="@item.Id" />
-                            <button type="submit" class="btn btn-outline-secondary">Details</button>
-                        </form>
-                        
+                    </td>
+                    <td class="text-center align-middle">
+                        <div class="btn-group" role="group">
+                                <form asp-controller="User" asp-action="Index" method="get">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button type="submit" class="btn btn-outline-secondary">Details</button>
+                                </form>
+                                @if (item.IsBanned == false)
+                                {
+                                    <form asp-controller="Admin" asp-action="Ban" method="get">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-outline-danger">Ban</button>
+                                    </form>
+                                }
+                                @if (item.IsBanned == true)
+                                {
+                                    <form asp-controller="Admin" asp-action="Unban" method="get">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-outline-warning">Unban</button>
+                                    </form>
+                                    <form asp-controller="Admin" asp-action="DeleteAllThreads" method="get">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                        <button type="submit" class="btn btn-outline-danger">Delete Threads</button>
+                                    </form>
+                                }
+                        </div>
                     </td>
                 </tr>
             }
@@ -52,3 +99,5 @@
             integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
             crossorigin="anonymous"></script>
     </div>
+
+                                     

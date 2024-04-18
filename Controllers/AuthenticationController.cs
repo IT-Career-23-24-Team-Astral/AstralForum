@@ -86,7 +86,7 @@ namespace AstralForum.Controllers
                 var cloudinaryResult = _cloudinaryService.UploadImage(registerRequest.ProfilePicture);
                 user.ProfilePictureUrl = cloudinaryResult.SecureUrl.AbsoluteUri;
 
-                await _userStore.SetUserNameAsync(user, registerRequest.Email, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, registerRequest.Username, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, registerRequest.Email, CancellationToken.None);
 
                 var identityResult = await _userManager.CreateAsync(user, registerRequest.Password);

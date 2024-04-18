@@ -1,9 +1,12 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Mapping;
+using AstralForum.Models.Admin;
 using AstralForum.Models;
 using AstralForum.Models.Thread;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
+using AstralForum.Services.Comment;
+using AstralForum.Services.ThreadCategory;
 
 namespace AstralForum.Services.Thread
 {
@@ -11,10 +14,12 @@ namespace AstralForum.Services.Thread
     {
         private readonly IThreadService threadService;
         private readonly ICloudinaryService cloudinaryService;
+        private readonly ICommentService commentService;
 
-        public ThreadFacade(IThreadService threadService, ICloudinaryService cloudinaryService)
+        public ThreadFacade(IThreadService threadService, ICommentService commentService, ICloudinaryService cloudinaryService)
         {
             this.threadService = threadService;
+            this.commentService = commentService;
             this.cloudinaryService = cloudinaryService;
         }
 
@@ -26,16 +31,15 @@ namespace AstralForum.Services.Thread
                 Title = threadDto.Title,
                 DateOfCreation = threadDto.CreatedOn,
                 Author = threadDto.CreatedBy,
-                LastComment = threadDto.Comments.OrderByDescending(c => c.CreatedOn).FirstOrDefault()
+                LastComment = threadDto.Comments.OrderByDescending(c => c.CreatedOn).FirstOrDefault(),
+                IsHidden = threadDto.IsHidden,
             };
 
             return model;
         }
-
+     
         public async Task<ThreadDto> CreateThread(ThreadCreationFormModel threadForm, User createdBy)
         {
-            // TODO: handle attachment upload and setting urls in the DTO
-
             ThreadDto threadDto = new ThreadDto()
             {
                 Title = threadForm.Title,

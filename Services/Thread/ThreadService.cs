@@ -1,13 +1,15 @@
-﻿using AstralForum.Data.Entities.Comment;
+﻿
 using AstralForum.Mapping;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
 using AstralForum.Data.Entities.Thread;
 using AstralForum.Data.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace AstralForum.Services.Thread
 {
-    public class ThreadService : IThreadService
+	public class ThreadService : IThreadService
 	{
 		private readonly ThreadRepository _threadRepository;
 
@@ -40,7 +42,17 @@ namespace AstralForum.Services.Thread
 
 			return threadDto;
 		}
-        public List<ThreadDto> SearchPostsByCreatedBy(int id, string searchQuery)
+
+		public ThreadDto GetThreadByThreadIdWithReactions(int id)
+		{
+			return _threadRepository.GetAll()
+				.Include(c => c.CreatedBy)
+				.Include(c => c.Reactions)
+					.ThenInclude(r => r.ReactionType)
+				.Single(c => c.Id == id).ToDto(false, true, false, false, false, false, true);
+		}
+
+		public List<ThreadDto> SearchPostsByCreatedBy(int id, string searchQuery)
         {
             var threads = _threadRepository
                 .GetAll()

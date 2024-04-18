@@ -1,0 +1,111 @@
+﻿
+@using AstralForum.Data.Entities
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<User> SignInManager
+@model AstralForum.Models.ThreadViewModel
+
+@{
+	ViewData["Title"] = "Thread " + Model.ThreadDto.Title;
+	Layout = "../Shared/_Layout.cshtml";
+}
+<h5>
+	Thread in category : @Model.ThreadDto.ThreadCategoryName</a>
+</h5>
+<div class="col-auto">
+	<form id="searchForm" class="form-inline" asp-controller="Thread" asp-action="SearchPostsByText" method="get">
+
+		<input type="hidden" name="id" value="@Model.ThreadDto.Id" />
+		<input class="form-control form-control-sm mr-2" type="text" placeholder="Search" aria-label="Search" name="searchQuery">
+		<button type="submit" class="btn btn-primary btn-sm">Search</button>
+	</form>
+</div>
+<form class="filter-box">
+	<div class="form-check form-check-inline">
+		<input class="form-check-input" type="checkbox" id="filterComment" name="filterComment">
+		<label class="form-check-label" for="filterComment">Filter by Comment</label>
+	</div>
+	<div class="form-check form-check-inline">
+		<input class="form-check-input" type="checkbox" id="filterCreatedBy" name="filterCreatedBy">
+		<label class="form-check-label" for="filterCreatedBy">Filter by Author</label>
+	</div>
+</form>
+<div class="container">
+	<div class="row">
+		<div class="col">
+			<div class="row">
+				<div class="col">
+					<h2>
+						@Model.ThreadDto.Title
+					</h2>
+				</div>
+				<div class="col col-3 d-flex justify-content-end">
+					<span class="fw-light">
+						Posted at @Model.ThreadDto.CreatedOn.ToString("g")
+					</span>
+				</div>
+			</div>
+
+			<p>
+				@Model.ThreadDto.Text
+			</p>
+		</div>
+	</div>
+</div>
+
+	<div class="row">
+		<div class="col">
+			Reaction section
+		</div>
+		<div class="col-2">
+			<span class="font-monospace">
+				by @Model.ThreadDto.CreatedBy.UserName
+			</span>
+			<br>
+			<span class="fw-light">
+				Member since: @Model.ThreadDto.CreatedBy.DateOfCreation.ToString("g")
+			</span>
+		</div>
+		<div class="col col-1 d-flex justify-content-end align-items-end">
+			<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-3 comment-profile-picture" width="45" height="45">
+		</div>
+	</div>
+
+
+	<div class="no-matches-text">
+		<h3>No matches to your search</h3>
+	</div>
+
+<script>
+
+	$(document).ready(function () {
+		$(".btn-comment").click(function () {
+			$("#commentWritingForm").removeClass("d-none");
+			$(window).scrollTop($("#commentWritingForm").position().top);
+		});
+	});
+	$(document).ready(function () {
+		$(".btn-comment").click(function () {
+			$("#commentWritingForm").removeClass("d-none");
+			$(window).scrollTop($("#commentWritingForm").position().top);
+		});
+
+		$(".filter-box input[type='checkbox']").change(function () {
+			var commentChecked = $("#filterComment").is(":checked");
+			var createdByChecked = $("#filterCreatedBy").is(":checked");
+
+			if (commentChecked && createdByChecked) {
+				alert("Only one filter can be applied.");
+				$("#filterComment").prop("checked", false);
+				$("#filterCreatedBy").prop("checked", false);
+			} else {
+				var action = "/Thread/SearchPostsByBoth";
+				if (commentChecked) {
+					action = "/Thread/SearchPostsByText";
+				} else if (createdByChecked) {
+					action = "/Thread/SearchPostsByCreatedBy";
+				}
+				$("#searchForm").attr("action", action);
+			}
+		});
+	});
+</script>

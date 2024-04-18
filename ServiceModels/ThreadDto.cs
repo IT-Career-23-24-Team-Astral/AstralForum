@@ -19,5 +19,7 @@ namespace AstralForum.ServiceModels
         public List<CommentDto> Comments { get; set; }
         public List<ThreadReactionDto> Reactions { get; set; }
         public List<ThreadAttachmentDto> Attachments { get; set; }
+        public bool IsHidden { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
     }
 }

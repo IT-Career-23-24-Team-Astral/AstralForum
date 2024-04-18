@@ -49,9 +49,23 @@ namespace AstralForum.Controllers
 		[Authorize]
 		public async Task<IActionResult> AddCommentReaction([FromForm] ReactionCommentModel reactionCommentForm)
 		{
-			int updatedReactionCount = _reactionFacade.AddReactionToComment(reactionCommentForm.CommentId, reactionCommentForm.ReactionTypeId, await _userManager.GetUserAsync(User));
+			int updatedReactionCount = await _reactionFacade.AddReactionToComment(reactionCommentForm.CommentId, reactionCommentForm.ReactionTypeId, await _userManager.GetUserAsync(User));
 			
-			return Json(new { reactionCount = updatedReactionCount});
+			return Json(new { reactionCount = updatedReactionCount });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize]
+		public async Task<IActionResult> RemoveCommentReaction([FromForm] ReactionCommentRemovalModel reactionCommentRemovalForm)
+		{
+			int updatedReactionCount = await _reactionFacade.RemoveCommentReaction(
+				reactionCommentRemovalForm.ReactionCommentId,
+				reactionCommentRemovalForm.CommentId,
+				reactionCommentRemovalForm.ReactionTypeId,
+				await _userManager.GetUserAsync(User));
+
+			return Json(new { reactionCount = updatedReactionCount });
 		}
 
 		[HttpPost]

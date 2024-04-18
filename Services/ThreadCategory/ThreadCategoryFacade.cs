@@ -5,6 +5,8 @@ using AstralForum.Models.Thread;
 using AstralForum.Models.ThreadCategory;
 using AstralForum.ServiceModels;
 using AstralForum.Services.Thread;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 
 namespace AstralForum.Services.ThreadCategory
 {
@@ -17,20 +19,6 @@ namespace AstralForum.Services.ThreadCategory
         {
             this.threadCategoryService = threadCategoryService;
             this.threadFacade = threadFacade;
-        }
-
-        public CategoryTableViewModel GetThreadCategoryTableViewModel(ThreadCategoryDto threadCategoryDto)
-        {
-            CategoryTableViewModel model = new CategoryTableViewModel()
-            {
-                Id = threadCategoryDto.Id,
-                CategoryName = threadCategoryDto.CategoryName,
-                DateOfCreation = threadCategoryDto.CreatedOn,
-                Author = threadCategoryDto.CreatedBy,
-                Description = threadCategoryDto.Description
-            };
-
-            return model;
         }
 
         public async Task<ThreadCategoryDto> CreateThreadCategory(CategoryCreateViewModel threadCategoryForm, User createdBy)
@@ -78,22 +66,72 @@ namespace AstralForum.Services.ThreadCategory
             return await threadCategoryService.DeleteThreadCategory(threadCategoryDto, createdBy);
         }
 
-        public CategoryThreadsViewModel GetAllThreadsByCategoryId(int categoryId)
+        
+        public CategoryThreadsViewModel SearchThreadByTitle(int id, string searchQuery)
         {
-            ThreadCategoryDto threadCategoryDto = threadCategoryService.GetThreadCategoryById(categoryId);
+            List<ThreadCategoryDto> allCategories = threadCategoryService.SearchThreadByTitle(id, searchQuery);
 
-            CategoryThreadsViewModel model = new CategoryThreadsViewModel()
+            // Check if any categories are found
+            if (allCategories == null || !allCategories.Any())
             {
-                CategoryName = threadCategoryDto.CategoryName,
-                CategoryId = threadCategoryDto.Id,
-                Threads = threadCategoryDto.Threads
-                    .OrderByDescending(t => t.CreatedOn)
-                    .Select(t => threadFacade.GetThreadTableViewModel(t)),
-                Description = threadCategoryDto.Description
-            };
+                return null;
+            }
+            else
+            {
+                ThreadCategoryDto selectedCategory = allCategories.First();
 
-            return model;
+                var filteredThreads = selectedCategory.Threads
+                                        .Where(t => t.Title.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase));
+
+                // Create the CategoryViewModel
+                CategoryThreadsViewModel model = new CategoryThreadsViewModel
+                {
+                    CategoryName = selectedCategory.CategoryName,
+                    CategoryId = selectedCategory.Id,
+                    Threads = filteredThreads
+                                .OrderByDescending(t => t.CreatedOn)
+                                .Select(t => threadFacade.GetThreadTableViewModel(t)),
+                    Description = selectedCategory.Description
+                };
+
+                return model;
+            }
         }
+
+
+
+        public CategoryThreadsViewModel SearchThreadByCreatedBy(int id,string searchQuery)
+        {
+            List<ThreadCategoryDto> allCategories = threadCategoryService.SearchThreadByCreatedBy(id, searchQuery);
+
+            // Check if any categories are found
+            if (allCategories == null || !allCategories.Any())
+            {
+                // Return a model with a specific CategoryId if no categories are found
+                return null;
+            }
+            else
+            {
+                ThreadCategoryDto selectedCategory = allCategories.First();
+
+                var filteredThreads = selectedCategory.Threads
+                                        .Where(t => t.CreatedBy.UserName.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase));
+
+                // Create the CategoryViewModel
+                CategoryThreadsViewModel model = new CategoryThreadsViewModel
+                {
+                    CategoryName = selectedCategory.CategoryName,
+                    CategoryId = selectedCategory.Id,
+                    Threads = filteredThreads
+                                .OrderByDescending(t => t.CreatedOn)
+                                .Select(t => threadFacade.GetThreadTableViewModel(t)),
+                    Description = selectedCategory.Description
+                };
+
+                return model;
+            }
+        }
+
         public CategoryViewModel GetAllThreadCategories()
         {
             List<ThreadCategoryDto> allCategories = threadCategoryService.GetAllThreadCategories();
@@ -115,6 +153,97 @@ namespace AstralForum.Services.ThreadCategory
 
             return model;
         }
+        public CategoryViewModel SearchThreadCategoriesByName(string searchQuery) 
+        {
+            List<ThreadCategoryDto> allCategories = threadCategoryService.SearchThreadCategoriesByName(searchQuery);
 
+            List<CategoryIndexViewModel> categoryViewModels = allCategories.Select(tc => new CategoryIndexViewModel
+            {
+                CategoryName = tc.CategoryName,
+                Description = tc.Description,
+                Author = tc.CreatedBy,
+                CategoryId = tc.Id
+            }).ToList();
+
+            CategoryViewModel model = new CategoryViewModel
+            {
+                Categories = categoryViewModels
+            };
+
+            return model;
+        }
+        public CategoryViewModel SearchThreadCategoriesByCreatedBy(string searchQuery)
+        {
+            List<ThreadCategoryDto> allCategories = threadCategoryService.SearchThreadCategoriesByCreatedBy(searchQuery);
+
+            // Map ThreadCategoryDto to CategoryIndexViewModel
+            List<CategoryIndexViewModel> categoryViewModels = allCategories.Select(tc => new CategoryIndexViewModel
+            {
+                CategoryName = tc.CategoryName,
+                Description = tc.Description,
+                Author = tc.CreatedBy,
+                CategoryId = tc.Id
+            }).ToList();
+
+            // Construct the view model
+            CategoryViewModel model = new CategoryViewModel
+            {
+                Categories = categoryViewModels
+            };
+
+            return model;
+        }
+        public CategoryViewModel SearchThreadCategoriesByBoth(string searchQuery)
+        {
+            List<ThreadCategoryDto> allCategories = threadCategoryService.SearchThreadCategoriesByBoth(searchQuery);
+
+            // Map ThreadCategoryDto to CategoryIndexViewModel
+            List<CategoryIndexViewModel> categoryViewModels = allCategories.Select(tc => new CategoryIndexViewModel
+            {
+                CategoryName = tc.CategoryName,
+                Description = tc.Description,
+                Author = tc.CreatedBy,
+                CategoryId = tc.Id
+            }).ToList();
+
+            // Construct the view model
+            CategoryViewModel model = new CategoryViewModel
+            {
+                Categories = categoryViewModels
+            };
+
+            return model;
+        }
+
+		public CategoryThreadsViewModel GetAllThreadsByCategoryId(int categoryId)
+		{
+			ThreadCategoryDto threadCategoryDto = threadCategoryService.GetThreadCategoryById(categoryId);
+
+			CategoryThreadsViewModel model = new CategoryThreadsViewModel()
+			{
+				CategoryName = threadCategoryDto.CategoryName,
+				CategoryId = threadCategoryDto.Id,
+				Threads = threadCategoryDto.Threads
+					.OrderByDescending(t => t.CreatedOn)
+					.Select(t => threadFacade.GetThreadTableViewModel(t)),
+				Description = threadCategoryDto.Description
+			};
+
+			return model;
+		}
+        public CategoryThreadsViewModel NoResults(int categoryId)
+        {
+            ThreadCategoryDto threadCategoryDto = threadCategoryService.GetThreadCategoryById(categoryId);
+
+            CategoryThreadsViewModel model = new CategoryThreadsViewModel()
+            {
+                CategoryName = threadCategoryDto.CategoryName,
+                CategoryId = threadCategoryDto.Id,
+               
+                Description = threadCategoryDto.Description
+            };
+
+            return model;
+        }
     }
 }

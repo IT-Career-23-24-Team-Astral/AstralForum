@@ -23,6 +23,9 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<ThreadRepository>();
 builder.Services.AddScoped<ThreadCategoryRepository>();
 builder.Services.AddScoped<CommentRepository>();
+builder.Services.AddScoped<CommentReactionRepository>();
+builder.Services.AddScoped<ThreadReactionRepository>();
+builder.Services.AddScoped<ReactionTypeRepository>();
 
 builder.Services.AddScoped<IThreadCategoryService, ThreadCategoryService>();
 builder.Services.AddScoped<IThreadService, ThreadService>();
@@ -40,7 +43,11 @@ builder.Services.AddScoped<IUserFacade, UserFacade>();
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews().AddRazorOptions(
+    options =>
+    {
+        options.ViewLocationFormats.Add("/Views/Admin/ReactionType/{0}.cshtml");
+    });
 
 // Email Sending Service
 builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGridSettings"));

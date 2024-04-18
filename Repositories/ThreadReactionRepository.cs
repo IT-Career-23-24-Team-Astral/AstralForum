@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
-    public class CommentReactionRepository : CommonRepository<CommentReaction>
+    public class ThreadReactionRepository : CommonRepository<ThreadReaction>
     {
-        public CommentReactionRepository(ApplicationDbContext context) : base(context) { }
+        public ThreadReactionRepository(ApplicationDbContext context) : base(context) { }
     }
 }

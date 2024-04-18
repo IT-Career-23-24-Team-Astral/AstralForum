@@ -1,5 +1,4 @@
-﻿﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -65,12 +64,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
                         </li>
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
-                            </li>
-                        }
+                        <li class="nav-item search-form">
+                            <form class="form-inline" asp-controller="Search" asp-action="Search" method="get">
+                                <input class="form-control form-control-sm mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="searchQuery">
+                                <button class="btn btn-outline-primary btn-sm my-2 my-sm-0" type="submit">Search</button>
+                            </form>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -91,4 +90,4 @@
     </footer>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-</html>
+</html>}

@@ -14,12 +14,12 @@ namespace AstralForum.Mapping
 			reactionType.Name = reactionTypeDto.Name;
 			reactionType.ImageUrl = reactionTypeDto.ImageUrl;
             reactionType.CreatedById = reactionTypeDto.CreatedById;
-            reactionType.CreatedBy = reactionTypeDto.CreatedBy.ToEntity();
+            reactionType.CreatedBy = reactionTypeDto.CreatedBy?.ToEntity();
             reactionType.CreatedOn = reactionTypeDto.CreatedOn;
 
             return reactionType;
         }
-        public static ReactionTypeDto ToDto(this ReactionType reactionType)
+        public static ReactionTypeDto ToDto(this ReactionType reactionType, bool includeCreatedBy = true)
         {
             ReactionTypeDto reactionTypeDto = new ReactionTypeDto();
 
@@ -27,7 +27,7 @@ namespace AstralForum.Mapping
             reactionTypeDto.Name = reactionType.Name;
             reactionTypeDto.ImageUrl = reactionType.ImageUrl;
             reactionTypeDto.CreatedById = reactionType.CreatedById;
-            reactionTypeDto.CreatedBy = reactionType.CreatedBy.ToDto();
+            reactionTypeDto.CreatedBy = includeCreatedBy ? reactionType.CreatedBy.ToDto() : new UserDto();
             reactionTypeDto.CreatedOn = reactionType.CreatedOn;
 
             return reactionTypeDto;

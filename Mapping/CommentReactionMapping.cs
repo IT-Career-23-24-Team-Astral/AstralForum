@@ -12,8 +12,9 @@ namespace AstralForum.Mapping
 
 			commentReaction.Id = commentReactionDto.Id;
 			commentReaction.CommentId = commentReactionDto.CommentId;
+			commentReaction.Comment = commentReactionDto.CommentDto?.ToEntity();
 			commentReaction.ReactionTypeId = commentReactionDto.ReactionTypeId;
-			commentReaction.ReactionType = commentReactionDto.ReactionTypeDto.ToEntity();
+			commentReaction.ReactionType = commentReactionDto.ReactionTypeDto?.ToEntity();
 			commentReaction.CreatedById = commentReactionDto.CreatedById;
 			commentReaction.CreatedOn = commentReactionDto.CreatedOn;
 
@@ -25,9 +26,11 @@ namespace AstralForum.Mapping
 
 			commentReactionDto.Id = reaction.Id;
 			commentReactionDto.CommentId = reaction.CommentId;
+			commentReactionDto.CommentDto = reaction.Comment?.ToDto(false, false, false);
 			commentReactionDto.ReactionTypeId = reaction.ReactionTypeId;
-			commentReactionDto.ReactionTypeDto = reaction.ReactionType.ToDto();
+			commentReactionDto.ReactionTypeDto = reaction.ReactionType?.ToDto(false);
 			commentReactionDto.CreatedById = reaction.CreatedById;
+			commentReactionDto.CreatedBy = reaction.CreatedBy?.ToDto();
 			commentReactionDto.CreatedOn = reaction.CreatedOn;
 
 			return commentReactionDto;

@@ -1,97 +1,104 @@
 ﻿@model AstralForum.Models.ThreadCategory.CategoryViewModel
-
 @{
     ViewData["Title"] = "Categories";
-
 }
 
 <style>
+
     .header {
-    text-align: center;
-    margin-bottom: 20px;
+        text-align: center;
+        margin-bottom: 10px; 
+        margin-top: 50px; 
     }
 
     .btn {
-    padding: 10px 20px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
+        padding: 5px 10px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
     }
 
     .btn-create {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: #fff;
-    border: 2px solid #007bff;
-    font-weight: bold;
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: #fff;
+        border: 2px solid #007bff;
+        font-weight: bold;
     }
 
-    .btn-create:hover {
-    color: #fff;
-    transform: scale(1.05);
-    }
+        .btn-create:hover {
+            color: #fff;
+            transform: scale(1.05);
+        }
 
     .categories {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-top: 10px;
+        margin-bottom: 20px; /
     }
 
     .category {
-    width: 350px; 
-    height: 350px; 
-    background-color: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+        width: calc(33.33% - 20px); 
+        max-width: 350px;
+        height: 350px;
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
 
-    .category:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
+        .category:hover {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
 
     .category-image img {
-    width: 100%;
-    border-radius: 10px;
+        width: 100%;
+        border-radius: 10px;
     }
 
     .category-details {
-    flex-grow: 1;
+        flex-grow: 1;
     }
 
     h2 {
-    color: #0056b3;
-    margin-top: 0;
-    font-size: 20px;
-    margin-bottom: 10px;
+        color: #0056b3;
+        margin-top: 0;
+        font-size: 20px;
+        margin-bottom: 10px;
     }
 
     p {
-    color: #666;
-    margin-bottom: 15px;
+        color: #666;
+        margin-bottom: 15px;
     }
 
     .category-actions {
-    text-align: center;
-    margin-top: 10px;
+        text-align: center;
+        margin-top: 10px;
     }
 
     .btn-join-discussion {
-    background: linear-gradient(135deg, #007bff, #0056b3);
-    color: #fff;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: #fff;
+        border: none;
+        padding: 8px 20px;
+        border-radius: 30px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
     }
 
-    .btn-join-discussion:hover {
-    transform: scale(1.05);
+        .btn-join-discussion:hover {
+            transform: scale(1.05);
+        }
+
+    .filter-box {
+        margin-bottom: 10px;
     }
 </style>
 
@@ -149,11 +156,31 @@
 </div>
 
 <script>
-	$(document).ready(function () {
-		$("#threadsTable tr").click(function () {
-			var id = $(this).attr("thread-id");
-			var action = "/Thread/Index/" + id;
-			window.location.href = window.location.origin + action;
-		})
-	})
+    $(document).ready(function () {
+        $("#threadsTable tr").click(function () {
+            var id = $(this).attr("thread-id");
+            var action = "/Thread/Index/" + id;
+            window.location.href = window.location.origin + action;
+        })
+    })
+    $(document).ready(function () {
+        $(".filter-box input[type='checkbox']").change(function () {
+            var categoryNameChecked = $("#filterCategoryName").is(":checked");
+            var createdByChecked = $("#filterCreatedBy").is(":checked");
+
+            if (categoryNameChecked && createdByChecked) {
+                alert("Only one filter can be applied.");
+                $("#filterCategoryName").prop("checked", false);
+                $("#filterCreatedBy").prop("checked", false);
+            } else {
+                if (categoryNameChecked) {
+                    $("#searchForm").attr("action", "/Search/SearchCategoryName");
+                } else if (createdByChecked) {
+                    $("#searchForm").attr("action", "/Search/SearchCreatedBy");
+                } else {
+                    $("#searchForm").attr("action", "/Search/Search");
+                }
+            }
+        });
+    });
 </script>

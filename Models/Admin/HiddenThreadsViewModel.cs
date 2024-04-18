@@ -2,8 +2,8 @@
 
 namespace AstralForum.Models.Admin
 {
-	public class HiddenThreadsViewModel
-	{
-		public List<ThreadDto> Threads { get; set; }
-	}
+    public class HiddenThreadsViewModel
+    {
+        public List<ThreadDto> Threads { get; set; }
+    }
 }

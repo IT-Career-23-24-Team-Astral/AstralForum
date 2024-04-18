@@ -1,4 +1,5 @@
 ﻿using AstralForum.Data.Entities;
+using AstralForum.Models.Admin;
 using AstralForum.Models.Thread;
 using AstralForum.ServiceModels;
 
