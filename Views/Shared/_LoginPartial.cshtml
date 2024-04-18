@@ -2,15 +2,27 @@
 @using Microsoft.AspNetCore.Identity
 @using AstralForum.Areas.Identity.Pages.Account
 @inject SignInManager<User> SignInManager
-@inject UserManager<User> UserManager //Reworked//
+@inject UserManager<User> UserManager 
+<style>
+    .nav-link {
+        border: none;
+        background: none;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+        color: #000;
+    }
+</style>
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
+
+    <form asp-controller="User" asp-action="Index" method="get">
+        <input type="hidden" name="id" value="@UserManager.GetUserId(User)" />
+        <button type="submit" class="nav-link text-dark">My Profile</button>
+    </form>
+    <li>
         <a class="nav-link text-dark" href="#logoutModal" data-bs-toggle="modal">Logout</a>
     </li>
 }

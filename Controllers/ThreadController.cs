@@ -2,6 +2,7 @@
 using AstralForum.Models;
 using AstralForum.Models.Thread;
 using AstralForum.ServiceModels;
+using AstralForum.Services;
 using AstralForum.Services.Thread;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -14,12 +15,14 @@ namespace AstralForum.Controllers
         private readonly IThreadFacade threadFacade;
         private readonly IThreadService threadService;
         private readonly UserManager<User> userManager;
+        private readonly TimeoutService timeoutService;
 
-        public ThreadController(IThreadFacade threadFacade, IThreadService threadService, UserManager<User> userManager)
+        public ThreadController(IThreadFacade threadFacade, IThreadService threadService, UserManager<User> userManager, TimeoutService timeoutService)
         {
             this.threadFacade = threadFacade;
             this.threadService = threadService;
             this.userManager = userManager;
+            this.timeoutService = timeoutService;
         }
 
         public IActionResult Index(int id)
@@ -50,11 +53,15 @@ namespace AstralForum.Controllers
         [Authorize]
         public async Task<IActionResult> Create(ThreadCreationFormModel threadForm)
         {
+            bool isUserInTimeout = await timeoutService.IsUserTimeout(await userManager.GetUserAsync(User));
+            if (isUserInTimeout)
+            {
+                return RedirectToAction("Timeout", "Home");
+            }
             if (threadForm.Text == null || threadForm.Title == null)
             {
 				return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
 			}
-
             await threadFacade.CreateThread(threadForm, await userManager.GetUserAsync(User));
 
             return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });

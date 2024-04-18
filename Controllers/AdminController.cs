@@ -5,9 +5,13 @@ using AstralForum.Services;
 using AstralForum.Services.Comment;
 using AstralForum.Services.Thread;
 using AstralForum.Services.ThreadCategory;
+using Humanizer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.Intrinsics.X86;
+using System;
 
 namespace AstralForum.Controllers
 {
@@ -18,11 +22,12 @@ namespace AstralForum.Controllers
         private readonly ICommentService commentService;
         private readonly RoleManager<Role> roleManager;
 		private readonly UserManager<User> userManager;
+        private readonly SignInManager<User> signInManager;
         private readonly IThreadFacade threadFacade;
         private readonly IThreadService threadService;
         private readonly ThreadRepository threadRepository;
         private readonly ApplicationDbContext applicationDbContext;
-        public AdminController(IUserFacade userFacade, RoleManager<Role> roleManager, UserManager<User> userManager, IThreadFacade threadFacade, IThreadService threadService, ThreadRepository threadRepository, ApplicationDbContext applicationDbContext, ICommentFacade commentFacade, ICommentService commentService)
+        public AdminController(IUserFacade userFacade, RoleManager<Role> roleManager, UserManager<User> userManager, IThreadFacade threadFacade, IThreadService threadService, ThreadRepository threadRepository, ApplicationDbContext applicationDbContext, ICommentFacade commentFacade, ICommentService commentService, SignInManager<User> signInManager)
         {
             this.userFacade = userFacade;
             this.roleManager = roleManager;
@@ -33,6 +38,7 @@ namespace AstralForum.Controllers
             this.applicationDbContext = applicationDbContext;
             this.commentFacade = commentFacade;
             this.commentService = commentService;
+            this.signInManager = signInManager;
         }
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
@@ -215,13 +221,17 @@ namespace AstralForum.Controllers
         [HttpGet]
         public async Task<IActionResult> Ban(int id)
         {
-            if (id == null)
+            var user = await applicationDbContext.Users.FindAsync(id);
+
+            if (user == null)
             {
                 return NotFound();
             }
-            var user = await applicationDbContext.Users.FindAsync(id);
+
             user.IsBanned = true;
             await applicationDbContext.SaveChangesAsync();
+            await userManager.UpdateSecurityStampAsync(user);
+            //await signInManager.SignOutAsync();
             string returnUrl = HttpContext.Request.Headers["Referer"];
             return Redirect(returnUrl);
         }

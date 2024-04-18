@@ -10,6 +10,7 @@ using AstralForum.Services.Thread;
 using AstralForum.Repositories;
 using AstralForum.Services.ThreadCategory;
 using AstralForum.Services.Comment;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ builder.Services.AddScoped<ThreadRepository>();
 builder.Services.AddScoped<ThreadCategoryRepository>();
 builder.Services.AddScoped<CommentRepository>();
 
+builder.Services.AddScoped<TimeoutService>();
+
 builder.Services.AddScoped<IThreadCategoryService, ThreadCategoryService>();
 builder.Services.AddScoped<IThreadService, ThreadService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
@@ -32,6 +35,10 @@ builder.Services.AddScoped<IThreadCategoryFacade, ThreadCategoryFacade>();
 builder.Services.AddScoped<IThreadFacade, ThreadFacade>();
 builder.Services.AddScoped<ICommentFacade, CommentFacade>();
 builder.Services.AddScoped<IUserFacade, UserFacade>();
+
+// For banning users and loging them out
+builder.Services.Configure<SecurityStampValidatorOptions>(o =>
+    o.ValidationInterval = TimeSpan.FromSeconds(10));
 
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<Role>()

@@ -62,6 +62,18 @@
                 <h6 class="info2">Last Name: <a class="fw-normal">@Model.Users.LastName</a></h6>
                 <h6 class="info2">Email: <a class="fw-normal">@Model.Users.Email</a></h6>
                 <h6 class="info2">Created: <a class="fw-normal">@Model.Users.DateOfCreation</a></h6>
+                @if (Model.Users.IsBanned)
+                {
+                    <h6 class="info2">Status: <a class="fw-normal">Banned</a></h6>
+                }
+                else if (Model.Users.TimeOut > DateTime.Now)
+                {
+                    <h6 class="info2">Status: <a class="fw-normal">Timeout until @Model.Users.TimeOut </a></h6>
+                }
+                else
+                {
+                    <h6 class="info2">Status: <a class="fw-normal">Active</a></h6>
+                }
             </div>
         </div>
         <div class="col-1"></div>

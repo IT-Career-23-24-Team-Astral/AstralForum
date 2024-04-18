@@ -17,13 +17,17 @@ namespace AstralForum.Controllers
 		private readonly ICommentFacade _commentFacade;
 		private readonly ICommentService _commentService;
 		private readonly UserManager<User> _userManager;
+        private readonly TimeoutService _timeoutService;
 
-		public CommentController(ICommentFacade commentFacade, ICommentService commentService, UserManager<User> userManager)
+
+        public CommentController(ICommentFacade commentFacade, ICommentService commentService, UserManager<User> userManager, TimeoutService timeoutService)
 		{
 			_commentFacade = commentFacade;
 			_commentService = commentService;
 			_userManager = userManager;
-		}
+			_timeoutService = timeoutService;
+
+        }
 
 		public async Task<IActionResult> CommentReplies(int commentId)
 		{
@@ -47,7 +51,12 @@ namespace AstralForum.Controllers
 		// TODO: fix attachments not to be shown as null
 		public async Task<IActionResult> AddThreadComment(ThreadViewModel viewModel, int threadId)
 		{
-			if (viewModel.CommentForm.Text == null)
+            bool isUserInTimeout = await _timeoutService.IsUserTimeout(await _userManager.GetUserAsync(User));
+            if (isUserInTimeout)
+            {
+                return RedirectToAction("Timeout", "Home");
+            }
+            if (viewModel.CommentForm.Text == null)
 			{
 				return RedirectToAction("Index", "Thread", new { id = threadId });
 			}
@@ -63,7 +72,12 @@ namespace AstralForum.Controllers
 		// TODO: fix attachments not to be shown as null
 		public async Task<IActionResult> AddCommentReply(ThreadViewModel viewModel, int threadId)
 		{
-			if (viewModel.CommentForm.Text == null)
+            bool isUserInTimeout = await _timeoutService.IsUserTimeout(await _userManager.GetUserAsync(User));
+            if (isUserInTimeout)
+            {
+                return RedirectToAction("Timeout", "Home");
+            }
+            if (viewModel.CommentForm.Text == null)
 			{
 				return RedirectToAction("Index", "Thread", new { id = threadId });
 			}

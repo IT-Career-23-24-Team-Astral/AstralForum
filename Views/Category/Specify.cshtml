@@ -85,23 +85,28 @@
                         @if (item.LastComment == null || item.LastComment.IsHidden == true)
                         {
                             <p class="fst-italic fw-semibold">No comments have been made on this thread yet</p>
-                            <div class="col d-flex justify-content-end">
-                            @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
-                            {
-                                <form asp-controller="Admin" asp-action="Timeout" method="get">
-                                    <button type="submit" class="btn btn-warning">Timeout</button>
-                                    <input type="hidden" name="id" value="@item.Author.Id">
-                                    <input type="datetime-local" id="time" name="time" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required>
-                                </form>
-                                <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
-                                    <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
-                                    <button type="submit" class="btn btn-danger adminButton" style="margin: -34px 0px 0px 0px">Hide</button>
-                                </form>
-                            }
-                            </div>
+                                <div class="col d-flex justify-content-end">
+                                    <button class="toggleAdminPanel btn btn-primary">Moderator Panel</button>
+                                    <div class="adminPanel" style="display: none;">
+                                        @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                                        {
+                                            <div class="adminPanel">
+                                                <form asp-controller="Admin" asp-action="Timeout" method="get">
+                                                    <button type="submit" class="btn btn-warning">Timeout</button>
+                                                    <input type="hidden" name="id" value="@item.Author.Id">
+                                                    <input type="datetime-local" id="time" name="time" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required>
+                                                </form>
+                                                <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
+                                                    <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
+                                                    <button type="submit" class="btn btn-danger adminButton" style="margin: 15px 0px 0px 10px">Hide</button>
+                                                </form>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
                         }
-                            else
-                            {
+                        else
+                        {
                             <div>
                                 @if (item.IsHidden == false)
                                 {
@@ -122,16 +127,25 @@
                                                     on @item.LastComment.CreatedOn.ToString("g")
                                                 </span>
                                         </div>
-                                        <div class="col d-flex justify-content-end">
-                                            <img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-circle" style="margin: 13px 0px 0px 10px" width="45" height="45">
-                                            @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
-                                            {
-                                                    <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
-                                                    <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
-                                                        <button type="submit" class="btn btn-danger adminButton" style="margin: 15px 0px 0px 10px">Hide</button>
-                                            </form>
-                                            }
-                                        </div>
+                                            <div class="col d-flex justify-content-end">
+                                                <button class="toggleAdminPanel btn btn-primary" style="margin-top: 40px;">Moderator Panel</button>
+                                                <div class="adminPanel" style="display: none;">
+                                                    @if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                                                    {
+                                                        <div class="adminPanel">
+                                                            <form asp-controller="Admin" asp-action="Timeout" method="get">
+                                                                <button type="submit" class="btn btn-warning">Timeout</button>
+                                                                <input type="hidden" name="id" value="@item.Author.Id">
+                                                                <input type="datetime-local" id="time" name="time" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required>
+                                                            </form>
+                                                            <form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
+                                                                <input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
+                                                                <button type="submit" class="btn btn-danger adminButton" style="margin: 15px 0px 0px 10px">Hide</button>
+                                                            </form>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
                                     </div>
                                 }
                             </div>
@@ -146,14 +160,24 @@
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function () {
-            $("#threadsTable tr").click(function () {
-                var id = $(this).attr("thread-id");
-                var action = "/Thread/Index/" + id;
-                window.location.href = window.location.origin + action;
-            })
-        })
+    <script>    
+            $(document).ready(function () {
+                $(".toggleAdminPanel").click(function () {
+                    event.stopPropagation();
+                    $(this).siblings(".adminPanel").toggle();
+                });
+
+            // Redirect to thread index on row click
+            $("#threadsTable tr").click(function (event) {
+                // Check if the clicked element is the datetime input
+                if (!$(event.target).is('#time')) {
+                    var id = $(this).attr("thread-id");
+                    var action = "/Thread/Index/" + id;
+                    window.location.href = window.location.origin + action;
+                }
+            });
+        });
     </script>
 }
+
 

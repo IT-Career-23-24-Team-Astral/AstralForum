@@ -116,13 +116,24 @@
 					Reaction section
 				</div>
 				<div class="col col-2 d-flex flex-column justify-content-center align-items-end">
-					
-					@if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
-					{
-						<form asp-controller="Comment" asp-action="HideComment" asp-route-id="@item.Id" method="get">
-							<button type="submit" class="btn btn-danger adminButton" style="margin: 0px 28px 5px 0px">Hide</button>
-						</form>
-					}
+					<div class="col d-flex justify-content-end">
+						<button class="toggleAdminPanel btn btn-primary">Moderator Panel</button>
+						<div class="adminPanel" style="display: none;">
+							@if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+							{
+								<div class="adminPanel">
+									<form asp-controller="Admin" asp-action="Timeout" method="get">
+										<button type="submit" class="btn btn-warning">Timeout</button>
+										<input type="hidden" name="id" value="@Model.ThreadDto.CreatedById">
+										<input type="datetime-local" id="time" name="time" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required>
+									</form>
+									<form asp-controller="Comment" asp-action="HideComment" asp-route-id="@item.Id" method="get">
+										<button type="submit" class="btn btn-danger adminButton" style="margin: 0px 28px 5px 0px">Hide</button>
+									</form>
+								</div>
+							}
+						</div>
+					</div>
 					<btn class="btn btn-light btn-show-replies" onclick="btnShowReplies(@item.Id)">Show replies</btn>
 				</div>
 			</div>
@@ -250,3 +261,15 @@
 		});
 	});
 </script>
+
+
+
+<script>
+	$(document).ready(function () {
+		$(".toggleAdminPanel").click(function () {
+			event.stopPropagation();
+			$(this).siblings(".adminPanel").toggle();
+		});
+	});
+</script>
+					
