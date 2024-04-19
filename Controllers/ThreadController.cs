@@ -188,6 +188,7 @@ namespace AstralForum.Controllers
 		[Authorize]
 		public IActionResult Edit([FromForm] ThreadEditFormModel threadEditForm)
 		{
+			// TODO: secure server side the editing of a thread only by its creator
 			if (!ModelState.IsValid)
 			{
 				return RedirectToAction("Index", new { id = threadEditForm.ThreadDtoId });

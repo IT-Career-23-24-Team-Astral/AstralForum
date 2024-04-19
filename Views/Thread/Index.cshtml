@@ -31,7 +31,7 @@
 	</div>
 </form>
 
-<div class="container">
+<div class="container mb-3">
 	<div class="row">
 		<div class="col">
 			<h2 id="threadTitle">@Model.ThreadDto.Title</h2>
@@ -306,14 +306,15 @@
 					}
 				</div>
 				<div class="col col-2 d-flex justify-content-end align-self-center">
-					<btn class="btn btn-light btn-show-replies" onclick="btnShowReplies(@item.Id)">Show replies</btn>
+					<btn id="btnShowRepliesCommentId-@item.Id" class="btn btn-light btn-show-replies" onclick="btnShowReplies(@item.Id)">Show replies</btn>
+					<btn id="btnHideRepliesCommentId-@item.Id" class="btn btn-light btn-hide-replies d-none" onclick="btnHideReplies(@item.Id)">Hide replies</btn>
 				</div>
 			</div>
 
 			<div id="replyWritingForm-@item.Id">
 			</div>
 
-			<div id="repliesToCommentId-@item.Id" class="mt-3">
+			<div id="repliesToCommentId-@item.Id" class="d-none mt-3">
 			</div>
 		</div>
 	}
@@ -388,7 +389,8 @@
 					{reactionSection}
 				</div>
 				<div class="col col-2 d-flex justify-content-end align-self-center">
-						<btn class="btn btn-light btn-show-replies" onclick="btnShowReplies({commentId})">Show replies</btn>
+					<btn id="btnShowRepliesCommentId-{commentId}" class="btn btn-light btn-show-replies" onclick="btnShowReplies({commentId})">Show replies</btn>
+					<btn id="btnHideRepliesCommentId-{commentId}" class="btn btn-light btn-hide-replies d-none" onclick="btnHideReplies({commentId})">Hide replies</btn>
 				</div>
 			</div>
 
@@ -396,7 +398,7 @@
 
 			</div>
 
-			<div id="repliesToCommentId-{commentId}" class="mt-3">
+			<div id="repliesToCommentId-{commentId}" class="mt-3 d-none">
 
 			</div>
 		</div>
@@ -409,6 +411,25 @@
 	}
 
 	function btnShowReplies(commentId) {
+		document.getElementById(`repliesToCommentId-${commentId}`).classList.remove("d-none");
+
+		if (document.getElementById(`repliesToCommentId-${commentId}`).textContent.trim() == "")
+		{
+			fillReplies(commentId);
+		}
+		
+		document.getElementById(`btnShowRepliesCommentId-${commentId}`).classList.add("d-none");
+		document.getElementById(`btnHideRepliesCommentId-${commentId}`).classList.remove("d-none");
+	}
+
+	function btnHideReplies(commentId) {
+		document.getElementById(`repliesToCommentId-${commentId}`).classList.add("d-none");
+
+		document.getElementById(`btnShowRepliesCommentId-${commentId}`).classList.remove("d-none");
+		document.getElementById(`btnHideRepliesCommentId-${commentId}`).classList.add("d-none");
+	}
+
+	function fillReplies(commentId) {
 		fetch(`/Comment/CommentReplies?commentId=${commentId}`)
 			.then(response => response.json())
 			.then(comments =>
