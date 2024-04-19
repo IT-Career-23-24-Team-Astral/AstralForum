@@ -185,7 +185,8 @@ namespace AstralForum.Services.Thread
             };
             return model;
         }
-        public async Task<HiddenThreadsViewModel> GetAllHiddenThreads()
+
+		public async Task<HiddenThreadsViewModel> GetAllHiddenThreads()
         {
             List<ThreadDto> threads = await threadService.GetAllHiddenThreads();
 
@@ -207,5 +208,5 @@ namespace AstralForum.Services.Thread
 
             return viewModel;
         }
-    }
+	}
 }

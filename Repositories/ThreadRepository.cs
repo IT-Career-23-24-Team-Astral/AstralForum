@@ -13,7 +13,7 @@ namespace AstralForum.Repositories
 	{
 		public ThreadRepository(ApplicationDbContext context) : base(context) { }
 
-        public Thread GetThreadById(int id)
+        public Thread? GetThreadById(int id)
         {
             return context.Threads
                 .Include(t => t.ThreadCategory)
@@ -27,9 +27,10 @@ namespace AstralForum.Repositories
                 .Include(t => t.Reactions)
                 .Include(t => t.Attachments)
                 .Where(t => t.Id == id)
-                .Single();
+                .SingleOrDefault();
         }
-        public void DeleteAllThreadsByUserId(int userId)
+
+		public void DeleteAllThreadsByUserId(int userId)
         {
             var threadsToDelete = context.Threads.Where(t => t.CreatedById == userId);
 
@@ -40,7 +41,12 @@ namespace AstralForum.Repositories
                 context.SaveChanges();
             }
         }
-        public async Task<List<Thread>> GetAllHiddenThreads()
+		public int EditThreadText(int id, string newText)
+        {
+            return context.Threads.Where(t => t.Id == id).ExecuteUpdate(setters => setters.SetProperty(t => t.Text, newText));
+        }
+
+		public async Task<List<Thread>> GetAllHiddenThreads()
         {
             return await context.Threads
                 .Include(t => t.CreatedBy)

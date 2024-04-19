@@ -52,11 +52,12 @@
 					<div class="col">
 						<div>
 							<p id="threadText">@Model.ThreadDto.Text</p>
-							<form id="threadEditForm" class="d-none">
+							<form id="threadEditForm" class="d-none" method="post">
+								<input type="hidden" name="threadDtoId" value="@Model.ThreadDto.Id" />
 								<div class="mb-3">
-									<input type="text" class="form-control" id="editThreadTextInput" value="Some text inside"/>
+									<textarea name="updatedText" class="form-control" id="editThreadTextInput" rows="5"></textarea>
 								</div>
-								<button type="submit" class="btn btn-primary">Save changes</button>
+								<button type="submit" class="btn btn-primary" asp-controller="Thread" asp-action="Edit">Save changes</button>
 							</form>
 						</div>
 
@@ -506,7 +507,9 @@
 
 		let threadTextElement = document.getElementById("threadText");
 		threadTextElement.classList.add("d-none");
-		document.getElementById("editThreadTextInput").setAttribute("value", threadTextElement.textContent);
+
+		document.getElementById("editThreadTextInput").value = threadTextElement.textContent;
+		document.getElementById("editThreadTextInput").focus();
 	}
 
 	function formAddReaction() {

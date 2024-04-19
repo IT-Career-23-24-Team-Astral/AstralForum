@@ -30,10 +30,9 @@ namespace AstralForum.Services.Thread
 			return (await _threadRepository.Delete(thread)).ToDto();
 		}
 
-		public async Task<ThreadDto> EditThread(ThreadDto threadDto)
+		public int EditThreadText(int id, string newText)
 		{
-			Data.Entities.Thread.Thread thread = threadDto.ToEntity();
-			return (await _threadRepository.Edit(thread)).ToDto();
+			return _threadRepository.EditThreadText(id, newText);
 		}
 
 		public ThreadDto GetThreadById(int id)
@@ -157,5 +156,5 @@ namespace AstralForum.Services.Thread
         {
             _threadRepository.DeleteAllThreadsByUserId(id);
         }
-    }
+	}
 }

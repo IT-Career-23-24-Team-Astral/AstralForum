@@ -13,15 +13,15 @@ using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 
 namespace AstralForum.Controllers
 {
-    public class ThreadController : Controller
-    {
-        private readonly IThreadFacade threadFacade;
-        private readonly IThreadService threadService;
+	public class ThreadController : Controller
+	{
+		private readonly IThreadFacade threadFacade;
+		private readonly IThreadService threadService;
 		private readonly IReactionFacade reactionFacade;
-        private readonly IReactionService reactionService;
-        private readonly UserManager<User> userManager;
+		private readonly IReactionService reactionService;
+		private readonly UserManager<User> userManager;
 
-        public ThreadController(IThreadFacade threadFacade, IThreadService threadService, IReactionFacade reactionFacade, IReactionService reactionService, UserManager<User> userManager)
+		public ThreadController(IThreadFacade threadFacade, IThreadService threadService, IReactionFacade reactionFacade, IReactionService reactionService, UserManager<User> userManager)
 		{
 			this.threadFacade = threadFacade;
 			this.threadService = threadService;
@@ -31,68 +31,68 @@ namespace AstralForum.Controllers
 		}
 
 		public async Task<IActionResult> Index(int id)
-        {
-            ThreadDto databaseModel = threadService.GetThreadById(id);
+		{
+			ThreadDto databaseModel = threadService.GetThreadById(id);
 
-            ThreadViewModel viewModel = new ThreadViewModel()
-            {
-                ThreadDto = databaseModel,
-                ReactionTypeDtos = await reactionService.GetAllReactionTypes(),
-                CommentForm = new CommentAndReplyCreationFormModel()
-            };
+			ThreadViewModel viewModel = new ThreadViewModel()
+			{
+				ThreadDto = databaseModel,
+				ReactionTypeDtos = await reactionService.GetAllReactionTypes(),
+				CommentForm = new CommentAndReplyCreationFormModel()
+			};
 
-            return View(viewModel);
-        }
-        public IActionResult NoResultsThread()
-        {
-            if (TempData["ThreadDto.Id"] == null)
-            {
-                return RedirectToAction("Index", "Category");
-            }
-            else
-            {
-                int id = (int)TempData["ThreadDto.Id"];
-                ThreadDto databaseModel = threadFacade.NoResultsThread(id);
+			return View(viewModel);
+		}
+		public IActionResult NoResultsThread()
+		{
+			if (TempData["ThreadDto.Id"] == null)
+			{
+				return RedirectToAction("Index", "Category");
+			}
+			else
+			{
+				int id = (int)TempData["ThreadDto.Id"];
+				ThreadDto databaseModel = threadFacade.NoResultsThread(id);
 
-                ThreadViewModel viewModel = new ThreadViewModel()
-                {
-                    ThreadDto = databaseModel,
-                    CommentForm = new CommentAndReplyCreationFormModel()
-                };
-            
-                return View(viewModel);
-            }
-        }
+				ThreadViewModel viewModel = new ThreadViewModel()
+				{
+					ThreadDto = databaseModel,
+					CommentForm = new CommentAndReplyCreationFormModel()
+				};
+
+				return View(viewModel);
+			}
+		}
 		public IActionResult SearchPostsByCreatedBy(int id, string searchQuery)
-        {
-            ViewData["CurrentFilter"] = searchQuery;
-            ThreadDto model = threadFacade.SearchPostsByCreatedBy(id, searchQuery);
-            
+		{
+			ViewData["CurrentFilter"] = searchQuery;
+			ThreadDto model = threadFacade.SearchPostsByCreatedBy(id, searchQuery);
 
-            if (model == null)
-            {
-                TempData["ThreadDto.Id"] = id;
-                return RedirectToAction("NoResultsThread", "Thread");
-            }
-            else if (!string.IsNullOrEmpty(searchQuery))
-            {
+
+			if (model == null)
+			{
+				TempData["ThreadDto.Id"] = id;
+				return RedirectToAction("NoResultsThread", "Thread");
+			}
+			else if (!string.IsNullOrEmpty(searchQuery))
+			{
 				ThreadViewModel viewModel = new ThreadViewModel()
 				{
 					ThreadDto = model,
 					CommentForm = new CommentAndReplyCreationFormModel()
 				};
 				return View("~/Views/Thread/Index.cshtml", viewModel);
-            }
-            else if (string.IsNullOrEmpty(searchQuery))
-            {
-                TempData["ThreadDto.Id"] = id;
-                return RedirectToAction("NoResultsThread", "Thread");
-            }
-            else
-            {
-                return RedirectToAction("Index", "Category");
-            }
-        }
+			}
+			else if (string.IsNullOrEmpty(searchQuery))
+			{
+				TempData["ThreadDto.Id"] = id;
+				return RedirectToAction("NoResultsThread", "Thread");
+			}
+			else
+			{
+				return RedirectToAction("Index", "Category");
+			}
+		}
 		public IActionResult SearchPostsByText(int id, string searchQuery)
 		{
 			ViewData["CurrentFilter"] = searchQuery;
@@ -154,34 +154,43 @@ namespace AstralForum.Controllers
 			}
 		}
 
-        [Authorize]
-        [Route("/Thread/Create/{categoryId}/{categoryName}")]
-        public IActionResult Create(int categoryId, string categoryName)
-        {
-            ThreadCreationFormModel model = new ThreadCreationFormModel()
-            {
-                CategoryId = categoryId,
-                CategoryName = categoryName
-            };
-            return View(model);
-        }
+		[Authorize]
+		[Route("/Thread/Create/{categoryId}/{categoryName}")]
+		public IActionResult Create(int categoryId, string categoryName)
+		{
+			ThreadCreationFormModel model = new ThreadCreationFormModel()
+			{
+				CategoryId = categoryId,
+				CategoryName = categoryName
+			};
+			return View(model);
+		}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize]
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize]
 		[Route("/Thread/Create/{categoryId}/{categoryName}")]
 		public async Task<IActionResult> Create(ThreadCreationFormModel threadForm)
-        {
-            // TODO: Find a better way to handle serverside input validation
-            if (threadForm.Title == null || threadForm.Text == null)
-            {
+		{
+			// TODO: Find a better way to handle serverside input validation
+			if (threadForm.Title == null || threadForm.Text == null)
+			{
 				return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
 			}
 
-            await threadFacade.CreateThread(threadForm, await userManager.GetUserAsync(User));
+			await threadFacade.CreateThread(threadForm, await userManager.GetUserAsync(User));
 
-            return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
-        }
+			return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize]
+		public IActionResult Edit([FromForm] ThreadEditFormModel threadEditForm)
+		{
+			threadService.EditThreadText(threadEditForm.ThreadDtoId, threadEditForm.UpdatedText);
+			return RedirectToAction("Index", new { id = threadEditForm.ThreadDtoId });
+		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]

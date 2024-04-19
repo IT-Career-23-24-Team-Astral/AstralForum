@@ -31,7 +31,7 @@ namespace AstralForum.Mapping
 			threadReactionDto.ReactionTypeId = threadReaction.ReactionTypeId;
 			threadReactionDto.ReactionTypeDto = threadReaction.ReactionType?.ToDto(false);
 			threadReactionDto.CreatedById = threadReaction.CreatedById;
-			threadReactionDto.CreatedBy = threadReaction.CreatedBy.ToDto();
+			threadReactionDto.CreatedBy = threadReaction.CreatedBy?.ToDto();
 			threadReactionDto.CreatedOn = threadReaction.CreatedOn;
 
 			return threadReactionDto;
