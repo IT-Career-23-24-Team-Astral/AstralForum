@@ -31,7 +31,7 @@
 	</div>
 </form>
 
-<div class="container mb-3">
+<div class="container">
 	<div class="row">
 		<div class="col">
 			<h2 id="threadTitle">@Model.ThreadDto.Title</h2>
@@ -549,7 +549,18 @@
 			method: 'POST',
 			body: formData
 		})
-			.then(data => location.reload());
+			.then(data => {
+				// if the response url contains the current url,
+				// then &autheticate=true was added and it needs to be refreshed
+				// to show the login modal
+				if (data.url.includes(window.location.href)) {
+					window.location.href = data.url;
+				} 
+				else
+				{
+					location.reload();
+				}
+			});
 	}
 
 	function formRemoveReaction() {
@@ -561,7 +572,14 @@
 			method: 'POST',
 			body: formData
 		})
-			.then(data => location.reload());
+			.then(data => {
+				if (data.url.includes(window.location.href)) {
+					window.location.href = data.url;
+				}
+				else {
+					location.reload();
+				}
+			});
 	}
 
 	$(document).ready(function () {

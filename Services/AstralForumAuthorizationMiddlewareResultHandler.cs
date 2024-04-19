@@ -16,6 +16,12 @@ namespace AstralForum.Services
                 if (!referer.Contains("?authenticate=true"))
                 {
                     context.Response.Redirect(referer + "?authenticate=true");
+                    return;
+                }
+                else
+                {
+                    context.Response.Redirect(referer);
+                    return;
                 }
             }
 
