@@ -6,7 +6,7 @@ namespace AstralForum.Services.Thread
 	public interface IThreadService
 	{
 		Task<ThreadDto> CreateThread(ThreadDto model, User createdBy);
-		int EditThreadText(int id, string newText);
+		int EditThread(int id, string newText, string newTitle);
 		ThreadDto GetThreadById(int id);
 		ThreadDto GetThreadByThreadIdWithReactions(int id);
 		Task<ThreadDto> DeleteThread(ThreadDto commentDto);

@@ -30,9 +30,9 @@ namespace AstralForum.Services.Thread
 			return (await _threadRepository.Delete(thread)).ToDto();
 		}
 
-		public int EditThreadText(int id, string newText)
+		public int EditThread(int id, string newText, string newTitle)
 		{
-			return _threadRepository.EditThreadText(id, newText);
+			return _threadRepository.EditThread(id, newText, newTitle);
 		}
 
 		public ThreadDto GetThreadById(int id)

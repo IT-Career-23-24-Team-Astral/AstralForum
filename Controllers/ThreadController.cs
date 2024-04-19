@@ -188,7 +188,11 @@ namespace AstralForum.Controllers
 		[Authorize]
 		public IActionResult Edit([FromForm] ThreadEditFormModel threadEditForm)
 		{
-			threadService.EditThreadText(threadEditForm.ThreadDtoId, threadEditForm.UpdatedText);
+			if (!ModelState.IsValid)
+			{
+				return RedirectToAction("Index", new { id = threadEditForm.ThreadDtoId });
+			}
+			threadService.EditThread(threadEditForm.ThreadDtoId, threadEditForm.UpdatedText, threadEditForm.UpdatedTitle);
 			return RedirectToAction("Index", new { id = threadEditForm.ThreadDtoId });
 		}
 

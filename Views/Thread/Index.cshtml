@@ -34,56 +34,52 @@
 <div class="container">
 	<div class="row">
 		<div class="col">
-			<div class="row">
-				<div class="col">
-					<h2>
-						@Model.ThreadDto.Title
-					</h2>
-				</div>
-				<div class="col col-3 d-flex justify-content-end">
-					<span class="fw-light">
-						Posted at @Model.ThreadDto.CreatedOn.ToString("g")
-					</span>
-				</div>
+			<h2 id="threadTitle">@Model.ThreadDto.Title</h2>
+			<p id="threadText">@Model.ThreadDto.Text</p>
+			<div>
+				<form id="threadEditForm" class="d-none" method="post">
+					<input type="hidden" name="threadDtoId" value="@Model.ThreadDto.Id" />
+					<div class="mb-3">
+						<input name="updatedTitle" class="form-control form-control-lg" id="editThreadTitleInput" />
+					</div>
+					<div class="mb-3">
+						<textarea name="updatedText" class="form-control" id="editThreadTextInput" rows="5"></textarea>
+					</div>
+					<div class="d-flex flex-wrap">
+						<button type="submit" class="btn btn-primary me-3" asp-controller="Thread" asp-action="Edit">
+							Save changes
+						</button>
+						<button class="btn btn-danger" onclick="btnCancelThreadEdit()">
+							Cancel
+						</button>
+					</div>
+				</form>
 			</div>
 
-			<p>
-				<div class="row">
-					<div class="col">
-						<div>
-							<p id="threadText">@Model.ThreadDto.Text</p>
-							<form id="threadEditForm" class="d-none" method="post">
-								<input type="hidden" name="threadDtoId" value="@Model.ThreadDto.Id" />
-								<div class="mb-3">
-									<textarea name="updatedText" class="form-control" id="editThreadTextInput" rows="5"></textarea>
-								</div>
-								<button type="submit" class="btn btn-primary" asp-controller="Thread" asp-action="Edit">Save changes</button>
-							</form>
-						</div>
+			@if (Model.ThreadDto.Attachments.Count > 0)
+			{
+				<hr />
+				<h6 class="fst-italic fw-lighter">Attachments: </h6>
+			}
 
-						@if (Model.ThreadDto.Attachments.Count > 0)
-						{
-							<hr />
-							<h6 class="fst-italic fw-lighter">Attachments: </h6>
-						}
-
-						@foreach (var attachment in Model.ThreadDto.Attachments)
-						{
-							<a href="@attachment.AttachmentUrl" target="_blank">@attachment.FileName</a>
-							<br />
-						}
-					</div>
-					<div class="col col-2">
-						@if(SignInManager.IsSignedIn(User) && (await UserManager.GetUserAsync(User)).Id == Model.ThreadDto.CreatedById)
-						{
-							<button class="btn btn-secondary" onclick="btnThreadEdit()">
-								Edit
-							</button>
-						}
-					</div>
-				</div>
-
-			</p>
+			@foreach (var attachment in Model.ThreadDto.Attachments)
+			{
+				<a href="@attachment.AttachmentUrl" target="_blank">@attachment.FileName</a>
+				<br />
+			}
+		</div>
+		<div class="col col-3">
+			<div class="d-flex justify-content-end">
+				<span class="fw-light">
+					Posted at @Model.ThreadDto.CreatedOn.ToString("g")
+				</span>
+			</div>
+			@if(SignInManager.IsSignedIn(User) && (await UserManager.GetUserAsync(User)).Id == Model.ThreadDto.CreatedById)
+			{
+				<button class="btn btn-secondary" onclick="btnThreadEdit()">
+					Edit
+				</button>
+			}
 		</div>
 	</div>
 
@@ -508,8 +504,18 @@
 		let threadTextElement = document.getElementById("threadText");
 		threadTextElement.classList.add("d-none");
 
+		let threadTitleElement = document.getElementById("threadTitle");
+		threadTitleElement.classList.add("d-none");
+
 		document.getElementById("editThreadTextInput").value = threadTextElement.textContent;
 		document.getElementById("editThreadTextInput").focus();
+
+		document.getElementById("editThreadTitleInput").setAttribute("value", threadTitleElement.textContent);
+	}
+
+	function btnCancelThreadEdit() {
+		event.preventDefault();
+		window.location.reload();
 	}
 
 	function formAddReaction() {

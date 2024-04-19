@@ -41,9 +41,13 @@ namespace AstralForum.Repositories
                 context.SaveChanges();
             }
         }
-		public int EditThreadText(int id, string newText)
+		public int EditThread(int id, string newText, string newTitle)
         {
-            return context.Threads.Where(t => t.Id == id).ExecuteUpdate(setters => setters.SetProperty(t => t.Text, newText));
+            return context.Threads
+                .Where(t => t.Id == id)
+                .ExecuteUpdate(setters => setters
+                    .SetProperty(t => t.Text, newText)
+                    .SetProperty(t => t.Title, newTitle));
         }
 
 		public async Task<List<Thread>> GetAllHiddenThreads()
