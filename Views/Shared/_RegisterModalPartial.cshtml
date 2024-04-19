@@ -7,6 +7,9 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
+				<div class="alert alert-success d-none" role="alert" id="SuccessfulRegistrationAlert">
+					Successful registration! Redirecting...
+				</div>
 				<form asp-controller="Authentication" asp-action="Register" id="registerForm" enctype="multipart/form-data">
 					@Html.AntiForgeryToken()
 					<div class="row mb-3">
@@ -71,6 +74,12 @@
 					<div class="mb-3">
 						<span id="FailedRegistrationValidation" class="text-danger"></span>
 					</div>
+					<div class="alert alert-secondary d-none" role="alert" id="LoadingRegisterAlert">
+						<i class="bi bi-hourglass"></i> Creating your account...
+					</div>
+					<div class="alert alert-success d-none" role="alert" id="SuccessfulRegistrationAlert">
+						Successful registration! Redirecting...
+					</div>
 					<button type="submit" class="btn btn-primary">Register</button>
 				</form>
 			</div>
@@ -91,6 +100,7 @@
 	$(document).ready(function () {
 		$('#registerForm').submit(function (event) {
 			event.preventDefault();
+			$('#LoadingRegisterAlert').removeClass('d-none');
 
 			var formData = new FormData(event.target);
 
@@ -106,7 +116,11 @@
 							$field.text(errorMessages.join('\n'));
 						});
 					} else {
-						alert("Successful registration!");
+						$('#SuccessfulRegistrationAlert').removeClass('d-none');
+						setTimeout(function () {
+							$("#registerModal").modal('hide');
+							window.location.href = window.location.href.replaceAll("?authenticate=true", "");
+						}, 1000);
 					}
 				});
 		});
