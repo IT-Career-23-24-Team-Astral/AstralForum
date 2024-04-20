@@ -18,6 +18,12 @@ namespace AstralForum.Services
         {
 			_commentRepository = commentRepository;
         }
+        public CommentDto GetCommentById(int id)
+        {
+            CommentDto commentDto = _commentRepository.GetCommentById(id).ToDto();
+
+            return commentDto;
+        }
         public async Task<CommentDto> AddComment(CommentDto commentDto, User createdBy)
         {
             Data.Entities.Comment.Comment comment = commentDto.ToEntity();

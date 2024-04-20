@@ -26,6 +26,24 @@ namespace AstralForum.Repositories
                 .FirstAsync(c => c.Id == id);
             return comment.Comments;
         }
+        public  Comment GetCommentById(int id)
+        {
+            return context.Comments
+                 .Include(c => c.Comments)
+                 .Include (cc => cc.CreatedBy)
+                 .Include(cc => cc.Attachments)
+                 .Include(cc => cc.Reactions)
+                 .Include(c => c.Comments)
+                    .ThenInclude(cc => cc.CreatedBy)
+                .Include(c => c.Comments)
+                    .ThenInclude(cc => cc.Attachments)
+                .Include(c => c.Comments)
+                    .ThenInclude(cc => cc.Reactions)
+                .Where(c => c.Id == id).Single();
+
+        }
+
+
         /*public IEnumerable<CommentModel> GetCommentsByThreadId(int id) => context.Comments.Where(c => c.ThreadId == id).Select(x => new CommentModel()
         {
             Id = x.Id,

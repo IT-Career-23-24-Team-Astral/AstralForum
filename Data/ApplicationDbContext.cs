@@ -20,7 +20,6 @@ namespace AstralForum.Data
             : base(options)
         {
         }
-
 		public DbSet<Ban> Bans { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<CommentAttachment> CommentsAttachment { get; set; }

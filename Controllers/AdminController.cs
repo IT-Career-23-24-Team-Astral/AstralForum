@@ -1,7 +1,10 @@
 ﻿using AstralForum.Data.Entities;
+using AstralForum.Mapping;
 using AstralForum.Models.Admin;
 using AstralForum.Models.Thread;
+using AstralForum.ServiceModels;
 using AstralForum.Services;
+using AstralForum.Services.Notification;
 using AstralForum.Services.ThreadCategory;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,11 +15,13 @@ namespace AstralForum.Controllers
     public class AdminController : Controller
     {
         private readonly IUserFacade userFacade;
+        private readonly INotificationService notificationService;
         private readonly RoleManager<Role> roleManager;
 		private readonly UserManager<User> userManager;
-		public AdminController(IUserFacade userFacade, RoleManager<Role> roleManager, UserManager<User> userManager)
+		public AdminController(IUserFacade userFacade,INotificationService notificationService, RoleManager<Role> roleManager, UserManager<User> userManager)
         {
             this.userFacade = userFacade;
+            this.notificationService = notificationService;
             this.roleManager = roleManager;
             this.userManager = userManager;
         }
@@ -152,7 +157,8 @@ namespace AstralForum.Controllers
                     userRoleViewModel.IsSelected = false;
 				}
                 model.Add(userRoleViewModel);
-			}
+                
+            }
             return View(model);
 		}
 		[Authorize(Roles = "Admin")]

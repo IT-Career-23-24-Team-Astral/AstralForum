@@ -5,24 +5,26 @@
 @inject UserManager<User> UserManager //Reworked//
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" href="#logoutModal" data-bs-toggle="modal">Logout</a>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" href="#registerModal" data-bs-toggle="modal">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" href="#loginModal" data-bs-toggle="modal">Login</a>
-    </li>
-}
+    @if (SignInManager.IsSignedIn(User))
+    {
+        
+
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="#logoutModal" data-bs-toggle="modal">Logout</a>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="#registerModal" data-bs-toggle="modal">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" href="#loginModal" data-bs-toggle="modal">Login</a>
+        </li>
+    }
 </ul>
 
 <partial name="_LoginModalPartial" />
@@ -33,9 +35,11 @@ else
     $(document).ready(function () {
         var url = window.location.href;
 
-        if(url.includes("authenticate")) {
+        if (url.includes("authenticate")) {
             $("#loginModal").modal('show');
             $("#loginModalLabel").text("To continue, please log in");
         }
+
+        
     });
 </script>

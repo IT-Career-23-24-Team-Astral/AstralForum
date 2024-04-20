@@ -34,8 +34,6 @@ namespace AstralForum.Controllers
             return View(categoryViewModel);
         }
 
-        [Authorize]
-        [Authorize(Roles = "Admin")]
         public IActionResult Create(int id)
         {
             CategoryCreateViewModel model = new CategoryCreateViewModel()
@@ -47,7 +45,6 @@ namespace AstralForum.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(CategoryCreateViewModel threadCategoryForm)
         {
             User loggedInUser = await userManager.GetUserAsync(User);

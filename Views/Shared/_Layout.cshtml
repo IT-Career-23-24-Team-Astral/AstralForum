@@ -65,12 +65,16 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Notification" asp-action="GetUserNotifications">Notifications</a>
+                        </li>
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
+
 
     <div class="container">
         <main role="main" class="pb-3">
@@ -86,3 +90,20 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<script>
+    $('#inboxButton').click(function () {
+            $.ajax({
+                url: '@Url.Action("GetUserNotifications", "Notification")',
+                type: 'GET',
+                success: function (data) {
+                    // Update the badge count with the number of notifications
+                    var notificationCount = data.length; // Assuming data is an array of notifications
+                    $('#notificationCount').text(notificationCount);
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                    // Handle error
+                }
+            });
+        });
+</script>

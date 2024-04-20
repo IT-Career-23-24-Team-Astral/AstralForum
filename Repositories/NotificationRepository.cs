@@ -1,102 +1,50 @@
 ﻿using AstralForum.Data.Entities;
-using AstralForum.Data.Entities.Comment;
-using AstralForum.Data.Entities.Reaction;
-using AstralForum.Data.Entities.Tag;
-using AstralForum.Models;
-using AstralForum.Models.Notification;
-using AstralForum.Repositories.Interfaces;
-using AstralForum.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
+
+using AstralForum.Mapping;
+using AstralForum.ServiceModels;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using SendGrid.Helpers.Mail;
 using System.Threading;
 
 
 namespace AstralForum.Repositories
 {
-    public class NotificationRepository : CommonRepository<Notification>
-    {
-        private ApplicationDbContext context;
+	public class NotificationRepository : CommonRepository<Notification>
+	{
+		private ApplicationDbContext context;
 
-        public NotificationRepository(ApplicationDbContext context) : base(context)
-        {
-            this.context = context;
-        }
+		public NotificationRepository(ApplicationDbContext context) : base(context)
+		{
+			this.context = context;
+		}
 
-        /*public async Task<List<Notification>> GetNotificationsByThreadId(int id)
+		
+        public async Task<List<Notification>> GetUserNotifications(int userId)
         {
-            Data.Entities.Thread.Thread thread = await context.Threads
-                .Include(e => e.Notifications)
-                .FirstAsync(p => p.Id == id);
-            return thread.Notifications;
-        }*/
-        public async Task<List<Notification>> GetNotificationsByCommentId(int id)
-        {
-            Comment comment = await context.Comments
-                .Include(e => e.Notifications)
-                .FirstAsync(p => p.Id == id);
-            return comment.Notifications;
+            return await context.Notifications
+                .Where(n => n.UserId == userId && !n.IsRead)
+                .Include(n => n.User)
+                .ToListAsync();
         }
-        public async Task<List<Notification>> GetNotificationsByTagId(int id)
+        public async Task<Notification> ReadNotification(int notificationId, int userId)
         {
-            Tag tag = await context.Tags
-                .Include(e => e.Notifications)
-                .FirstAsync(p => p.Id == id);
-            return tag.Notifications;
-        }
+            var notification = context.Notifications
+                .FirstOrDefault(n => n.UserId == userId && n.Id == notificationId);
 
-        /*public async Task<List<Notification>> GetNotificationsByReactionId(int id)
-        {
-            Reaction reaction = await context.Reactions
-                .Include(e => e.Notifications)
-                .FirstAsync(p => p.Id == id);
-            return reaction.Notifications;
-        }*/
-        public async Task<List<Notification>> GetNotificationsByNotificationId(int id)
-        {
-            Notification notification = await context.Notifications
-                .Include(e => e.Notifications)
-                .FirstAsync(p => p.Id == id);
-            return notification.Notifications;
-        }
-        /*public void CreateNotification(NotificationModel model, User Id)
-        {
-            Notification notification = new Notification()
+            if (notification != null)
             {
-                Id = model.Id,
-                NotificationId = model.NotificationId,
-                Text = model.Text,
-
-            };
-            context.Notifications.Add(notification);
-            context.SaveChanges();
-            var userNotification = new NotificationApplicationUser();
-            userNotification.Id = notification.Id;
-
-            context.UserNotifications.Add(userNotification);
-            context.SaveChanges();
+                notification.IsRead = true;
+                context.Notifications.Update(notification);
+                await context.SaveChangesAsync();
+                return notification;
+            }
+            else
+            {
+                return null;
+            }
         }
-        public List<NotificationApplicationUser> GetUserNotifications(string userId)
-        {
-            return context.UserNotifications.Where(u => u.UserId.Equals(userId) && !u.IsRead)
-                                            .Include(n => n.Notification)
-                                            .ToList();
-        }
-        public IEnumerable<NotificationModel> GetNotificationsByNotificationId(int id) => context.Notifications.Where(c => c.NotificationId == id).Select(a => new NotificationModel()
-        {
-            Id = a.Id,
-            Date = DateTime.Now,
-            Text = a.Text,
-            Id = a.Id
-        }).ToList();
 
-        public void ReadNotification(int notificationId, string userId)
-        {
-            var notifications = context.UserNotifications
-                                        .FirstOrDefault(n => n.UserId.Equals(userId)
-                                        && n.Id == notificationId);
-            notifications.IsRead = true;
-            context.UserNotifications.Update(notifications);
-            context.SaveChanges();
-        }*/
+
     }
 }

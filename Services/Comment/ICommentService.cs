@@ -7,6 +7,7 @@ namespace AstralForum.Services.Comment
 {
     public interface ICommentService
     {
+        public CommentDto GetCommentById(int id);
         Task<CommentDto> AddComment(CommentDto model, User createdBy);
         Task<CommentDto> EditComment(CommentDto commentDto);
         Task<List<CommentDto>> GetAllCommentsByThreadId(int id);

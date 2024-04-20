@@ -10,6 +10,8 @@ using AstralForum.Services.Thread;
 using AstralForum.Repositories;
 using AstralForum.Services.ThreadCategory;
 using AstralForum.Services.Comment;
+using AstralForum.Services.Notification;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,6 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services.AddScoped<NotificationRepository>();
 builder.Services.AddScoped<ThreadRepository>();
 builder.Services.AddScoped<ThreadCategoryRepository>();
 builder.Services.AddScoped<CommentRepository>();
@@ -27,17 +30,23 @@ builder.Services.AddScoped<IThreadCategoryService, ThreadCategoryService>();
 builder.Services.AddScoped<IThreadService, ThreadService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<IThreadCategoryFacade, ThreadCategoryFacade>();
 builder.Services.AddScoped<IThreadFacade, ThreadFacade>();
 builder.Services.AddScoped<ICommentFacade, CommentFacade>();
 builder.Services.AddScoped<IUserFacade, UserFacade>();
+builder.Services.AddScoped<INotificationFacade, NotificationFacade>();
 
 builder.Services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<Role>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
-
+builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        });
 // Email Sending Service
 builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGridSettings"));
 builder.Services.AddSendGrid(options =>
@@ -48,6 +57,7 @@ builder.Services.AddScoped<IEmailSender, EmailSenderService>();
 
 // Custom authentication middleware
 builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, AstralForumAuthorizationMiddlewareResultHandler>();
+
 
 var app = builder.Build();
 
