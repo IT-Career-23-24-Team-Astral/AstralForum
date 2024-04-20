@@ -77,6 +77,9 @@
 					<div class="alert alert-secondary d-none" role="alert" id="LoadingRegisterAlert">
 						<i class="bi bi-hourglass"></i> Creating your account...
 					</div>
+					<div class="alert alert-warning d-none" role="alert" id="ConfirmEmailRegisterAlert">
+						Confirm email to complete registration and then log in! Redirecting...
+					</div>
 					<div class="alert alert-success d-none" role="alert" id="SuccessfulRegistrationAlert">
 						Successful registration! Redirecting...
 					</div>
@@ -110,7 +113,13 @@
 			})
 				.then(response => response.json())
 				.then(data => {
-					if (data.success === false) {
+					if (data.confirmEmail === true) {
+						$("#ConfirmEmailRegisterAlert").removeClass('d-none');
+						setTimeout(function () {
+							$("#registerModal").modal('hide');
+							window.location.href = window.location.href.replaceAll("?authenticate=true", "");
+						}, 3000);
+					} else if (data.success === false) {
 						$.each(data.errors, function (fieldName, errorMessages) {
 							var $field = $('#' + fieldName + 'RegistrationValidation');
 							$field.text(errorMessages.join('\n'));

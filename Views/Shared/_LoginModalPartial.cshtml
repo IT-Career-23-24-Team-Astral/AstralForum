@@ -12,9 +12,9 @@
 				<form asp-controller="Authentication" asp-action="Login" id="loginForm">
 					@Html.AntiForgeryToken()
 					<div class="mb-3">
-						<label for="LoginEmail" class="form-label">Email address</label>
-						<input name="Email" type="email" class="form-control" id="LoginEmail">
-						<span id="EmailLoginValidation" class="text-danger"></span>
+						<label for="LoginUsername" class="form-label">Username</label>
+						<input name="Username" type="text" class="form-control" id="LoginUsername">
+						<span id="UsernameLoginValidation" class="text-danger"></span>
 					</div>
 					<div class="mb-3">
 						<label for="LoginPassword" class="form-label">Password</label>
@@ -54,7 +54,7 @@
 
 	$("#loginModal").on('hide.bs.modal', function () {
 		window.location.href = window.location.href.replaceAll("?authenticate=true", "");
-	})
+	});
 
 	$(document).ready(function () {
 		$('#loginForm').submit(function (event) {

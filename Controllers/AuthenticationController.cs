@@ -42,7 +42,7 @@ namespace AstralForum.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userManager.FindByEmailAsync(loginRequest.Email);
+                var user = await _userManager.FindByNameAsync(loginRequest.Username);
 
                 if (user != null && user.IsBanned)
                 {
@@ -50,7 +50,7 @@ namespace AstralForum.Controllers
                 }
                 else
                 {
-                    var result = await _signInManager.PasswordSignInAsync(loginRequest.Email, loginRequest.Password, loginRequest.RememberMe, lockoutOnFailure: false);
+                    var result = await _signInManager.PasswordSignInAsync(loginRequest.Username, loginRequest.Password, loginRequest.RememberMe, lockoutOnFailure: false);
 
                     if (result.Succeeded)
                     {
@@ -102,7 +102,7 @@ namespace AstralForum.Controllers
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-                    /*code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 					var callbackUrl = Url.Page(
 						"/Account/ConfirmEmail",
 						pageHandler: null,
@@ -111,16 +111,16 @@ namespace AstralForum.Controllers
 
 					await _emailSender.SendEmailAsync(registerRequest.Email, "Confirm your email",
 						$"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-*/
-                    /*if (_userManager.Options.SignIn.RequireConfirmedAccount)
+
+                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
 					{
-						return RedirectToPage("RegisterConfirmation", new { email = registerRequest.Email, returnUrl = returnUrl });
+						return Json(new { confirmEmail = true });
 					}
-					else*/
-                    //{
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return Json(new { success = true });
-                    //}
+					else
+                    {
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return Json(new { success = true });
+                    }
                 }
 
                 foreach (var error in result.IdentityResult.Errors)
