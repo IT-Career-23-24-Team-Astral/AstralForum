@@ -307,7 +307,10 @@
 				</div>
 				<div class="col col-2 d-flex flex-column justify-content-center align-items-end">
 					<div class="col d-flex justify-content-end">
-						<button class="toggleAdminPanel btn btn-primary">Moderator Panel</button>
+						@if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+						{
+							<button class="toggleAdminPanel btn btn-primary">Moderator Panel</button>
+						}
 						<div class="adminPanel" style="display: none;">
 							@if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
 							{
