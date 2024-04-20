@@ -19,7 +19,13 @@ namespace AstralForum.Repositories
 			this.context = context;
 		}
 
-		
+        public async Task<List<Notification>> GetUserReadNotifications(int userId)
+        {
+            return await context.Notifications
+                .Where(n => n.UserId == userId && n.IsRead == true)
+                .Include(n => n.User)
+                .ToListAsync();
+        }
         public async Task<List<Notification>> GetUserNotifications(int userId)
         {
             return await context.Notifications

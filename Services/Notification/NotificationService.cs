@@ -3,7 +3,6 @@ using AstralForum.Mapping;
 using AstralForum.Repositories;
 using AstralForum.Repositories.Interfaces;
 using AstralForum.ServiceModels;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace AstralForum.Services.Notification
 {
@@ -27,13 +26,25 @@ namespace AstralForum.Services.Notification
             var notifications = await _notificationRepository.GetUserNotifications(userId);
             return notifications.Select(n => n.ToDto()).ToList();
         }
+        public async Task<List<NotificationDto>> GetUserReadNotifications(int userId)
+        {
+            var notifications = await _notificationRepository.GetUserReadNotifications(userId);
+            return notifications.Select(n => n.ToDto()).ToList();
+        }
 
         public async Task<NotificationDto> ReadNotification(int notificationId, User user)
 		{
             var notifications = await _notificationRepository.ReadNotification(notificationId, user.Id);
 			return notifications.ToDto();
         }
+        public async Task<NotificationDto> DeleteNotification(NotificationDto notificationDto, User user)
+        {
+            Data.Entities.Notification notification = notificationDto.ToEntity();
 
+            notification.User = user;
+
+            return (await _notificationRepository.Delete(notification)).ToDto();
+        }
 
     }
 }

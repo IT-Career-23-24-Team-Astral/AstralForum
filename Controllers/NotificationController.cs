@@ -1,10 +1,12 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Models.Categories;
 using AstralForum.Models.Notification;
+using AstralForum.Models.ThreadCategory;
 using AstralForum.Repositories;
 using AstralForum.Repositories.Interfaces;
 using AstralForum.Services.Notification;
 using AstralForum.Services.ThreadCategory;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -46,29 +48,47 @@ namespace AstralForum.Controllers
             }
             else
             {
-				return NoContent();
+                ViewBag.Message = "You have no new notifications.";
+                return View();
             }
         }
 
+        public async Task<IActionResult> GetUserReadNotifications()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            NotificationModel notifications = await _notificationFacade.GetUserReadNotifications(user.Id);
 
-
-
-
-
+            if (notifications != null && notifications.UserNotifications.Count > 0)
+            {
+                return View(notifications);
+            }
+            else
+            {
+                ViewBag.Message = "You have no old notifications.";
+                return View();
+            }
+        }
         public async Task<IActionResult> ReadNotification(int notificationId)
 		{
 			var user = await _userManager.GetUserAsync(User);
 			var updatedNotificationDto = await _notificationRepository.ReadNotification(notificationId, user.Id);
+            return RedirectToAction("GetUserNotifications", "Notification");
+        }
+        public IActionResult DeleteNotification(int id)
+        {
+            GetUserNotificationViewModel model = new GetUserNotificationViewModel()
+            {
+                NotificationId = id
+            };
+            return View(model);
+        }
 
-			if (updatedNotificationDto != null)
-			{
-				return Ok(updatedNotificationDto);
-			}
-			else
-			{
-				return RedirectToAction("NoResultNotification", "Notification");
-			}
-		}
-		
-	}
+        [HttpPost]
+        public async Task<IActionResult> DeleteNotification(GetUserNotificationViewModel notificationForm)
+        {
+            await _notificationFacade.DeleteNotification(notificationForm, await _userManager.GetUserAsync(User));
+
+            return RedirectToAction("GetUserReadNotifications", "Notification");
+        }
+    }
 }

@@ -10,5 +10,6 @@ namespace AstralForum.Models.Notification
 		public string Text { get; set; }
 		public bool IsRead { get; set; }
 		public int Count { get; set; }
+		public DateTime Date { get; set; }
 	}
 }
