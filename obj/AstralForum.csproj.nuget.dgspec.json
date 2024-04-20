@@ -85,6 +85,10 @@
               "target": "Package",
               "version": "[8.0.1, )"
             },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.70, )"
+            },
             "SendGrid": {
               "target": "Package",
               "version": "[9.29.2, )"

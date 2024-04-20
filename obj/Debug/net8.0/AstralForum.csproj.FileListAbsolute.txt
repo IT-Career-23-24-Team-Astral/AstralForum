@@ -898,3 +898,5 @@ C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\AstralForum.pdb
 C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\AstralForum.genruntimeconfig.cache
 C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\ref\AstralForum.dll
 C:\Users\Neychev\Desktop\AstralForum\obj\Debug\net8.0\AstralFo.8703E9B0.Up2Date
+C:\Users\Neychev\Desktop\AstralForum\bin\Debug\net8.0\Castle.Core.dll
+C:\Users\Neychev\Desktop\AstralForum\bin\Debug\net8.0\Moq.dll
