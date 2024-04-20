@@ -1,23 +1,29 @@
-﻿using AstralForum.Models.Admin;
+﻿using AstralForum.Data.Entities;
+using AstralForum.Models.Admin;
 using AstralForum.Models.User;
 using AstralForum.Data.Entities;
 using AstralForum.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
+using System.Drawing;
 using System.Security.Cryptography;
 
 namespace AstralForum.Controllers
 {
     public class UserController : Controller
     {
+
         private readonly IUserFacade userFacade;
         private readonly UserManager<User> userManager;
+        private readonly RoleManager<Role> roleManager;
 
-        public UserController(IUserFacade userFacade, UserManager<User> userManager)
+        public UserController(IUserFacade userFacade, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
             this.userFacade = userFacade;
             this.userManager = userManager;
+            this.roleManager = roleManager;
         }
 
         [HttpPost("register")]
@@ -159,7 +165,20 @@ namespace AstralForum.Controllers
             if (user != null)
             {
                 var roles = await userManager.GetRolesAsync(user);
-                model.Roles = roles.Select(role => new Role { Name = role }).ToList();
+                model.Roles = new List<Role>();
+
+                foreach (var roleName in roles)
+                {
+                    var role = await roleManager.FindByNameAsync(roleName);
+                    if (role != null)
+                    {
+                        model.Roles.Add(new Role
+                        {
+                            Name = roleName,
+                            Color = role.Color
+                        });
+                    }
+                }
             }
 
             return View(model);

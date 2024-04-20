@@ -26,6 +26,59 @@ namespace AstralForum.Repositories
                 .FirstAsync(c => c.Id == id);
             return comment.Comments;
         }
+        public void DeleteAllCommentsByUserId(int userId)
+        {
+            var comments = context.Comments.Where(t => t.AuthorId == userId);
+            foreach (Comment comment in comments)
+            {
+                comment.IsHidden = true;
+                comment.IsDeleted = true;
+                context.SaveChanges();
+            }
+        }
+        public async Task<List<Comment>> GetAllHiddenComments()
+        {
+            return await context.Comments
+                .Include(t => t.CreatedBy)
+                .Where(t => t.IsHidden == true && t.IsDeleted == false)
+                .ToListAsync();
+        }
+        public async Task<List<Comment>> GetAllDeletedComments()
+        {
+            return await context.Comments
+                .Include(t => t.CreatedBy)
+                .Where(t => t.IsDeleted == true)
+                .ToListAsync();
+        }
+        public Comment HideComment(int id)
+        {
+            var comment = context.Comments.FirstOrDefault(t => t.Id == id);
+            comment.IsHidden = true;
+            context.SaveChanges();
+            return comment;
+        }
+        public Comment UnhideComment(int id)
+        {
+            var comment = context.Comments.FirstOrDefault(t => t.Id == id);
+            comment.IsHidden = false;
+            context.SaveChanges();
+            return comment;
+        }
+        public Comment DeleteComment(int id)
+        {
+            var comment = context.Comments.FirstOrDefault(t => t.Id == id);
+            comment.IsDeleted = true;
+            context.SaveChanges();
+            return comment;
+        }
+        public Comment GetDeletedCommentBack(int id)
+        {
+            var comment = context.Comments.FirstOrDefault(t => t.Id == id);
+            comment.IsHidden = false;
+            comment.IsDeleted = false;
+            context.SaveChanges();
+            return comment;
+        }
         /*public IEnumerable<CommentModel> GetCommentsByThreadId(int id) => context.Comments.Where(c => c.ThreadId == id).Select(x => new CommentModel()
         {
             Id = x.Id,

@@ -116,8 +116,6 @@ namespace AstralForum.Controllers
             var thread = threadService.HideThread(id);
             
             return Redirect($"/Category/Specify/{categoryId}");
-            //return RedirectToAction("Specify", "Category", new { id = threadCategoryForm.CategoryId });
-
         }
         public IActionResult NoResults()
         {

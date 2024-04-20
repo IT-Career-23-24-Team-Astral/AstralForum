@@ -16,13 +16,15 @@ namespace AstralForum.Mapping
             comment.CommentId = commentDto.ParentCommentId;
             comment.CreatedById = commentDto.CreatedById;
             comment.CreatedOn = commentDto.CreatedOn;
+            comment.IsHidden = commentDto.IsHidden;
+            comment.IsDeleted = commentDto.IsDeleted;
             comment.Comments = commentDto.Comments.Select(c => c.ToEntity()).ToList();
             comment.Reactions = commentDto.Reactions.Select(r => r.ToEntity()).ToList();
             comment.Attachments = commentDto.Attachments.Select(a => a.ToEntity()).ToList();
 
             return comment;
         }
-        public static CommentDto ToDto(this Comment comment, bool includeReactions = true, bool includeAttachments = true, bool includeReplies = true)
+        public static CommentDto ToDto(this Comment comment, bool includeReactions = true, bool includeAttachments = true, bool includeReplies = true, bool CreatedBy = true)
         {
             CommentDto commentDto = new CommentDto();
 
@@ -31,8 +33,13 @@ namespace AstralForum.Mapping
             commentDto.Text = comment.Text;
             commentDto.ParentCommentId = comment.CommentId;
             commentDto.CreatedById = comment.CreatedById;
-            commentDto.CreatedBy = comment.CreatedBy.ToDto();
+            if (CreatedBy == true)
+            {
+                commentDto.CreatedBy = comment.CreatedBy.ToDto();
+            }
             commentDto.CreatedOn = comment.CreatedOn;
+            commentDto.IsHidden = comment.IsHidden;
+            commentDto.IsDeleted = comment.IsDeleted;
             commentDto.Comments = includeReplies ? comment.Comments.Select(c => c.ToDto()).ToList() : new List<CommentDto>();
             commentDto.Reactions = includeReactions ? comment.Reactions.Select(r => r.ToDto()).ToList() : new List<CommentReactionDto>();
             commentDto.Attachments = includeAttachments ? comment.Attachments.Select(a => a.ToDto()).ToList() : new List<CommentAttachmentDto>();

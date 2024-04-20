@@ -28,5 +28,10 @@ namespace AstralForum.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        public IActionResult Timeout()
+        {
+            ViewBag.Message = "Sorry, you are currently in timeout. Please try again later.";
+            return View();
+        }
     }
 }

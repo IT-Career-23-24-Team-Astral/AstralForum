@@ -3,6 +3,7 @@ using AstralForum.Models;
 using AstralForum.Models.Reaction;
 using AstralForum.Models.Thread;
 using AstralForum.ServiceModels;
+using AstralForum.Services;
 using AstralForum.Services.Reaction;
 using AstralForum.Services.Thread;
 using AstralForum.Services.ThreadCategory;
@@ -20,14 +21,16 @@ namespace AstralForum.Controllers
 		private readonly IReactionFacade reactionFacade;
 		private readonly IReactionService reactionService;
 		private readonly UserManager<User> userManager;
+    private readonly TimeoutService timeoutService;
 
-		public ThreadController(IThreadFacade threadFacade, IThreadService threadService, IReactionFacade reactionFacade, IReactionService reactionService, UserManager<User> userManager)
+		public ThreadController(IThreadFacade threadFacade, IThreadService threadService, IReactionFacade reactionFacade, IReactionService reactionService, UserManager<User> userManager, TimeoutService timeoutService)
 		{
 			this.threadFacade = threadFacade;
 			this.threadService = threadService;
 			this.reactionFacade = reactionFacade;
 			this.reactionService = reactionService;
 			this.userManager = userManager;
+      this.timeoutService = timeoutService;
 		}
 
 		public async Task<IActionResult> Index(int id)
@@ -165,23 +168,26 @@ namespace AstralForum.Controllers
 			};
 			return View(model);
 		}
-
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		[Authorize]
-		[Route("/Thread/Create/{categoryId}/{categoryName}")]
-		public async Task<IActionResult> Create(ThreadCreationFormModel threadForm)
-		{
-			// TODO: Find a better way to handle serverside input validation
-			if (threadForm.Title == null || threadForm.Text == null)
-			{
-				return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
-			}
-
-			await threadFacade.CreateThread(threadForm, await userManager.GetUserAsync(User));
-
-			return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
-		}
+    
+    [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        [Route("/Thread/Create/{categoryId}/{categoryName}")]
+        public async Task<IActionResult> Create(ThreadCreationFormModel threadForm)
+        {
+            bool isUserInTimeout = await timeoutService.IsUserTimeout(await userManager.GetUserAsync(User));
+            if (isUserInTimeout)
+            {
+                return RedirectToAction("Timeout", "Home");
+            }
+            // TODO: Find a better way to handle serverside input validation
+            if (threadForm.Text == null || threadForm.Title == null)
+            {
+              return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
+            }
+            await threadFacade.CreateThread(threadForm, await userManager.GetUserAsync(User));
+            return RedirectToAction("Specify", "Category", new { id = threadForm.CategoryId });
+          }
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]

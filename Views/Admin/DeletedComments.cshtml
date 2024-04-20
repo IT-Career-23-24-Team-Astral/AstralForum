@@ -1,0 +1,72 @@
+﻿@model AstralForum.Models.Admin.HiddenCommentsViewModel
+
+@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<h1>Deleted Comments</h1>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 16%;" class="text-center align-middle">Email</th>
+                <th scope="col" style="width: 16%;" class="text-center align-middle">Comment</th>
+                <th scope="col" style="width: 16%;" class="text-center align-middle">Created On</th>
+                <th scope="col" style="width: 16%;" class="text-center align-middle">User Status</th>
+                <th scope="col" style="width: 10%;" class="text-center align-middle"></th>
+                <th scope="col" style="width: 10%;" class="text-center align-middle"></th>
+            </tr>
+        </thead>
+		<tbody>
+			@foreach (var item in Model.Comments)
+			{
+                <tr>
+                    <td class="text-center align-middle">@item.CreatedBy.Email</td>
+                    <td class="text-center align-middle">@item.Text</td>
+                    <td class="text-center align-middle">@item.CreatedOn</td>
+                    <td class="text-center align-middle">
+                        @if (item.CreatedBy.IsBanned == true)
+                        {
+                            <span>
+                                Banned
+                            </span>
+                        }
+                        else if (item.CreatedBy.TimeOut > DateTime.Now)
+                        {
+                            <span>
+                                Timed out
+                            </span>
+                        }
+                        else
+                        {
+                            <span>
+                                Active
+                            </span>
+                        }
+                    </td>
+                    <td>
+                        <div>
+                            <form asp-controller="Admin" asp-action="RecoverComment" method="get">
+                                <input type="hidden" name="id" value="@item.Id" />
+                                <button type="submit" class="btn btn-success">Recover</button>
+                            </form>
+                        </div>
+                    </td>
+                    <td>
+                        <div>
+                            <form asp-controller="User" asp-action="Index" method="get">
+                                <input type="hidden" name="id" value="@item.CreatedById" />
+                                <button type="submit" class="btn btn-secondary">Details</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+	    }
+        </tbody>
+    </table>
+</div>
+
+
+
+

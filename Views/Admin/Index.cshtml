@@ -6,13 +6,26 @@
 <div class="container">
         <br><br>
         <h1 class="text-center">All Users</h1>
-        <div class="btn-group" role="group">
-        <form asp-controller="Admin" asp-action="ListRoles" method="get">
-            <button type="submit" class="btn btn-outline-secondary">All Roles</button>
-        </form>
-        <form asp-controller="Admin" asp-action="HiddenThreads" method="get">
-            <button type="submit" class="btn btn-outline-secondary">Hidden Threads</button>
-        </form>
+        <div class="btn-group" role="group" style="display: flex; justify-content: space-between;">
+            <div style="display: flex;">
+                <form asp-controller="Admin" asp-action="ListRoles" method="get">
+                    <button type="submit" class="btn btn-outline-secondary">All Roles</button>
+                </form>
+                <form asp-controller="Admin" asp-action="HiddenThreads" method="get">
+                    <button type="submit" class="btn btn-outline-secondary">Hidden Threads</button>
+                </form>
+                <form asp-controller="Admin" asp-action="HiddenComments" method="get">
+                    <button type="submit" class="btn btn-outline-secondary">Hidden Comments</button>
+                </form>
+            </div>
+            <div style="display: flex;">
+                <form asp-controller="Admin" asp-action="DeletedComments" method="get">
+                    <button type="submit" class="btn btn-warning">Deleted Comments</button>
+                </form>
+                <form asp-controller="Admin" asp-action="DeletedThreads" method="get">
+                <button type="submit" class="btn btn-warning">Deleted Threads</button>
+                </form>
+            </div>
         </div>
         <table class="table table-striped table-bordered">
             <thead>
@@ -84,9 +97,9 @@
                                         <input type="hidden" name="id" value="@item.Id" />
                                         <button type="submit" class="btn btn-outline-warning">Unban</button>
                                     </form>
-                                    <form asp-controller="Admin" asp-action="DeleteAllThreads" method="get">
+                                    <form asp-controller="Admin" asp-action="DeleteAllThreadsAndCommentsByUserId" method="get">
                                         <input type="hidden" name="id" value="@item.Id" />
-                                        <button type="submit" class="btn btn-outline-danger">Delete Threads</button>
+                                        <button type="submit" class="btn btn-outline-danger">Delete All</button>
                                     </form>
                                 }
                         </div>

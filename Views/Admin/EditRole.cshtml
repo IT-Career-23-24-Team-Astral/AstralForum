@@ -13,6 +13,10 @@
 			<input asp-for="RoleName" class="form-control">
 			<span asp-validation-for="RoleName " class="text-danger"></span>
 		</div>
+		<h6>Color: </h6>
+		<div class="col-sm-10">
+			<input type="color" asp-for="Color" class="form-control form-control-color" title="Choose your color">
+		</div>
 	</div>
 
 	<div asp-validation-summary="All" class="text-danger"></div>

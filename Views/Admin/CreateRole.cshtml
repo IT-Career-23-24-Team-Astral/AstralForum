@@ -9,11 +9,13 @@
     <div class="col-md-12">
         <form method="post">
             <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-droup">
+            <div class="form-group">
                 <label asp-for="RoleName"></label>
-                <input asp-for="RoleName" class="form-control"/>
-                <span asp-validation-for="RoleName" class="text-danger"></span>
+                <input asp-for="RoleName" class="form-control" />
+                <label asp-for="Color" class="form-label">Color</label>
+                <input type="color" asp-for="Color" class="form-control form-control-color" title="Choose your color">
             </div>
+            <br>
             <button type="submit" class="btn btn-primary">Create</button>
         </form>
     </div>
