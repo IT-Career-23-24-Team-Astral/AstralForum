@@ -28,7 +28,7 @@ namespace AstralForum.Repositories
         }
         public void DeleteAllCommentsByUserId(int userId)
         {
-            var comments = context.Comments.Where(t => t.AuthorId == userId);
+            var comments = context.Comments.Where(t => t.CreatedById == userId);
             foreach (Comment comment in comments)
             {
                 comment.IsHidden = true;

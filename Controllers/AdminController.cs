@@ -218,7 +218,8 @@ namespace AstralForum.Controllers
             }
             return RedirectToAction("EditRole", new { Id = id});
 		}
-        [HttpGet]
+		//[Authorize(Roles = "Admin")]
+		[HttpGet]
         public async Task<IActionResult> Ban(int id)
         {
             var user = await applicationDbContext.Users.FindAsync(id);
@@ -235,7 +236,8 @@ namespace AstralForum.Controllers
             string returnUrl = HttpContext.Request.Headers["Referer"];
             return Redirect(returnUrl);
         }
-        [HttpGet]
+		//[Authorize(Roles = "Admin")]
+		[HttpGet]
         public async Task<IActionResult> Unban(int id)
         {
             if (id == null)
@@ -248,7 +250,8 @@ namespace AstralForum.Controllers
             string returnUrl = HttpContext.Request.Headers["Referer"];
             return Redirect(returnUrl);
         }
-        public async Task<IActionResult> TimeOut(int id, DateTime time)
+		//[Authorize(Roles = "Admin, Moderator")]
+		public async Task<IActionResult> TimeOut(int id, DateTime time)
         {
             var user = await applicationDbContext.Users.FindAsync(id);
             if (user == null)
@@ -265,8 +268,9 @@ namespace AstralForum.Controllers
             string returnUrl = HttpContext.Request.Headers["Referer"];
             return Redirect(returnUrl);
         }
-        //  Timed out for @((item.TimeOut - DateTime.Now).TotalHours.ToString("0")) hours and @((item.TimeOut - DateTime.Now).Minutes) minutes
-        public async Task<IActionResult> DeleteTimeout(int id)
+		//  Timed out for @((item.TimeOut - DateTime.Now).TotalHours.ToString("0")) hours and @((item.TimeOut - DateTime.Now).Minutes) minutes
+		//[Authorize(Roles = "Admin")]
+		public async Task<IActionResult> DeleteTimeout(int id)
         {
             var user = await applicationDbContext.Users.FindAsync(id);
             if (user == null)
@@ -278,21 +282,24 @@ namespace AstralForum.Controllers
             string returnUrl = HttpContext.Request.Headers["Referer"];
             return Redirect(returnUrl);
         }
-        [HttpGet]
+		//[Authorize(Roles = "Admin")]
+		[HttpGet]
         public async Task<IActionResult> HiddenThreads()
         {
             HiddenThreadsViewModel model = await threadFacade.GetAllHiddenThreads();
 
             return View(model);
         }
-        [HttpGet]
+		//[Authorize(Roles = "Admin")]
+		[HttpGet]
         public async Task<IActionResult> DeleteThread(int id)
         {
             var thread = threadService.DeleteThread(id);
 
             return RedirectToAction("HiddenThreads");
         }
-        [HttpGet]
+		//[Authorize(Roles = "Admin")]
+		[HttpGet]
         public async Task<IActionResult> RecoverThread(int id)
         {
             var thread = threadService.GetDeletedThreadBack(id);
@@ -300,7 +307,8 @@ namespace AstralForum.Controllers
             string returnUrl = HttpContext.Request.Headers["Referer"];
             return Redirect(returnUrl);
         }
-        [HttpGet]
+		//[Authorize(Roles = "Admin")]
+		[HttpGet]
         public async Task<IActionResult> DeleteAllThreadsAndCommentsByUserId(int userid)
         {
             threadService.DeleteAllThreadsByUserId(userid);
@@ -308,22 +316,24 @@ namespace AstralForum.Controllers
             string returnUrl = HttpContext.Request.Headers["Referer"];
             return Redirect(returnUrl);
         }
-        [HttpGet]
+		//[Authorize(Roles = "Admin")]
+		[HttpGet]
         public async Task<IActionResult> DeletedThreads()
         {
             HiddenThreadsViewModel model = await threadFacade.GetAllDeletedThreads();
 
             return View(model);
         }
-
-        [HttpGet]
+		//[Authorize(Roles = "Admin")]
+		[HttpGet]
         public async Task<IActionResult> HiddenComments()
         {
             HiddenCommentsViewModel model = await commentFacade.GetAllHiddenComments();
 
             return View(model);
         }
-        [HttpGet]
+		//[Authorize(Roles = "Admin")]
+		[HttpGet]
         public async Task<IActionResult> DeleteComment(int id)
         {
             var comment = commentService.DeleteComment(id);
@@ -331,7 +341,8 @@ namespace AstralForum.Controllers
             string returnUrl = HttpContext.Request.Headers["Referer"];
             return Redirect(returnUrl);
         }
-        [HttpGet]
+		//[Authorize(Roles = "Admin")]
+		[HttpGet]
         public async Task<IActionResult> RecoverComment(int id)
         {
             var comment = commentService.GetDeletedCommentBack(id);
@@ -339,7 +350,8 @@ namespace AstralForum.Controllers
             string returnUrl = HttpContext.Request.Headers["Referer"];
             return Redirect(returnUrl);
         }
-        [HttpGet]
+		//[Authorize(Roles = "Admin")]
+		[HttpGet]
         public async Task<IActionResult> DeletedComments()
         {
             HiddenCommentsViewModel model = await commentFacade.GetAllDeletedComments();

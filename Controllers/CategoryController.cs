@@ -108,8 +108,8 @@ namespace AstralForum.Controllers
 
             return View(model);
         }
-        [Authorize(Roles = "Admin")]
-        [HttpGet]
+		[Authorize(Roles = "Admin, Moderator")]
+		[HttpGet]
         public IActionResult HideThread(int id)
         {
             var thread = threadService.HideThread(id);
@@ -127,7 +127,5 @@ namespace AstralForum.Controllers
             CategoryThreadsViewModel model = threadCategoryFacade.NoResults(id);
             return View(model);
         }
-
-
     }
 }

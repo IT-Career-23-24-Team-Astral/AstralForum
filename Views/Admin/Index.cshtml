@@ -9,21 +9,24 @@
         <div class="btn-group" role="group" style="display: flex; justify-content: space-between;">
             <div style="display: flex;">
                 <form asp-controller="Admin" asp-action="ListRoles" method="get">
-                    <button type="submit" class="btn btn-outline-secondary">All Roles</button>
+				<button type="submit" style="margin: 2px 5px;" class="btn btn-outline-secondary">All Roles</button>
                 </form>
                 <form asp-controller="Admin" asp-action="HiddenThreads" method="get">
-                    <button type="submit" class="btn btn-outline-secondary">Hidden Threads</button>
+                <button type="submit" style="margin: 2px 5px;" class="btn btn-outline-secondary">Hidden Threads</button>
                 </form>
                 <form asp-controller="Admin" asp-action="HiddenComments" method="get">
-                    <button type="submit" class="btn btn-outline-secondary">Hidden Comments</button>
+                <button type="submit" style="margin: 2px 5px;" class="btn btn-outline-secondary">Hidden Comments</button>
+                </form>
+                <form asp-controller="ReactionType" asp-action="Index" method="get">
+                <button type="submit" style="margin: 2px 10px;" class="btn btn-outline-secondary">Reactions</button>
                 </form>
             </div>
             <div style="display: flex;">
                 <form asp-controller="Admin" asp-action="DeletedComments" method="get">
-                    <button type="submit" class="btn btn-warning">Deleted Comments</button>
+                <button type="submit" style="margin: 2px 5px;" class="btn btn-warning">Deleted Comments</button>
                 </form>
                 <form asp-controller="Admin" asp-action="DeletedThreads" method="get">
-                <button type="submit" class="btn btn-warning">Deleted Threads</button>
+                <button type="submit" style="margin: 2px 5px;" class="btn btn-warning">Deleted Threads</button>
                 </form>
             </div>
         </div>
@@ -97,8 +100,8 @@
                                         <input type="hidden" name="id" value="@item.Id" />
                                         <button type="submit" class="btn btn-outline-warning">Unban</button>
                                     </form>
-                                    <form asp-controller="Admin" asp-action="DeleteAllThreadsAndCommentsByUserId" method="get">
-                                        <input type="hidden" name="id" value="@item.Id" />
+                                <form asp-controller="Admin" asp-action="DeleteAllThreadsAndCommentsByUserId" method="get">
+                                        <input type="hidden" name="userid" value="@item.Id" />
                                         <button type="submit" class="btn btn-outline-danger">Delete All</button>
                                     </form>
                                 }
