@@ -113,7 +113,6 @@ namespace AstralForum.Controllers
 			return RedirectToAction("Index", "Thread", new { id = threadId });
 		}
 		[Authorize(Roles = "Admin")]
-		[Authorize(Roles = "Moderator")]
 		[HttpGet]
 		public IActionResult HideComment(int id)
 		{

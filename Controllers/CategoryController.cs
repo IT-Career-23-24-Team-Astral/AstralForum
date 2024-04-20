@@ -109,14 +109,14 @@ namespace AstralForum.Controllers
             return View(model);
         }
         [Authorize(Roles = "Admin")]
-        [Authorize(Roles = "Moderator")]
         [HttpGet]
-        public IActionResult HideThread(int id, int categoryId)
+        public IActionResult HideThread(int id)
         {
             var thread = threadService.HideThread(id);
-            
-            return Redirect($"/Category/Specify/{categoryId}");
-        }
+
+			string returnUrl = HttpContext.Request.Headers["Referer"];
+			return Redirect(returnUrl);
+		}
         public IActionResult NoResults()
         {
             if (TempData["CategoryId"] == null)

@@ -61,108 +61,6 @@
 			New thread
 		</button>
 	</form>
-
-	<table class="table table-striped table-hover mt-4" id="threadsTable">
-		<thead>
-			<tr>
-				<th class="col-3">
-					@Html.DisplayNameFor(model => model.Threads.ElementAt(0).Title)
-				</th>
-				<th class="col">
-					@Html.DisplayNameFor(model => model.Threads.ElementAt(0).DateOfCreation)
-				</th>
-				<th class="col-2">
-					@Html.DisplayNameFor(model => model.Threads.ElementAt(0).Author.UserName)
-				</th>
-				<th class="col-5">
-					@Html.DisplayNameFor(model => model.Threads.ElementAt(0).LastComment)
-				</th>
-			</tr>
-		</thead>
-		<tbody class="table-group-divider">
-			@foreach (var item in Model.Threads)
-			{
-				if (item.IsHidden == false)
-				{
-					<tr id="tableRow" thread-id="@item.Id">
-						<td>
-							@item.Title
-						</td>
-						<td class="fw-light">
-							@item.DateOfCreation.ToString("g")
-						</td>
-						<td>
-							<div class="row">
-								<div class="col-8">
-									@item.Author.UserName
-									<br>
-									<span class="fw-light">
-										Member since: @item.Author.DateOfCreation.ToString("g")
-									</span>
-								</div>
-								<div class="col d-flex justify-content-end">
-									<img src="@item.Author.ProfilePictureUrl" class="rounded-circle" width="40" height="40">
-								</div>
-							</div>
-						</td>
-						<td>
-							@if (item.LastComment == null)
-							{
-								<p class="fst-italic fw-semibold">No comments have been made on this thread yet</p>
-								<div class="col d-flex justify-content-end">
-									@if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
-									{
-										<form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
-											<input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
-											<button type="submit" class="btn btn-danger adminButton" style="margin: -34px 0px 0px 0px">Hide</button>
-										</form>
-									}
-								</div>
-							}
-							else
-							{
-								<div>
-									@if (item.IsHidden == false)
-									{
-										@item.LastComment.Text
-										<div class="row">
-											<div class="col">
-												@if (item.LastComment.CreatedBy == null)
-												{
-													<span class="font-monospace">by [Unknown]</span>
-												}
-												else
-												{
-													<span class="font-monospace">
-														by @item.LastComment.CreatedBy.UserName
-													</span>
-												}
-												<br>
-												<span class="fw-light">
-													on @item.LastComment.CreatedOn.ToString("g")
-												</span>
-											</div>
-											<div class="col d-flex justify-content-end">
-												<img src="@item.LastComment.CreatedBy?.ProfilePictureUrl" class="rounded-circle" style="margin: 13px 0px 0px 10px" width="45" height="45">
-												@if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
-												{
-													<form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
-														<input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
-														<button type="submit" class="btn btn-danger adminButton" style="margin: 15px 0px 0px 10px">Hide</button>
-													</form>
-												}
-											</div>
-										</div>
-									}
-								</div>
-							}
-						</td>
-					</tr>
-				}
-			}
-		</tbody>
-	</table>
-
 	<table class="table table-striped table-hover mt-4" id="threadsTable">
 		<thead>
 			<tr>
@@ -202,7 +100,7 @@
 									</span>
 								</div>
 								<div class="col d-flex justify-content-end">
-									<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-circle" width="40" height="40">
+									<img src="@item.Author.ProfilePictureUrl" class="rounded-circle" width="40" height="40">
 								</div>
 							</div>
 						</td>
@@ -222,7 +120,6 @@
 													<input type="datetime-local" id="time" name="time" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required>
 												</form>
 												<form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
-													<input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
 													<button type="submit" class="btn btn-danger adminButton" style="margin: 15px 0px 0px 10px">Hide</button>
 												</form>
 											</div>
