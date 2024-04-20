@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AstralForum")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4d0e10ea2ceea5684073f13914f22478f3ee9de5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ac565ec89d86a828d25c7eede1c053060244fe80")]
 [assembly: System.Reflection.AssemblyProductAttribute("AstralForum")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AstralForum")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
