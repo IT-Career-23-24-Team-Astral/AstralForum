@@ -1,4 +1,28 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿/*$(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="popover"]').popover({
+        placement: 'bottom',
+        content: function () {
+            return $("#notification-content").html();
+        },
+        html: true
+    });
 
-// Write your JavaScript code.
+    $('body').append(`<div id="notification-content" class="hide"></div>`)
+
+    function getNotification() {
+        $.ajax({
+            url: "https://localhost:7036/Notification/GetUserNotifications",
+            method: "GET",
+            success: function (result) {
+                $("#notificationCount").html(result);
+                console.log(result);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+    getNotification();
+});
+*/

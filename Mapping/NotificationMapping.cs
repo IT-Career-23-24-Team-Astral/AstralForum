@@ -11,11 +11,9 @@ namespace AstralForum.Mapping
 
             notification.Id = notificationDto.Id;
             notification.UserId = notificationDto.UserId;
-            notification.NotificationId = notificationDto.NotificationId;
             notification.Text = notificationDto.Text;
-            notification.NotificationType = notificationDto.NotificationType;
             notification.IsRead = notificationDto.IsRead;
-            notification.CreatedOn = notificationDto.CreatedOn;
+            notification.Date = notificationDto.Date;
 
             return notification;
 
@@ -26,10 +24,10 @@ namespace AstralForum.Mapping
 
             notificationDto.Id = notification.Id;
             notificationDto.UserId = notification.UserId;
-            notificationDto.NotificationId = notification.NotificationId;
+            notificationDto.User = notification.User.ToDto();
             notificationDto.Text = notification.Text;
-            notificationDto.NotificationType = notification.NotificationType;
             notificationDto.IsRead = notification.IsRead;
+            notificationDto.Date = notification.Date;
 
             return notificationDto;
 

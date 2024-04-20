@@ -17,7 +17,9 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Notification" asp-action="GetUserNotifications">Notifications</a>
+        </li>
     <form asp-controller="User" asp-action="Index" method="get">
         <input type="hidden" name="id" value="@UserManager.GetUserId(User)" />
         <button type="submit" class="nav-link text-dark">My Profile</button>

@@ -12,12 +12,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.Intrinsics.X86;
 using System;
+using AstralForum.ServiceModels;
+using AstralForum.Data.Entities.Comment;
+using AstralForum.Mapping;
+using AstralForum.Services.Notification;
 
 namespace AstralForum.Controllers
 {
     public class AdminController : Controller
     {
         private readonly IUserFacade userFacade;
+        private readonly INotificationService notificationService;
+        private readonly IThreadCategoryService threadCategoryService;
         private readonly ICommentFacade commentFacade;
         private readonly ICommentService commentService;
         private readonly RoleManager<Role> roleManager;
@@ -27,9 +33,11 @@ namespace AstralForum.Controllers
         private readonly IThreadService threadService;
         private readonly ThreadRepository threadRepository;
         private readonly ApplicationDbContext applicationDbContext;
-        public AdminController(IUserFacade userFacade, RoleManager<Role> roleManager, UserManager<User> userManager, IThreadFacade threadFacade, IThreadService threadService, ThreadRepository threadRepository, ApplicationDbContext applicationDbContext, ICommentFacade commentFacade, ICommentService commentService, SignInManager<User> signInManager)
+        public AdminController(IUserFacade userFacade, INotificationService notificationService, IThreadCategoryService threadCategoryService, RoleManager<Role> roleManager, UserManager<User> userManager, IThreadFacade threadFacade, IThreadService threadService, ThreadRepository threadRepository, ApplicationDbContext applicationDbContext, ICommentFacade commentFacade, ICommentService commentService, SignInManager<User> signInManager)
         {
             this.userFacade = userFacade;
+            this.notificationService = notificationService;
+            this.threadCategoryService = threadCategoryService;
             this.roleManager = roleManager;
             this.userManager = userManager;
             this.threadFacade = threadFacade;
@@ -67,6 +75,7 @@ namespace AstralForum.Controllers
                 var result = await roleManager.CreateAsync(role);
                 if (result.Succeeded)
                 {
+                   
                     return RedirectToAction("ListRoles", "Admin");
                 }
             }
@@ -234,6 +243,15 @@ namespace AstralForum.Controllers
             await userManager.UpdateSecurityStampAsync(user);
             //await signInManager.SignOutAsync();
             string returnUrl = HttpContext.Request.Headers["Referer"];
+            NotificationDto notification = new NotificationDto
+            {
+                Text = $"You have been banned",
+                User = user.ToDto(),
+                UserId = user.Id,
+                Date = DateTime.Now,
+
+            };
+            await notificationService.CreateNotification(notification, user.Id);
             return Redirect(returnUrl);
         }
 		//[Authorize(Roles = "Admin")]
@@ -248,6 +266,15 @@ namespace AstralForum.Controllers
             user.IsBanned = false;
             await applicationDbContext.SaveChangesAsync();
             string returnUrl = HttpContext.Request.Headers["Referer"];
+            NotificationDto notification = new NotificationDto
+            {
+                Text = $"{user.UserName} you are not banned anymore",
+                User = user.ToDto(),
+                UserId = user.Id,
+                Date = DateTime.Now,
+
+            };
+            await notificationService.CreateNotification(notification, user.Id);
             return Redirect(returnUrl);
         }
 		//[Authorize(Roles = "Admin, Moderator")]
@@ -266,6 +293,15 @@ namespace AstralForum.Controllers
             user.TimeOut = time;
             await applicationDbContext.SaveChangesAsync();
             string returnUrl = HttpContext.Request.Headers["Referer"];
+            NotificationDto notification = new NotificationDto
+            {
+                Text = $"Timeout",
+                User = user.ToDto(),
+                UserId = user.Id,
+                Date = DateTime.Now,
+
+            };
+            await notificationService.CreateNotification(notification, user.Id);
             return Redirect(returnUrl);
         }
 		//  Timed out for @((item.TimeOut - DateTime.Now).TotalHours.ToString("0")) hours and @((item.TimeOut - DateTime.Now).Minutes) minutes
@@ -280,7 +316,17 @@ namespace AstralForum.Controllers
             user.TimeOut = DateTime.Now;
             await applicationDbContext.SaveChangesAsync();
             string returnUrl = HttpContext.Request.Headers["Referer"];
+            NotificationDto notification = new NotificationDto
+            {
+                Text = $"No more timeout for you",
+                User = user.ToDto(),
+                UserId = user.Id,
+                Date = DateTime.Now,
+
+            };
+            await notificationService.CreateNotification(notification, user.Id);
             return Redirect(returnUrl);
+            
         }
 		//[Authorize(Roles = "Admin")]
 		[HttpGet]
@@ -295,6 +341,17 @@ namespace AstralForum.Controllers
         public async Task<IActionResult> DeleteThread(int id)
         {
             var thread = threadService.DeleteThread(id);
+            var category = threadCategoryService.GetThreadCategoryById(thread.ThreadCategoryId);
+
+            NotificationDto notification = new NotificationDto
+            {
+                Text = $"{thread.CreatedBy.UserName} your thread has been deleted on {category.CreatedBy.UserName}'s Category {category.CategoryName} :(",
+                User = thread.CreatedBy,
+                UserId = thread.CreatedById,
+                Date = DateTime.Now,
+
+            };
+            await notificationService.CreateNotification(notification, thread.CreatedById);
 
             return RedirectToAction("HiddenThreads");
         }
@@ -303,9 +360,20 @@ namespace AstralForum.Controllers
         public async Task<IActionResult> RecoverThread(int id)
         {
             var thread = threadService.GetDeletedThreadBack(id);
+            var category = threadCategoryService.GetThreadCategoryById(thread.ThreadCategoryId);
 
             string returnUrl = HttpContext.Request.Headers["Referer"];
+            NotificationDto notification = new NotificationDto
+            {
+                Text = $"Congratulations you thread has been recovered on {category.CreatedBy.UserName}'s Category {category.CategoryName}",
+                User = thread.CreatedBy,
+                UserId = thread.CreatedById,
+                Date = DateTime.Now,
+
+            };
+            await notificationService.CreateNotification(notification, thread.CreatedById);
             return Redirect(returnUrl);
+
         }
 		//[Authorize(Roles = "Admin")]
 		[HttpGet]
@@ -337,8 +405,18 @@ namespace AstralForum.Controllers
         public async Task<IActionResult> DeleteComment(int id)
         {
             var comment = commentService.DeleteComment(id);
+            var thread = threadService.GetThreadById(comment.ThreadId);
 
             string returnUrl = HttpContext.Request.Headers["Referer"];
+            NotificationDto notification = new NotificationDto
+            {
+                Text = $"Your comment has been deleted on{thread.CreatedBy.UserName}'s thread:{thread.Title} ",
+                User = comment.CreatedBy,
+                UserId = comment.CreatedById,
+                Date = DateTime.Now,
+
+            };
+            await notificationService.CreateNotification(notification, comment.CreatedById);
             return Redirect(returnUrl);
         }
 		//[Authorize(Roles = "Admin")]
@@ -346,8 +424,18 @@ namespace AstralForum.Controllers
         public async Task<IActionResult> RecoverComment(int id)
         {
             var comment = commentService.GetDeletedCommentBack(id);
+            var thread = threadService.GetThreadById(comment.ThreadId);
 
             string returnUrl = HttpContext.Request.Headers["Referer"];
+            NotificationDto notification = new NotificationDto
+            {
+                Text = $"Your comment has been recovered on{thread.CreatedBy.UserName}'s thread:{thread.Title} ",
+                User = comment.CreatedBy,
+                UserId = comment.CreatedById,
+                Date = DateTime.Now,
+
+            };
+            await notificationService.CreateNotification(notification, comment.CreatedById);
             return Redirect(returnUrl);
         }
 		//[Authorize(Roles = "Admin")]

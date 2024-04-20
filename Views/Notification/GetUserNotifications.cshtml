@@ -1,0 +1,73 @@
+﻿@model AstralForum.Models.Notification.NotificationModel
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewData["Title"]</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .notification {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+            .notification:hover {
+                transform: translateY(-2px);
+            }
+
+        h1 {
+            color: #343a40;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        @if (Model != null && Model.UserNotifications != null && Model.UserNotifications.Any())
+        {
+            <div class="container" style="position: relative;">
+                @foreach (var notification in Model.UserNotifications)
+                {
+                    <form asp-controller="Notification" asp-action="ReadNotification" method="post">
+                        <input type="hidden" name="notificationId" value="@notification.NotificationId" />
+                        <div class="notification d-flex justify-content-between align-items-center" onclick="this.parentNode.submit(); this.style.display='none'" style="width: 80%; height: 60px; position: relative; margin-left: 1px;">
+                            <h5>@notification.Text</h5>
+                            <h6>@notification.Date.ToString("g")</h6>
+                        </div>
+                    </form>
+                }
+                <div style="position: absolute; top: 13px; right: 0.01px;">
+                    <form asp-controller="Notification" asp-action="GetUserReadNotifications" method="post">
+                        <button type="submit" class="btn btn-primary" style="margin-right: 20px;">Old Notifications</button>
+                    </form>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div style="text-align: center; font-size: 20px; margin-bottom: 20px;">
+                <p>@ViewBag.Message</p>
+            </div>
+            <div style="text-align: center; font-size: 20px; margin-bottom: 20px;">
+                <form asp-controller="Notification" asp-action="GetUserReadNotifications" method="post">
+                    <button type="submit" class="btn btn-primary">Old Notifications</button>
+                </form>
+            </div>
+        }
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

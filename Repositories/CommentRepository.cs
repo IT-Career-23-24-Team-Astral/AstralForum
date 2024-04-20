@@ -7,6 +7,22 @@ namespace AstralForum.Repositories
     public class CommentRepository : CommonRepository<Comment>
     {
         public CommentRepository(ApplicationDbContext context) : base(context) { }
+        public Comment GetCommentById(int id)
+        {
+            return context.Comments
+                 .Include(c => c.Comments)
+                 .Include(cc => cc.CreatedBy)
+                 .Include(cc => cc.Attachments)
+                 .Include(cc => cc.Reactions)
+                 .Include(c => c.Comments)
+                    .ThenInclude(cc => cc.CreatedBy)
+                .Include(c => c.Comments)
+                    .ThenInclude(cc => cc.Attachments)
+                .Include(c => c.Comments)
+                    .ThenInclude(cc => cc.Reactions)
+                .Where(c => c.Id == id).Single();
+
+        }
         public async Task<List<Comment>> GetCommentsByThreadId(int id)
         {
             Data.Entities.Thread.Thread thread = await context.Threads
