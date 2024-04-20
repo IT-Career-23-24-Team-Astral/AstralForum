@@ -14,6 +14,7 @@ namespace AstralForum.Mapping
             user.Email = userDto.Email;
             user.FirstName = userDto.FirstName;
             user.LastName = userDto.LastName;
+            user.ProfilePictureUrl = userDto.ProfilePictureUrl;
             user.DateOfCreation = userDto.DateOfCreation;
             user.IsBanned = userDto.IsBanned;
             user.TimeOut = userDto.TimeOut;
@@ -30,6 +31,7 @@ namespace AstralForum.Mapping
             userDto.Email = user.Email;
             userDto.FirstName = user.FirstName;
             userDto.LastName = user.LastName;
+            userDto.ProfilePictureUrl = user.ProfilePictureUrl;
             userDto.DateOfCreation = user.DateOfCreation;
             userDto.IsBanned = user.IsBanned;
             userDto.TimeOut = user.TimeOut;

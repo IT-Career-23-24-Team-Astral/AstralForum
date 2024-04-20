@@ -9,11 +9,11 @@ using Thread = AstralForum.Data.Entities.Thread.Thread;
 
 namespace AstralForum.Repositories
 {
-    public class ThreadRepository : CommonRepository<Data.Entities.Thread.Thread>
-    {
-        public ThreadRepository(ApplicationDbContext context) : base(context) { }
+	public class ThreadRepository : CommonRepository<Data.Entities.Thread.Thread>
+	{
+		public ThreadRepository(ApplicationDbContext context) : base(context) { }
 
-        public Thread GetThreadById(int id)
+        public Thread? GetThreadById(int id)
         {
             return context.Threads
                 .Include(t => t.ThreadCategory)
@@ -27,9 +27,10 @@ namespace AstralForum.Repositories
                 .Include(t => t.Reactions)
                 .Include(t => t.Attachments)
                 .Where(t => t.Id == id)
-                .Single();
+                .SingleOrDefault();
         }
-        public void DeleteAllThreadsByUserId(int userId)
+
+		public void DeleteAllThreadsByUserId(int userId)
         {
             var threadsToDelete = context.Threads.Where(t => t.CreatedById == userId);
 
@@ -40,7 +41,16 @@ namespace AstralForum.Repositories
                 context.SaveChanges();
             }
         }
-        public async Task<List<Thread>> GetAllHiddenThreads()
+		public int EditThread(int id, string newText, string newTitle)
+        {
+            return context.Threads
+                .Where(t => t.Id == id)
+                .ExecuteUpdate(setters => setters
+                    .SetProperty(t => t.Text, newText)
+                    .SetProperty(t => t.Title, newTitle));
+        }
+
+		public async Task<List<Thread>> GetAllHiddenThreads()
         {
             return await context.Threads
                 .Include(t => t.CreatedBy)

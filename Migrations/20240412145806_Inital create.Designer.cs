@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AstralForum.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240311150957_qwe")]
-    partial class qwe
+    [Migration("20240412145806_Inital create")]
+    partial class Initalcreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,6 +111,10 @@ namespace AstralForum.Migrations
                     b.Property<int>("CommentId")
                         .HasColumnType("int");
 
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CommentId");
@@ -167,7 +171,7 @@ namespace AstralForum.Migrations
                     b.ToTable("Notifications");
                 });
 
-            modelBuilder.Entity("AstralForum.Data.Entities.Reaction.Reaction", b =>
+            modelBuilder.Entity("AstralForum.Data.Entities.Reaction.CommentReaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -187,23 +191,15 @@ namespace AstralForum.Migrations
                     b.Property<int>("ReactionTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ReactionTypeId1")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ThreadId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CommentId");
 
                     b.HasIndex("CreatedById");
 
-                    b.HasIndex("ReactionTypeId1");
+                    b.HasIndex("ReactionTypeId");
 
-                    b.HasIndex("ThreadId");
-
-                    b.ToTable("Reactions");
+                    b.ToTable("CommentReactions");
                 });
 
             modelBuilder.Entity("AstralForum.Data.Entities.Reaction.ReactionType", b =>
@@ -224,14 +220,46 @@ namespace AstralForum.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ReactionId")
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.ToTable("ReactionsTypes");
+                });
+
+            modelBuilder.Entity("AstralForum.Data.Entities.Reaction.ThreadReaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ReactionTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ThreadId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CreatedById");
 
-                    b.ToTable("ReactionsType");
+                    b.HasIndex("ReactionTypeId");
+
+                    b.HasIndex("ThreadId");
+
+                    b.ToTable("ThreadReaction");
                 });
 
             modelBuilder.Entity("AstralForum.Data.Entities.Reply.Reply", b =>
@@ -484,6 +512,10 @@ namespace AstralForum.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ThreadId")
                         .HasColumnType("int");
 
@@ -558,6 +590,9 @@ namespace AstralForum.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("BanEnd")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -575,6 +610,9 @@ namespace AstralForum.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsBanned")
+                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -603,8 +641,15 @@ namespace AstralForum.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfilePictureUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeOut")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -857,12 +902,12 @@ namespace AstralForum.Migrations
                     b.Navigation("CreatedBy");
                 });
 
-            modelBuilder.Entity("AstralForum.Data.Entities.Reaction.Reaction", b =>
+            modelBuilder.Entity("AstralForum.Data.Entities.Reaction.CommentReaction", b =>
                 {
-                    b.HasOne("AstralForum.Data.Entities.Comment.Comment", null)
+                    b.HasOne("AstralForum.Data.Entities.Comment.Comment", "Comment")
                         .WithMany("Reactions")
                         .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("AstralForum.Data.Entities.User", "CreatedBy")
@@ -873,7 +918,39 @@ namespace AstralForum.Migrations
 
                     b.HasOne("AstralForum.Data.Entities.Reaction.ReactionType", "ReactionType")
                         .WithMany()
-                        .HasForeignKey("ReactionTypeId1")
+                        .HasForeignKey("ReactionTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("ReactionType");
+                });
+
+            modelBuilder.Entity("AstralForum.Data.Entities.Reaction.ReactionType", b =>
+                {
+                    b.HasOne("AstralForum.Data.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("AstralForum.Data.Entities.Reaction.ThreadReaction", b =>
+                {
+                    b.HasOne("AstralForum.Data.Entities.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("AstralForum.Data.Entities.Reaction.ReactionType", "ReactionType")
+                        .WithMany()
+                        .HasForeignKey("ReactionTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -888,17 +965,6 @@ namespace AstralForum.Migrations
                     b.Navigation("ReactionType");
 
                     b.Navigation("Thread");
-                });
-
-            modelBuilder.Entity("AstralForum.Data.Entities.Reaction.ReactionType", b =>
-                {
-                    b.HasOne("AstralForum.Data.Entities.User", "CreatedBy")
-                        .WithMany()
-                        .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedBy");
                 });
 
             modelBuilder.Entity("AstralForum.Data.Entities.Reply.Reply", b =>

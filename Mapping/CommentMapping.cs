@@ -19,8 +19,8 @@ namespace AstralForum.Mapping
             comment.IsHidden = commentDto.IsHidden;
             comment.IsDeleted = commentDto.IsDeleted;
             comment.Comments = commentDto.Comments.Select(c => c.ToEntity()).ToList();
-            comment.Reactions = commentDto.Reactions.Select(c => c.ToEntity()).ToList();
-            comment.Attachments = commentDto.Attachments.Select(c => c.ToEntity()).ToList();
+            comment.Reactions = commentDto.Reactions.Select(r => r.ToEntity()).ToList();
+            comment.Attachments = commentDto.Attachments.Select(a => a.ToEntity()).ToList();
 
             return comment;
         }
@@ -41,8 +41,8 @@ namespace AstralForum.Mapping
             commentDto.IsHidden = comment.IsHidden;
             commentDto.IsDeleted = comment.IsDeleted;
             commentDto.Comments = includeReplies ? comment.Comments.Select(c => c.ToDto()).ToList() : new List<CommentDto>();
-            commentDto.Reactions = includeReactions ? comment.Reactions.Select(c => c.ToDto()).ToList() : new List<ReactionDto>();
-            commentDto.Attachments = includeAttachments ? comment.Attachments.Select(c => c.ToDto()).ToList() : new List<CommentAttachmentDto>();
+            commentDto.Reactions = includeReactions ? comment.Reactions.Select(r => r.ToDto()).ToList() : new List<CommentReactionDto>();
+            commentDto.Attachments = includeAttachments ? comment.Attachments.Select(a => a.ToDto()).ToList() : new List<CommentAttachmentDto>();
 
             return commentDto;
         }

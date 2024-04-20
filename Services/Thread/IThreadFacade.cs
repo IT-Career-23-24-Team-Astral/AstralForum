@@ -8,8 +8,11 @@ namespace AstralForum.Services.Thread
     public interface IThreadFacade
     {
         ThreadTableViewModel GetThreadTableViewModel(ThreadDto threadDto);
-
-        Task<ThreadDto> CreateThread(ThreadCreationFormModel threadForm, User createdById);
+        ThreadDto NoResultsThread(int id);
+		ThreadDto SearchPostsByCreatedBy(int id, string searchQuery);
+        ThreadDto SearchPostsByText(int id, string searchQuery);
+        ThreadDto SearchPostsByBoth(int id, string searchQuery);
+		Task<ThreadDto> CreateThread(ThreadCreationFormModel threadForm, User createdById);
         Task<HiddenThreadsViewModel> GetAllHiddenThreads();
         Task<HiddenThreadsViewModel> GetAllDeletedThreads();
     }

@@ -6,8 +6,9 @@ namespace AstralForum.Services.Thread
 	public interface IThreadService
 	{
 		Task<ThreadDto> CreateThread(ThreadDto model, User createdBy);
-		Task<ThreadDto> EditThread(ThreadDto commentDto);
+		int EditThread(int id, string newText, string newTitle);
 		ThreadDto GetThreadById(int id);
+		ThreadDto GetThreadByThreadIdWithReactions(int id);
 		Task<ThreadDto> DeleteThread(ThreadDto commentDto);
         Task<List<ThreadDto>> GetAllHiddenThreads();
         Task<List<ThreadDto>> GetAllDeletedThreads();
@@ -16,6 +17,9 @@ namespace AstralForum.Services.Thread
 		ThreadDto DeleteThread(int id);
 		ThreadDto GetDeletedThreadBack(int id);
         void DeleteAllThreadsByUserId(int id);
+		List<ThreadDto> SearchPostsByCreatedBy(int id, string searchQuery);
+		List<ThreadDto> SearchPostsByText(int id, string searchQuery);
+		List<ThreadDto> SearchPostsByBoth(int id, string searchQuery);
 
-    }
+	}
 }

@@ -7,7 +7,7 @@ namespace AstralForum.Models.User
 {
     public class UserInfoModel
     {
-		public UserDto Users { get; set; }
-		public List<Role> Roles { get; set; }
+        public UserDto Users { get; set; }
+        public List<Role> Roles { get; set; }
     }
 }

@@ -11,6 +11,33 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <style>
+        /* Adjusted styles */
+        .navbar-nav .nav-link {
+            padding: 0.25rem 0.5rem; /* Reduced padding */
+        }
+
+        .search-form {
+            margin-right: 0.5rem; /* Adjusted margin */
+        }
+
+            .search-form input[type="text"],
+            .search-form button {
+                padding: 0.25rem 0.5rem; /* Reduced padding */
+                border-radius: 0; /* Removed border-radius */
+                border: 1px solid #ced4da; /* Added border */
+            }
+
+            .search-form button {
+                background-color: #007bff;
+                color: #fff;
+                transition: background-color 0.3s ease;
+            }
+
+                .search-form button:hover {
+                    background-color: #0056b3;
+                }
+    </style>
 </head>
 <body>
     <header>
@@ -32,6 +59,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
                         </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
+                            </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>

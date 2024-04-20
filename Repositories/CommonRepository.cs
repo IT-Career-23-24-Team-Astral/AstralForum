@@ -33,7 +33,11 @@ namespace AstralForum.Repositories
         {
             return context.Set<T>().AsQueryable();
         }
-        public int Save()
+		public IQueryable<T> GetAllAsNoTracking()
+		{
+			return context.Set<T>().AsNoTracking().AsQueryable();
+		}
+		public int Save()
 		{
 			return context.SaveChanges();
 		}

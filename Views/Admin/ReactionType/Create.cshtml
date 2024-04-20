@@ -1,0 +1,27 @@
+﻿@model AstralForum.Models.Reaction.ReactionTypeCreationFormModel
+
+@{
+	ViewData["Title"] = "Create reaction type";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+	<h1>Create new reaction type</h1>
+
+	<a asp-controller="ReactionType" asp-action="Index" class="btn btn-secondary"> Back to List</a>
+
+	<form method="post" enctype="multipart/form-data">
+		<div asp-validation-summary="All"></div>
+		<div class="mb-3">
+			<label asp-for="Name"></label>
+			<input asp-for="Name" class="form-control" />
+			<span asp-validation-for="Name" class="text-danger"></span>
+		</div>
+		<div class="mb-3">
+			<label asp-for="Image"></label>
+			<input type="file" asp-for="Image" class="form-control" />
+		</div>
+		<button type="submit" class="btn btn-primary">Create</button>
+	</form>
+
+</div>

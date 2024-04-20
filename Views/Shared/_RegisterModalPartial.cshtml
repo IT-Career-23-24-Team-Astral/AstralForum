@@ -7,7 +7,10 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<form asp-controller="Authentication" asp-action="Register" id="registerForm">
+				<div class="alert alert-success d-none" role="alert" id="SuccessfulRegistrationAlert">
+					Successful registration! Redirecting...
+				</div>
+				<form asp-controller="Authentication" asp-action="Register" id="registerForm" enctype="multipart/form-data">
 					@Html.AntiForgeryToken()
 					<div class="row mb-3">
 						<div class="col">
@@ -26,7 +29,7 @@
 					</div>
 					<div class="mb-3">
 						<label for="RegisterUsername" class="form-label">Username</label>
-						<input name="Username" type="email" class="form-control" id="RegisterUsername">
+						<input name="Username" type="text" class="form-control" id="RegisterUsername">
 						<div id="usernameHelpBlock" class="form-text">
 							The username must be 5-20 characters long and can contain only lowercase latin
 							characters, the underscore character (_) and numbers.
@@ -56,11 +59,29 @@
 						<span id="ConfirmPasswordRegistrationValidation" class="text-danger"></span>
 					</div>
 					<div class="mb-3">
+						<label for="RegisterProfilePicture" class="form-label">Profile picture</label>
+						<input name="ProfilePicture" type="file" class="form-control" id="RegisterProfilePicture">
+						<div id="profilePictureHelpBlock" class="form-text">
+							Make sure your profile picture follows our code of conduct. 
+							Your account may be blocked if your profile picture is deemed inappropriate
+						</div>
+						<span id="ProfilePictureRegistrationValidation" class="text-danger"></span>
+					</div>
+					<div class="mb-3">
 						Already have an account?
 						<a href="#" id="linkLogIn">Log in</a>
 					</div>
 					<div class="mb-3">
 						<span id="FailedRegistrationValidation" class="text-danger"></span>
+					</div>
+					<div class="alert alert-secondary d-none" role="alert" id="LoadingRegisterAlert">
+						<i class="bi bi-hourglass"></i> Creating your account...
+					</div>
+					<div class="alert alert-warning d-none" role="alert" id="ConfirmEmailRegisterAlert">
+						Confirm email to complete registration and then log in! Redirecting...
+					</div>
+					<div class="alert alert-success d-none" role="alert" id="SuccessfulRegistrationAlert">
+						Successful registration! Redirecting...
 					</div>
 					<button type="submit" class="btn btn-primary">Register</button>
 				</form>
@@ -82,20 +103,35 @@
 	$(document).ready(function () {
 		$('#registerForm').submit(function (event) {
 			event.preventDefault();
+			$('#LoadingRegisterAlert').removeClass('d-none');
 
-			var formData = $(this).serialize();
+			var formData = new FormData(event.target);
 
-			$.post(this.action, formData, function (response) {
-				if (response.success == false) {
-					$.each(response.errors, function (fieldName, errorMessages) {
-						var $field = $('#' + fieldName + 'RegistrationValidation');
-						$field.text(errorMessages.join('\n'));
-					});
-				} else {
-					alert("Successful registration!");
-				}
-
-			});
+			fetch(this.action, {
+				method: 'POST',
+				body: formData
+			})
+				.then(response => response.json())
+				.then(data => {
+					if (data.confirmEmail === true) {
+						$("#ConfirmEmailRegisterAlert").removeClass('d-none');
+						setTimeout(function () {
+							$("#registerModal").modal('hide');
+							window.location.href = window.location.href.replaceAll("?authenticate=true", "");
+						}, 3000);
+					} else if (data.success === false) {
+						$.each(data.errors, function (fieldName, errorMessages) {
+							var $field = $('#' + fieldName + 'RegistrationValidation');
+							$field.text(errorMessages.join('\n'));
+						});
+					} else {
+						$('#SuccessfulRegistrationAlert').removeClass('d-none');
+						setTimeout(function () {
+							$("#registerModal").modal('hide');
+							window.location.href = window.location.href.replaceAll("?authenticate=true", "");
+						}, 1000);
+					}
+				});
 		});
 	})
 </script>

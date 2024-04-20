@@ -25,5 +25,7 @@ namespace AstralForum.Models.User
 		[Required]
 		[Compare("Password")]
 		public string ConfirmPassword { get; set; } = string.Empty;
+
+		public IFormFile ProfilePicture { get; set; }
 	}
 }

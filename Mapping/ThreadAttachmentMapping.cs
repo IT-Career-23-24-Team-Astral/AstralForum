@@ -13,6 +13,7 @@ namespace AstralForum.Mapping
 			threadAttachment.Id = threadAttachmentDto.Id;
 			threadAttachment.ThreadId = threadAttachmentDto.ThreadId;
 			threadAttachment.AttachmentUrl = threadAttachmentDto.AttachmentUrl;
+			threadAttachment.FileName = threadAttachmentDto.FileName;
 
 			return threadAttachment;
 		}
@@ -23,6 +24,7 @@ namespace AstralForum.Mapping
 			threadAttachmentDto.Id = threadAttachment.Id;
 			threadAttachmentDto.ThreadId = threadAttachment.ThreadId;
 			threadAttachmentDto.AttachmentUrl = threadAttachment.AttachmentUrl;
+			threadAttachmentDto.FileName = threadAttachment.FileName;
 
 			return threadAttachmentDto;
 		}

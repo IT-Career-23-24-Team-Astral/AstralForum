@@ -10,9 +10,9 @@ namespace AstralForum.Mapping
 			CommentAttachment commentAttachment = new CommentAttachment();
 
             commentAttachment.Id = commentAttachmentDto.Id;
-            commentAttachment.CommentId = commentAttachmentDto.CommentId;
-            commentAttachment.Comment = commentAttachmentDto.Comment;
+			commentAttachment.CommentId = commentAttachmentDto.CommentId;
             commentAttachment.AttachmentUrl = commentAttachmentDto.AttachmentUrl;
+			commentAttachment.FileName = commentAttachmentDto.FileName;
 
 			return commentAttachment;
 		}
@@ -23,8 +23,8 @@ namespace AstralForum.Mapping
 
             commentAttachmentDto.Id = commentAttachment.Id;
             commentAttachmentDto.CommentId = commentAttachment.CommentId;
-            commentAttachmentDto.Comment = commentAttachment.Comment;
             commentAttachmentDto.AttachmentUrl = commentAttachment.AttachmentUrl;
+			commentAttachmentDto.FileName = commentAttachment.FileName;
 
 			return commentAttachmentDto;
 		}

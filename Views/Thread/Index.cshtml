@@ -1,6 +1,7 @@
 ﻿@using AstralForum.Data.Entities
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager
 @model AstralForum.Models.ThreadViewModel
 
 @{
@@ -11,32 +12,144 @@
 <h5>
 	Thread in category <a asp-controller="Category" asp-action="Specify" asp-route-id="@Model.ThreadDto.ThreadCategoryId">@Model.ThreadDto.ThreadCategoryName</a>
 </h5>
+<div class="col-auto">
+	<form id="searchForm" class="form-inline" asp-controller="Thread" asp-action="SearchPostsByText" method="get">
+
+		<input type="hidden" name="id" value="@Model.ThreadDto.Id" />
+		<input class="form-control form-control-sm mr-2" type="text" placeholder="Search" aria-label="Search" name="searchQuery">
+		<button type="submit" class="btn btn-primary btn-sm">Search</button>
+	</form>
+</div>
+<form class="filter-box">
+	<div class="form-check form-check-inline">
+		<input class="form-check-input" type="checkbox" id="filterComment" name="filterComment">
+		<label class="form-check-label" for="filterComment">Filter by Comment</label>
+	</div>
+	<div class="form-check form-check-inline">
+		<input class="form-check-input" type="checkbox" id="filterCreatedBy" name="filterCreatedBy">
+		<label class="form-check-label" for="filterCreatedBy">Filter by Author</label>
+	</div>
+</form>
 
 <div class="container">
 	<div class="row">
 		<div class="col">
-			<div class="row">
-				<div class="col">
-					<h2>
-						@Model.ThreadDto.Title
-					</h2>
-				</div>
-				<div class="col col-3 d-flex justify-content-end">
-					<span class="fw-light">
-						Posted at @Model.ThreadDto.CreatedOn.ToString("g")
-					</span>
-				</div>
+			<h2 id="threadTitle">@Model.ThreadDto.Title</h2>
+			<p id="threadText">@Model.ThreadDto.Text</p>
+			<div>
+				<form id="threadEditForm" class="d-none" method="post">
+					<input type="hidden" name="threadDtoId" value="@Model.ThreadDto.Id" />
+					<div class="mb-3">
+						<input name="updatedTitle" class="form-control form-control-lg" id="editThreadTitleInput" />
+					</div>
+					<div class="mb-3">
+						<textarea name="updatedText" class="form-control" id="editThreadTextInput" rows="5"></textarea>
+					</div>
+					<div class="d-flex flex-wrap">
+						<button type="submit" class="btn btn-primary me-3" asp-controller="Thread" asp-action="Edit">
+							Save changes
+						</button>
+						<button class="btn btn-danger" onclick="btnCancelThreadEdit()">
+							Cancel
+						</button>
+					</div>
+				</form>
 			</div>
 
-			<p>
-				@Model.ThreadDto.Text
-			</p>
+			@if (Model.ThreadDto.Attachments.Count > 0)
+			{
+				<hr />
+				<h6 class="fst-italic fw-lighter">Attachments: </h6>
+			}
+
+			@foreach (var attachment in Model.ThreadDto.Attachments)
+			{
+				<a href="@attachment.AttachmentUrl" target="_blank">@attachment.FileName</a>
+				<br />
+			}
+		</div>
+		<div class="col col-3">
+			<div class="d-flex justify-content-end">
+				<span class="fw-light">
+					Posted at @Model.ThreadDto.CreatedOn.ToString("g")
+				</span>
+			</div>
+			@if(SignInManager.IsSignedIn(User) && (await UserManager.GetUserAsync(User)).Id == Model.ThreadDto.CreatedById)
+			{
+				<button class="btn btn-secondary" onclick="btnThreadEdit()">
+					Edit
+				</button>
+			}
 		</div>
 	</div>
 
 	<div class="row">
-		<div class="col">
-			Reaction section
+		<div class="col d-flex flex-wrap">
+			@foreach (var reactionType in Model.ReactionTypeDtos)
+			{
+				bool buttonDisabled = false;
+				int loggedInUserId = 0;
+
+				if (SignInManager.IsSignedIn(User))
+				{
+					loggedInUserId = (await UserManager.GetUserAsync(User)).Id;
+				}
+				else
+				{
+					buttonDisabled = false;
+				}
+
+				if (@Model.ThreadDto.Reactions.Where(r => r.CreatedById == loggedInUserId && r.ReactionTypeId == reactionType.Id).Any())
+				{
+					buttonDisabled = true;
+				}
+
+				if (buttonDisabled)
+				{
+					<form asp-controller="Thread" asp-action="RemoveThreadReaction" onsubmit="formRemoveReaction()" method="post">
+						@Html.AntiForgeryToken()
+						<input type="hidden" name="reactionThreadId" value="@Model.ThreadDto.Reactions.Single(r => r.CreatedById == loggedInUserId && r.ReactionTypeId == reactionType.Id).Id" />
+						<input type="hidden" name="threadId" value="@Model.ThreadDto.Id" />
+						<input type="hidden" name="reactionTypeId" value="@reactionType.Id" />
+						@if (SignInManager.IsSignedIn(User))
+						{
+							<button type="submit" class="btn btn-outline-secondary opacity-50 m-1 px-1 border border-1 border-secondary rounded d-flex align-items-center" title="Remove comment reaction">
+								<img class="me-1" src="@reactionType.ImageUrl" width="20" height="20" />
+								<span class="fw-light">@Model.ThreadDto.Reactions.Count(r => r.ReactionTypeId == reactionType.Id)</span>
+							</button>
+						}
+						else
+						{
+							<button type="submit" class="btn btn-outline-secondary opacity-50 m-1 px-1 border border-1 border-secondary rounded d-flex align-items-center">
+								<img class="me-1" src="@reactionType.ImageUrl" width="20" height="20" />
+								<span class="fw-light">@Model.ThreadDto.Reactions.Count(r => r.ReactionTypeId == reactionType.Id)</span>
+							</button>
+						}
+					</form>
+				}
+				else
+				{
+					<form asp-controller="Thread" asp-action="AddThreadReaction" onsubmit="formAddReaction()" method="post">
+						@Html.AntiForgeryToken()
+						<input type="hidden" name="threadId" value="@Model.ThreadDto.Id" />
+						<input type="hidden" name="reactionTypeId" value="@reactionType.Id" />
+						@if (SignInManager.IsSignedIn(User))
+						{
+							<button type="submit" class="btn btn-outline-secondary m-1 px-1 border border-1 border-secondary rounded d-flex align-items-center" title="Add comment reaction">
+								<img class="me-1" src="@reactionType.ImageUrl" width="20" height="20" />
+								<span class="fw-light">@Model.ThreadDto.Reactions.Count(r => r.ReactionTypeId == reactionType.Id)</span>
+							</button>
+						}
+						else
+						{
+							<button type="submit" class="btn btn-outline-secondary m-1 px-1 border border-1 border-secondary rounded d-flex align-items-center">
+								<img class="me-1" src="@reactionType.ImageUrl" width="20" height="20" />
+								<span class="fw-light">@Model.ThreadDto.Reactions.Count(r => r.ReactionTypeId == reactionType.Id)</span>
+							</button>
+						}
+					</form>
+				}
+			}
 		</div>
 		<div class="col-2">
 			<span class="font-monospace">
@@ -48,10 +161,31 @@
 			</span>
 		</div>
 		<div class="col col-1 d-flex justify-content-end align-items-end">
-			<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-3 comment-profile-picture" width="45" height="45">
+			<img src="@Model.ThreadDto.CreatedBy.ProfilePictureUrl" class="rounded-3 comment-profile-picture" width="45" height="45">
 		</div>
 	</div>
 
+	<div class="row mt-1">
+		<div class="col-auto ml-auto">
+			<form id="searchForm" class="form-inline" asp-controller="Thread" asp-action="SearchPostsByText" method="get">
+				<input type="hidden" name="id" value="@Model.ThreadDto.Id" />
+				<div class="input-group mb-2">
+					<input class="form-control form-control-sm" type="text" placeholder="Search" aria-label="Search" name="searchQuery">
+					<div class="input-group-append">
+						<button type="submit" class="btn btn-primary btn-sm">Search</button>
+					</div>
+				</div>
+				<div class="form-check form-check-inline ml-2">
+					<input class="form-check-input" type="checkbox" id="filterComment" name="filterComment">
+					<label class="form-check-label" for="filterComment">Search by Title</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="filterCreatedBy" name="filterCreatedBy">
+					<label class="form-check-label" for="filterCreatedBy">Search by Author</label>
+				</div>
+			</form>
+		</div>
+	</div>
 
 	<div class="row">
 		<div class="col">
@@ -93,6 +227,18 @@
 
 			<p>
 				@item.Text
+
+				@if (item.Attachments.Count > 0)
+				{
+					<hr />
+					<h6 class="fst-italic fw-lighter">Attachments: </h6>
+				}
+
+				@foreach (var attachment in item.Attachments)
+				{
+					<a href="@attachment.AttachmentUrl" target="_blank">@attachment.FileName</a>
+					<br />
+				}
 			</p>
 
 			<div class="row">
@@ -108,12 +254,56 @@
 							</span>
 						</div>
 						<div class="col d-flex justify-content-end align-items-end">
-							<img src="https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg" class="rounded-3 comment-profile-picture" width="40" height="40">
+							<img src="@item.CreatedBy.ProfilePictureUrl" class="rounded-3 comment-profile-picture" width="40" height="40">
 						</div>
 					</div>
 				</div>
-				<div class="col">
-					Reaction section
+				<div class="col d-flex flex-wrap">
+					@foreach (var reactionType in Model.ReactionTypeDtos)
+					{
+						bool buttonDisabled = false;
+						int loggedInUserId = 0;
+
+						if (SignInManager.IsSignedIn(User))
+						{
+							loggedInUserId = (await UserManager.GetUserAsync(User)).Id;
+						}
+						else
+						{
+							buttonDisabled = false;
+						}
+
+						if (item.Reactions.Where(r => r.CreatedById == loggedInUserId && r.ReactionTypeId == reactionType.Id).Any())
+						{
+							buttonDisabled = true;
+						}
+
+						if (buttonDisabled)
+						{
+							<form asp-controller="Comment" asp-action="RemoveCommentReaction" onsubmit="formRemoveReaction()" method="post">
+								@Html.AntiForgeryToken()
+								<input type="hidden" name="reactionCommentId" value="@item.Reactions.Single(r => r.CreatedById == loggedInUserId && r.ReactionTypeId == reactionType.Id).Id" />
+								<input type="hidden" name="commentId" value="@item.Id" />
+								<input type="hidden" name="reactionTypeId" value="@reactionType.Id" />
+								<button type="submit" class="btn btn-outline-secondary opacity-50 m-1 px-1 border border-1 border-secondary rounded d-flex align-items-center" title="@reactionType.Name">
+									<img class="me-1" src="@reactionType.ImageUrl" width="20" height="20" />
+									<span class="fw-light">@item.Reactions.Count(r => r.ReactionTypeId == reactionType.Id)</span>
+								</button>
+							</form>
+						}
+						else
+						{
+							<form asp-controller="Comment" asp-action="AddCommentReaction" onsubmit="formAddReaction()" method="post">
+								@Html.AntiForgeryToken()
+								<input type="hidden" name="commentId" value="@item.Id" />
+								<input type="hidden" name="reactionTypeId" value="@reactionType.Id" />
+								<button type="submit" class="btn btn-outline-secondary m-1 px-1 border border-1 border-secondary rounded d-flex align-items-center" title="@reactionType.Name">
+									<img class="me-1" src="@reactionType.ImageUrl" width="20" height="20" />
+									<span class="fw-light">@item.Reactions.Count(r => r.ReactionTypeId == reactionType.Id)</span>
+								</button>
+							</form>
+						}
+					}
 				</div>
 				<div class="col col-2 d-flex flex-column justify-content-center align-items-end">
 					<div class="col d-flex justify-content-end">
@@ -134,21 +324,22 @@
 							}
 						</div>
 					</div>
-					<btn class="btn btn-light btn-show-replies" onclick="btnShowReplies(@item.Id)">Show replies</btn>
+        </div>
+				<div class="col col-2 d-flex justify-content-end align-self-center">
+					<btn id="btnShowRepliesCommentId-@item.Id" class="btn btn-light btn-show-replies" onclick="btnShowReplies(@item.Id)">Show replies</btn>
+					<btn id="btnHideRepliesCommentId-@item.Id" class="btn btn-light btn-hide-replies d-none" onclick="btnHideReplies(@item.Id)">Hide replies</btn>
 				</div>
 			</div>
 
 			<div id="replyWritingForm-@item.Id">
-			
 			</div>
 
-			<div id="repliesToCommentId-@item.Id" class="mt-3">
-			
+			<div id="repliesToCommentId-@item.Id" class="d-none mt-3">
 			</div>
 		</div>
 	}
 
-	<form id="replyWritingForm" class="d-none" method="post">
+	<form id="replyWritingForm" class="d-none" method="post" enctype="multipart/form-data">
 		<input type="hidden" asp-for="CommentForm.CommentId" id="commentIdFormInput" />
 		<div class="mb-3">
 			<label asp-for="CommentForm.Text" class="form-label">Reply text</label>
@@ -164,7 +355,7 @@
 		</button>
 	</form>
 
-	<form id="commentWritingForm" class="d-none" method="post">
+	<form id="commentWritingForm" class="d-none" method="post" enctype="multipart/form-data">
 		<div class="mb-3">
 			<label asp-for="CommentForm.Text" class="form-label">Comment text</label>
 			<textarea asp-for="CommentForm.Text" class="form-control" rows="4"></textarea>
@@ -180,56 +371,58 @@
 
 <script>
 	const replyTemplate = `
-				<div class="border border-secondary bg-secondary bg-opacity-10 rounded px-2 py-2 mb-3">
+		<div class="border border-secondary bg-secondary bg-opacity-10 rounded px-2 py-2 mb-3">
+			<div class="row">
+				<div class="col">
+					<span class="fw-light">
+						Posted at {commentCreatedOn}
+					</span>
+				</div>
+				<div class="col-2 d-flex justify-content-end">
+						<btn class="btn btn-primary btn-reply" onclick="btnAddReply({commentId})">Reply to this comment</btn>
+				</div>
+			</div>
+
+			<p>
+				{commentText}
+				{commentAttachments}
+			</p>
+
+			<div class="row">
+				<div class="col col-2">
 					<div class="row">
-						<div class="col">
+						<div class="col-8">
+							<span class="font-monospace">
+								by {commentCreatedBy}
+							</span>
+							<br>
 							<span class="fw-light">
-								Posted at {commentCreatedOn}
+								Member since: {commentCreatedByDateOfCreation}
 							</span>
 						</div>
-						<div class="col-2 d-flex justify-content-end">
-								<btn class="btn btn-primary btn-reply" onclick="btnAddReply({commentId})">Reply to this comment</btn>
+						<div class="col d-flex justify-content-end align-items-end">
+							<img src="{commentCreatedByProfilePicture}" class="rounded-3 comment-profile-picture" width="40" height="40">
 						</div>
-					</div>
-
-					<p>
-						{commentText}
-					</p>
-
-					<div class="row">
-						<div class="col col-2">
-							<div class="row">
-								<div class="col-8">
-									<span class="font-monospace">
-										by {commentCreatedBy}
-									</span>
-									<br>
-									<span class="fw-light">
-										Member since: {commentCreatedByDateOfCreation}
-									</span>
-								</div>
-								<div class="col d-flex justify-content-end align-items-end">
-									<img src="{commentCreatedByProfilePicture}" class="rounded-3 comment-profile-picture" width="40" height="40">
-								</div>
-							</div>
-						</div>
-						<div class="col">
-							Reaction section
-						</div>
-						<div class="col col-2 d-flex justify-content-end align-self-center">
-								<btn class="btn btn-light btn-show-replies" onclick="btnShowReplies({commentId})">Show replies</btn>
-						</div>
-					</div>
-
-					<div id="replyWritingForm-{commentId}">
-
-					</div>
-
-					<div id="repliesToCommentId-{commentId}" class="mt-3">
-						
 					</div>
 				</div>
-				`;
+				<div class="col d-flex flex-wrap">
+					{reactionSection}
+				</div>
+				<div class="col col-2 d-flex justify-content-end align-self-center">
+					<btn id="btnShowRepliesCommentId-{commentId}" class="btn btn-light btn-show-replies" onclick="btnShowReplies({commentId})">Show replies</btn>
+					<btn id="btnHideRepliesCommentId-{commentId}" class="btn btn-light btn-hide-replies d-none" onclick="btnHideReplies({commentId})">Hide replies</btn>
+				</div>
+			</div>
+
+			<div id="replyWritingForm-{commentId}">
+
+			</div>
+
+			<div id="repliesToCommentId-{commentId}" class="mt-3 d-none">
+
+			</div>
+		</div>
+		`;
 
 	function btnAddReply(replyToCommentId) {
 		document.getElementById(`replyWritingForm-${replyToCommentId}`).append(document.getElementById("replyWritingForm"));
@@ -238,26 +431,206 @@
 	}
 
 	function btnShowReplies(commentId) {
+		document.getElementById(`repliesToCommentId-${commentId}`).classList.remove("d-none");
+
+		if (document.getElementById(`repliesToCommentId-${commentId}`).textContent.trim() == "")
+		{
+			fillReplies(commentId);
+		}
+		
+		document.getElementById(`btnShowRepliesCommentId-${commentId}`).classList.add("d-none");
+		document.getElementById(`btnHideRepliesCommentId-${commentId}`).classList.remove("d-none");
+	}
+
+	function btnHideReplies(commentId) {
+		document.getElementById(`repliesToCommentId-${commentId}`).classList.add("d-none");
+
+		document.getElementById(`btnShowRepliesCommentId-${commentId}`).classList.remove("d-none");
+		document.getElementById(`btnHideRepliesCommentId-${commentId}`).classList.add("d-none");
+	}
+
+	function fillReplies(commentId) {
 		fetch(`/Comment/CommentReplies?commentId=${commentId}`)
 			.then(response => response.json())
 			.then(comments =>
 				comments.forEach(function (comment) {
-					var commentDiv = replyTemplate
+					var commentAttachments = "";
+
+					if (Object.keys(comment.attachments).length) {
+						commentAttachments += `<hr /> <h6 class="fst-italic fw-lighter">Attachments: </h6>`;
+					}
+
+					comment.attachments.forEach(function (attachment) {
+						commentAttachments += `<a href="${attachment.attachmentUrl}" target="_blank">${attachment.fileName}</a> <br />`;
+					});
+
+					let reactionSection = "";
+
+					let loggedInUserId = 0;
+					let buttonDisabled = false;
+					let matchingReactionId = 0;
+					let reactionsCount = 0;
+
+					@if (SignInManager.IsSignedIn(User))
+					{
+						int loggedInUserId = (await UserManager.GetUserAsync(User)).Id;
+						<text>
+							loggedInUserId = @loggedInUserId;
+						</text>
+					}
+
+					@foreach (var reactionType in Model.ReactionTypeDtos)
+					{
+						<text>
+							matchingReactionId = 0;
+								reactionsCount = 0;
+								buttonDisabled = false;
+
+								comment.reactions.forEach(function (reaction) {
+									if (reaction.createdById == loggedInUserId && reaction.reactionTypeId == @reactionType.Id) {
+										buttonDisabled = true;
+										matchingReactionId = reaction.id;
+									}
+									if (reaction.reactionTypeId == @reactionType.Id) {
+										reactionsCount++;
+									}
+								})
+
+								if (buttonDisabled) {
+									reactionSection += `
+										<form asp-controller="Comment" asp-action="RemoveCommentReaction" onsubmit="formRemoveReaction()" method="post">
+											@Html.AntiForgeryToken()
+											<input type="hidden" name="reactionCommentId" value="${matchingReactionId}" />
+											<input type="hidden" name="commentId" value="{commentId}" />
+											<input type="hidden" name="reactionTypeId" value="@reactionType.Id" />
+											<button type="submit" class="btn btn-outline-secondary opacity-50 m-1 px-1 border border-1 border-secondary rounded d-flex align-items-center" title="@reactionType.Name">
+												<img class="me-1" src="@reactionType.ImageUrl" width="20" height="20" />
+												<span class="fw-light">${reactionsCount}</span>
+											</button>
+										</form>`;
+								}
+								else {
+									reactionSection += `
+										<form asp-controller="Comment" asp-action="AddCommentReaction" onsubmit="formAddReaction()" method="post">
+											@Html.AntiForgeryToken()
+											<input type="hidden" name="commentId" value="{commentId}" />
+											<input type="hidden" name="reactionTypeId" value="@reactionType.Id" />
+											<button type="submit" class="btn btn-outline-secondary m-1 px-1 border border-1 border-secondary rounded d-flex align-items-center" title="@reactionType.Name">
+												<img class="me-1" src="@reactionType.ImageUrl" width="20" height="20" />
+												<span class="fw-light">${reactionsCount}</span>
+											</button>
+										</form>`;
+								}
+							</text>
+						}
+
+						var commentDiv = replyTemplate
+						.replaceAll('{reactionSection}', reactionSection)
+						.replaceAll('{commentAttachments}', commentAttachments)
 						.replaceAll('{commentId}', comment.id)
 						.replaceAll('{commentCreatedBy}', comment.createdBy.userName)
 						.replaceAll('{commentCreatedByDateOfCreation}', comment.createdBy.dateOfCreation)
-						.replaceAll('{commentCreatedByProfilePicture}', 'https://res.cloudinary.com/do8e2zy1a/image/upload/v1709327402/cld-sample.jpg')
+						.replaceAll('{commentCreatedByProfilePicture}', comment.createdBy.profilePictureUrl)
 						.replaceAll('{commentText}', comment.text)
 						.replaceAll('{commentCreatedOn}', comment.createdOn);
+
 					$(`#repliesToCommentId-${commentId}`).append(commentDiv);
 				})
 			);
+	}
+
+	function btnThreadEdit() {
+		document.getElementById("threadEditForm").classList.remove("d-none");
+
+		let threadTextElement = document.getElementById("threadText");
+		threadTextElement.classList.add("d-none");
+
+		let threadTitleElement = document.getElementById("threadTitle");
+		threadTitleElement.classList.add("d-none");
+
+		document.getElementById("editThreadTextInput").value = threadTextElement.textContent;
+		document.getElementById("editThreadTextInput").focus();
+
+		document.getElementById("editThreadTitleInput").setAttribute("value", threadTitleElement.textContent);
+	}
+
+	function btnCancelThreadEdit() {
+		event.preventDefault();
+		window.location.reload();
+	}
+
+	function formAddReaction() {
+		event.preventDefault();
+		let form = event.target;
+		let reactionCounter = event.target.children[2].children[1];
+		let buttonElement = event.target.children[2];
+		var formData = new FormData(event.target);
+		fetch(event.target.action, {
+			method: 'POST',
+			body: formData
+		})
+			.then(data => {
+				// if the response url contains the current url,
+				// then &autheticate=true was added and it needs to be refreshed
+				// to show the login modal
+				if (data.url.includes(window.location.href)) {
+					window.location.href = data.url;
+				} 
+				else
+				{
+					location.reload();
+				}
+			});
+	}
+
+	function formRemoveReaction() {
+		event.preventDefault();
+		let reactionCounter = event.target.children[3].children[1];
+		let buttonElement = event.target.children[3];
+		var formData = new FormData(event.target);
+		fetch(event.target.action, {
+			method: 'POST',
+			body: formData
+		})
+			.then(data => {
+				if (data.url.includes(window.location.href)) {
+					window.location.href = data.url;
+				}
+				else {
+					location.reload();
+				}
+			});
 	}
 
 	$(document).ready(function () {
 		$(".btn-comment").click(function () {
 			$("#commentWritingForm").removeClass("d-none");
 			$(window).scrollTop($("#commentWritingForm").position().top);
+		});
+	});
+	$(document).ready(function () {
+		$(".btn-comment").click(function () {
+			$("#commentWritingForm").removeClass("d-none");
+			$(window).scrollTop($("#commentWritingForm").position().top);
+		});
+
+		$(".filter-box input[type='checkbox']").change(function () {
+			var commentChecked = $("#filterComment").is(":checked");
+			var createdByChecked = $("#filterCreatedBy").is(":checked");
+
+			if (commentChecked && createdByChecked) {
+				alert("Only one filter can be applied.");
+				$("#filterComment").prop("checked", false);
+				$("#filterCreatedBy").prop("checked", false);
+			} else {
+				var action = "/Thread/SearchPostsByBoth";
+				if (commentChecked) {
+					action = "/Thread/SearchPostsByText";
+				} else if (createdByChecked) {
+					action = "/Thread/SearchPostsByCreatedBy";
+				}
+				$("#searchForm").attr("action", action);
+			}
 		});
 	});
 </script>

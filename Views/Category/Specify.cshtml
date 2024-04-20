@@ -4,39 +4,161 @@
 @inject SignInManager<User> SignInManager
 
 @{
-    ViewData["Title"] = "Threads in " + Model.CategoryName;
-    Layout = "../Shared/_Layout.cshtml";
+	ViewData["Title"] = "Threads in " + Model.CategoryName;
+	Layout = "../Shared/_Layout.cshtml";
 }
 @{
-    int categoryId = Model.CategoryId;
+	int categoryId = Model.CategoryId;
 }
 
 <div class="container">
-    <div class="row">
-        <div class="col">
-            <h2>
-                Threads in category: @Model.CategoryName
-            </h2>
-            <p>@ViewData["CategoryDescription"]</p>
-        </div>
-        @if (User.IsInRole("Admin"))
-        {
-            <div class="col-auto">
-                <a asp-controller="Category" asp-action="Edit" asp-route-id="@Model.CategoryId" class="btn btn-primary">Edit Category</a>
-                <a asp-controller="Category" asp-action="Delete" asp-route-id="@Model.CategoryId" class="btn btn-danger">Delete Category</a>
-            </div>
-        }
-    </div>
+	<div class="row">
+		<div class="col">
+			<h2>
+				Threads in category: @Model.CategoryName
+			</h2>
+			<p>@ViewData["CategoryDescription"]</p>
+		</div>
+		<div class="col-auto">
+			<form id="searchForm" class="form-inline" asp-controller="Search" asp-action="SearchThread" method="get">
+				<input type="hidden" name="id" value="@Model.CategoryId" />
+				<input class="form-control form-control-sm mr-2" type="text" placeholder="Search" aria-label="Search" name="searchQuery">
+				<button type="submit" class="btn btn-primary btn-sm">Search</button>
+				<div class="form-check form-check-inline ml-2">
+					<input class="form-check-input" type="checkbox" id="filterTitle" name="filterTitle">
+					<label class="form-check-label" for="filterTitle">Search by Title</label>
+				</div>
+				<div class="form-check form-check-inline">
+					<input class="form-check-input" type="checkbox" id="filterCreatedBy" name="filterCreatedBy">
+					<label class="form-check-label" for="filterCreatedBy">Search by Author</label>
+				</div>
+			</form>
+		</div>
+		@if (User.IsInRole("Admin"))
+		{
+			<div class="col-auto ml-auto">
+				<a asp-controller="Category" asp-action="Edit" asp-route-id="@Model.CategoryId" class="btn btn-primary">Edit Category</a>
+				<a asp-controller="Category" asp-action="Delete" asp-route-id="@Model.CategoryId" class="btn btn-danger">Delete Category</a>
+			</div>
+		}
+	</div>
 
-    <p>
-        What goes in this category: @Model.Description
-    </p>
+	<p>
+		What goes in this category: @Model.Description
+	</p>
+	<form class="filter-box">
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="filterTitle" name="filterTitle">
+			<label class="form-check-label" for="filterTitle">Filter by Title</label>
+		</div>
+		<div class="form-check form-check-inline">
+			<input class="form-check-input" type="checkbox" id="filterCreatedBy" name="filterCreatedBy">
+			<label class="form-check-label" for="filterCreatedBy">Filter by Author</label>
+		</div>
+	</form>
+	<form asp-controller="Thread" asp-action="Create" asp-route-categoryId="@Model.CategoryId" asp-route-categoryName="@Model.CategoryName" method="get">
+		<button type="submit" class="btn btn-success mt-3">
+			New thread
+		</button>
+	</form>
 
-    <form asp-controller="Thread" asp-action="Create" asp-route-id="@Model.CategoryId" method="get">
-        <button type="submit" class="btn btn-success mt-3">
-            New thread
-        </button>
-    </form>
+	<table class="table table-striped table-hover mt-4" id="threadsTable">
+		<thead>
+			<tr>
+				<th class="col-3">
+					@Html.DisplayNameFor(model => model.Threads.ElementAt(0).Title)
+				</th>
+				<th class="col">
+					@Html.DisplayNameFor(model => model.Threads.ElementAt(0).DateOfCreation)
+				</th>
+				<th class="col-2">
+					@Html.DisplayNameFor(model => model.Threads.ElementAt(0).Author.UserName)
+				</th>
+				<th class="col-5">
+					@Html.DisplayNameFor(model => model.Threads.ElementAt(0).LastComment)
+				</th>
+			</tr>
+		</thead>
+		<tbody class="table-group-divider">
+			@foreach (var item in Model.Threads)
+			{
+				if (item.IsHidden == false)
+				{
+					<tr id="tableRow" thread-id="@item.Id">
+						<td>
+							@item.Title
+						</td>
+						<td class="fw-light">
+							@item.DateOfCreation.ToString("g")
+						</td>
+						<td>
+							<div class="row">
+								<div class="col-8">
+									@item.Author.UserName
+									<br>
+									<span class="fw-light">
+										Member since: @item.Author.DateOfCreation.ToString("g")
+									</span>
+								</div>
+								<div class="col d-flex justify-content-end">
+									<img src="@item.Author.ProfilePictureUrl" class="rounded-circle" width="40" height="40">
+								</div>
+							</div>
+						</td>
+						<td>
+							@if (item.LastComment == null)
+							{
+								<p class="fst-italic fw-semibold">No comments have been made on this thread yet</p>
+								<div class="col d-flex justify-content-end">
+									@if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+									{
+										<form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
+											<input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
+											<button type="submit" class="btn btn-danger adminButton" style="margin: -34px 0px 0px 0px">Hide</button>
+										</form>
+									}
+								</div>
+							}
+							else
+							{
+								<div>
+									@if (item.IsHidden == false)
+									{
+										@item.LastComment.Text
+										<div class="row">
+											<div class="col">
+												@if (item.LastComment.CreatedBy == null)
+												{
+													<span class="font-monospace">by [Unknown]</span>
+												}
+												else
+												{
+													<span class="font-monospace">
+														by @item.LastComment.CreatedBy.UserName
+													</span>
+												}
+												<br>
+												<span class="fw-light">
+													on @item.LastComment.CreatedOn.ToString("g")
+												</span>
+											</div>
+											<div class="col d-flex justify-content-end">
+												<img src="@item.LastComment.CreatedBy?.ProfilePictureUrl" class="rounded-circle" style="margin: 13px 0px 0px 10px" width="45" height="45">
+												@if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+												{
+													<form asp-controller="Category" asp-action="HideThread" asp-route-id="@item.Id" method="get">
+														<input type="hidden" asp-for="CategoryId" value="@Model.CategoryId"></input>
+														<button type="submit" class="btn btn-danger adminButton" style="margin: 15px 0px 0px 10px">Hide</button>
+													</form>
+												}
+											</div>
+										</div>
+									}
+								</div>
+							}
+						</td>
+					</tr>
+				}
 
     <table class="table table-striped table-hover mt-4" id="threadsTable">
         <thead>
@@ -177,7 +299,25 @@
                 }
             });
         });
+      $(document).ready(function () {
+			$(".filter-box input[type='checkbox']").change(function () {
+				var TitleChecked = $("#filterTitle").is(":checked");
+				var createdByChecked = $("#filterCreatedBy").is(":checked");
+
+				if (TitleChecked && createdByChecked) {
+					alert("Only one filter can be applied.");
+					$("#filterTitle").prop("checked", false);
+					$("#filterCreatedBy").prop("checked", false);
+				} else {
+					if (TitleChecked) {
+						$("#searchForm").attr("action", "/Search/SearchThread");
+					} else if (createdByChecked) {
+						$("#searchForm").attr("action", "/Search/SearchThreadByCreatedBy");
+					} else {
+						$("#searchForm").attr("action", "/Search/SearchThread");
+					}
+				}
+			});
+		});
     </script>
 }
-
-

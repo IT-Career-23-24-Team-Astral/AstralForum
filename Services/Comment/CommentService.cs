@@ -3,9 +3,11 @@ using AstralForum.Data.Entities;
 using AstralForum.Data.Entities.Comment;
 using AstralForum.Mapping;
 using AstralForum.Models;
+using AstralForum.Models.Comment;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
 using AstralForum.Services.Comment;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Services
 {
@@ -32,7 +34,16 @@ namespace AstralForum.Services
             return (await _commentRepository.Edit(comment)).ToDto();
         }
 
-        public async Task<List<CommentDto>> GetAllCommentsByThreadId(int id)
+		public CommentDto GetCommentByCommentIdWithReactions(int id)
+		{
+            return _commentRepository.GetAll()
+                .Include(c => c.CreatedBy)
+                .Include(c => c.Reactions)
+                    .ThenInclude(r => r.ReactionType)
+                .Single(c => c.Id == id).ToDto(true, false, false);
+		}
+
+		public async Task<List<CommentDto>> GetAllCommentsByThreadId(int id)
         {
             List<Data.Entities.Comment.Comment> comments = await _commentRepository.GetCommentsByThreadId(id);
             List<CommentDto> commentDtos = comments.Select(comment => comment.ToDto()).ToList();
@@ -52,6 +63,18 @@ namespace AstralForum.Services
             Data.Entities.Comment.Comment comment = commentDto.ToEntity();
 
             return (await _commentRepository.Delete(comment)).ToDto();
+        }
+        public CommentTableViewModel GetCommentTableViewModel(CommentDto commentDto)
+        {
+            CommentTableViewModel model = new CommentTableViewModel()
+			{
+				Id = commentDto.Id,
+				Text = commentDto.Text,
+				Author = commentDto.CreatedBy,
+				DateOfCreation = commentDto.CreatedOn,
+			
+			};
+            return model;
         }
 
         public async Task<List<CommentDto>> GetAllHiddenComments()

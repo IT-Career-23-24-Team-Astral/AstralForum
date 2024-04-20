@@ -1,14 +1,15 @@
-﻿using AstralForum.Data.Entities.Comment;
+﻿
 using AstralForum.Mapping;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
 using AstralForum.Data.Entities.Thread;
 using AstralForum.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
 namespace AstralForum.Services.Thread
 {
-    public class ThreadService : IThreadService
+	public class ThreadService : IThreadService
 	{
 		private readonly ThreadRepository _threadRepository;
 
@@ -29,10 +30,9 @@ namespace AstralForum.Services.Thread
 			return (await _threadRepository.Delete(thread)).ToDto();
 		}
 
-		public async Task<ThreadDto> EditThread(ThreadDto threadDto)
+		public int EditThread(int id, string newText, string newTitle)
 		{
-			Data.Entities.Thread.Thread thread = threadDto.ToEntity();
-			return (await _threadRepository.Edit(thread)).ToDto();
+			return _threadRepository.EditThread(id, newText, newTitle);
 		}
 
 		public ThreadDto GetThreadById(int id)
@@ -40,6 +40,81 @@ namespace AstralForum.Services.Thread
 			ThreadDto threadDto = _threadRepository.GetThreadById(id).ToDto(includeCommentReplies: false);
 
 			return threadDto;
+		}
+
+		public ThreadDto GetThreadByThreadIdWithReactions(int id)
+		{
+			return _threadRepository.GetAll()
+				.Include(c => c.CreatedBy)
+				.Include(c => c.Reactions)
+					.ThenInclude(r => r.ReactionType)
+				.Single(c => c.Id == id).ToDto(false, true, false, false, false, false, true);
+		}
+
+		public List<ThreadDto> SearchPostsByCreatedBy(int id, string searchQuery)
+        {
+            var threads = _threadRepository
+                .GetAll()
+                .Include(t => t.ThreadCategory)
+                .Include(t => t.CreatedBy)
+                .Include(t => t.Comments)
+                    .ThenInclude(c => c.CreatedBy)
+                .Include(t => t.Comments)
+                    .ThenInclude(c => c.Reactions)
+                .Include(t => t.Comments)
+                    .ThenInclude(c => c.Attachments)
+                .Include(t => t.Reactions)
+                .Include(t => t.Attachments)
+				.AsEnumerable()
+                .Where(t => t.Id == id && (searchQuery == null || t.Comments.Any(c => c.CreatedBy.UserName.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase))))
+                .Select(tc => tc.ToDto(includeCommentReplies: false))
+                .ToList();
+
+            return threads;
+        }
+		public List<ThreadDto> SearchPostsByText(int id, string searchQuery)
+		{
+			var threads = _threadRepository
+				.GetAll()
+				.Include(t => t.ThreadCategory)
+				.Include(t => t.CreatedBy)
+				.Include(t => t.Comments)
+					.ThenInclude(c => c.CreatedBy)
+				.Include(t => t.Comments)
+					.ThenInclude(c => c.Reactions)
+				.Include(t => t.Comments)
+					.ThenInclude(c => c.Attachments)
+				.Include(t => t.Reactions)
+				.Include(t => t.Attachments)
+				.AsEnumerable()
+				.Where(t => t.Id == id && (searchQuery == null ||
+					t.Comments.Any(c => c.Text.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase))))
+				.Select(tc => tc.ToDto(includeCommentReplies: false))
+				.ToList();
+
+			return threads;
+		}
+		public List<ThreadDto> SearchPostsByBoth(int id, string searchQuery)
+		{
+			var threads = _threadRepository
+				.GetAll()
+				.Include(t => t.ThreadCategory)
+				.Include(t => t.CreatedBy)
+				.Include(t => t.Comments)
+					.ThenInclude(c => c.CreatedBy)
+				.Include(t => t.Comments)
+					.ThenInclude(c => c.Reactions)
+				.Include(t => t.Comments)
+					.ThenInclude(c => c.Attachments)
+				.Include(t => t.Reactions)
+				.Include(t => t.Attachments)
+				.AsEnumerable()
+				.Where(t => t.Id == id && (searchQuery == null ||
+					t.Comments.Any(c => c.Text.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase)) ||
+					t.CreatedBy.UserName.StartsWith(searchQuery, StringComparison.OrdinalIgnoreCase)))
+				.Select(tc => tc.ToDto(includeCommentReplies: false))
+				.ToList();
+			return threads;
 		}
         public async Task<List<ThreadDto>> GetAllHiddenThreads()
         {
@@ -81,5 +156,5 @@ namespace AstralForum.Services.Thread
         {
             _threadRepository.DeleteAllThreadsByUserId(id);
         }
-    }
+	}
 }

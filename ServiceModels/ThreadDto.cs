@@ -8,7 +8,7 @@ namespace AstralForum.ServiceModels
     {
         public ThreadDto() {
             Comments = new List<CommentDto>();
-            Reactions = new List<ReactionDto>();
+            Reactions = new List<ThreadReactionDto>();
             Attachments = new List<ThreadAttachmentDto>();
         }
 
@@ -17,7 +17,7 @@ namespace AstralForum.ServiceModels
         public int ThreadCategoryId { get; set; }
         public string ThreadCategoryName { get; set; }
         public List<CommentDto> Comments { get; set; }
-        public List<ReactionDto> Reactions { get; set; }
+        public List<ThreadReactionDto> Reactions { get; set; }
         public List<ThreadAttachmentDto> Attachments { get; set; }
         public bool IsHidden { get; set; } = false;
         public bool IsDeleted { get; set; } = false;

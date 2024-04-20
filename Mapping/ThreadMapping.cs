@@ -15,11 +15,11 @@ namespace AstralForum.Mapping
             thread.Text = threadDto.Text;
             thread.ThreadCategoryId = threadDto.ThreadCategoryId;
             thread.CreatedById = threadDto.CreatedById;
-            thread.CreatedBy = threadDto.CreatedBy.ToEntity();
+            thread.CreatedBy = threadDto.CreatedBy?.ToEntity();
             thread.CreatedOn = threadDto.CreatedOn;
-            thread.Comments = threadDto.Comments.Select(c => c.ToEntity()).ToList();
-            thread.Reactions = threadDto.Reactions.Select(c => c.ToEntity()).ToList();
-            thread.Attachments = threadDto.Attachments.Select(c => c.ToEntity()).ToList();
+            thread.Comments = threadDto.Comments?.Select(c => c.ToEntity()).ToList();
+            thread.Reactions = threadDto.Reactions?.Select(c => c.ToEntity()).ToList();
+            thread.Attachments = threadDto.Attachments?.Select(c => c.ToEntity()).ToList();
             thread.IsHidden = threadDto.IsHidden;
             thread.IsDeleted = threadDto.IsDeleted;
 
@@ -36,14 +36,11 @@ namespace AstralForum.Mapping
             threadDto.ThreadCategoryId = thread.ThreadCategoryId;
             threadDto.ThreadCategoryName = thread.ThreadCategory != null ? thread.ThreadCategory.CategoryName : "";
             threadDto.CreatedById = thread.CreatedById;
-            if (CreatedBy == true)
-            {
-                threadDto.CreatedBy = thread.CreatedBy.ToDto();
-            }
+            threadDto.CreatedBy = thread.CreatedBy?.ToDto();
             threadDto.CreatedOn = thread.CreatedOn;
             // include only top level comments in the dto
             threadDto.Comments = includeComments ? thread.Comments.Select(c => c.ToDto(includeCommentReactions, includeCommentAttachments, includeCommentReplies)).Where(c => c.ParentCommentId == null).ToList() : new List<CommentDto>();
-            threadDto.Reactions = includeReactions ? thread.Reactions.Select(r => r.ToDto()).ToList() : new List<ReactionDto>();
+            threadDto.Reactions = includeReactions ? thread.Reactions.Select(r => r.ToDto()).ToList() : new List<ThreadReactionDto>();
             threadDto.Attachments = includeAttachments ? thread.Attachments.Select(a => a.ToDto()).ToList() : new List<ThreadAttachmentDto>();
             threadDto.IsHidden = thread.IsHidden;
             threadDto.IsDeleted = thread.IsDeleted;

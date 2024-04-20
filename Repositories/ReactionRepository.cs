@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
-    public class ReactionRepository : CommonRepository<Reaction>
+    /*public class ReactionRepository : CommonRepository<Reaction>
     {
         public ReactionRepository(ApplicationDbContext context) : base(context) { }
         public async Task<List<Reaction>> GetReactionsByThreadId(int id)
@@ -49,6 +49,6 @@ namespace AstralForum.Repositories
         public IEnumerable<ReactionModel> GetReactionsByThreadId(int id) => context.Threads.Where(c => c.Id == id).Select(x => new ReactionModel()
         {
             ReactionId = x.Id,
-        }).ToList();*/
-    }
+        }).ToList();
+    }*/
 }
