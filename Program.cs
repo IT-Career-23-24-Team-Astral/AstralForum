@@ -12,6 +12,7 @@ using AstralForum.Services.ThreadCategory;
 using AstralForum.Services.Comment;
 using Microsoft.AspNetCore.Identity;
 using AstralForum.Services.Reaction;
+using AstralForum.Services.Notification;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,7 @@ builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<CommentReactionRepository>();
 builder.Services.AddScoped<ThreadReactionRepository>();
 builder.Services.AddScoped<ReactionTypeRepository>();
+builder.Services.AddScoped<NotificationRepository>();
 
 builder.Services.AddScoped<TimeoutService>();
 
@@ -36,12 +38,14 @@ builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IReactionService, ReactionService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<IThreadCategoryFacade, ThreadCategoryFacade>();
 builder.Services.AddScoped<IThreadFacade, ThreadFacade>();
 builder.Services.AddScoped<ICommentFacade, CommentFacade>();
 builder.Services.AddScoped<IReactionFacade, ReactionFacade>();
 builder.Services.AddScoped<IUserFacade, UserFacade>();
+builder.Services.AddScoped<INotificationFacade, NotificationFacade>();
 
 // For banning users and loging them out
 builder.Services.Configure<SecurityStampValidatorOptions>(o =>

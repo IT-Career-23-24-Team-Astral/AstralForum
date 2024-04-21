@@ -615,24 +615,22 @@ namespace AstralForum.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
-                    NotificationId = table.Column<int>(type: "int", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    NotificationType = table.Column<int>(type: "int", nullable: false),
                     IsRead = table.Column<bool>(type: "bit", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CommentId = table.Column<int>(type: "int", nullable: true),
-                    TagId = table.Column<int>(type: "int", nullable: true),
-                    CreatedById = table.Column<int>(type: "int", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    NotificationId = table.Column<int>(type: "int", nullable: true),
+                    TagId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Notifications", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Notifications_AspNetUsers_CreatedById",
-                        column: x => x.CreatedById,
+                        name: "FK_Notifications_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Notifications_Comments_CommentId",
                         column: x => x.CommentId,
@@ -642,8 +640,7 @@ namespace AstralForum.Migrations
                         name: "FK_Notifications_Notifications_NotificationId",
                         column: x => x.NotificationId,
                         principalTable: "Notifications",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Notifications_Tags_TagId",
                         column: x => x.TagId,
@@ -741,11 +738,6 @@ namespace AstralForum.Migrations
                 column: "CommentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notifications_CreatedById",
-                table: "Notifications",
-                column: "CreatedById");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Notifications_NotificationId",
                 table: "Notifications",
                 column: "NotificationId");
@@ -754,6 +746,11 @@ namespace AstralForum.Migrations
                 name: "IX_Notifications_TagId",
                 table: "Notifications",
                 column: "TagId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notifications_UserId",
+                table: "Notifications",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PostReactions_ReactionTypeId",

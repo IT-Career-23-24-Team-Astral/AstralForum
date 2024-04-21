@@ -1,6 +1,5 @@
 ﻿using AstralForum.Data.Entities;
 using AstralForum.Mapping;
-using AstralForum.Migrations;
 using AstralForum.Models.Categories;
 using AstralForum.Models.Notification;
 using AstralForum.Models.ThreadCategory;
