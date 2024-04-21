@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace AstralForum.Controllers
 {
-    // TODO: make only available with the admin role
-    public class ReactionTypeController : Controller
+	[Authorize(Roles = "Admin")]
+	public class ReactionTypeController : Controller
     {
         private readonly IReactionService reactionService;
         private readonly IReactionFacade reactionFacade;

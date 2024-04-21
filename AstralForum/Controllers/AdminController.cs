@@ -31,9 +31,9 @@ namespace AstralForum.Controllers
         private readonly SignInManager<User> signInManager;
         private readonly IThreadFacade threadFacade;
         private readonly IThreadService threadService;
-        private readonly ThreadRepository threadRepository;
+        private readonly IThreadRepository threadRepository;
         private readonly ApplicationDbContext applicationDbContext;
-        public AdminController(IUserFacade userFacade, INotificationService notificationService, IThreadCategoryService threadCategoryService, RoleManager<Role> roleManager, UserManager<User> userManager, IThreadFacade threadFacade, IThreadService threadService, ThreadRepository threadRepository, ApplicationDbContext applicationDbContext, ICommentFacade commentFacade, ICommentService commentService, SignInManager<User> signInManager)
+        public AdminController(IUserFacade userFacade, INotificationService notificationService, IThreadCategoryService threadCategoryService, RoleManager<Role> roleManager, UserManager<User> userManager, IThreadFacade threadFacade, IThreadService threadService, IThreadRepository threadRepository, ApplicationDbContext applicationDbContext, ICommentFacade commentFacade, ICommentService commentService, SignInManager<User> signInManager)
         {
             this.userFacade = userFacade;
             this.notificationService = notificationService;
@@ -48,20 +48,20 @@ namespace AstralForum.Controllers
             this.commentService = commentService;
             this.signInManager = signInManager;
         }
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             AllUsersViewModel model = await userFacade.GetAllUsers();
 
             return View(model);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public IActionResult CreateRole()
         {
             return View();
         }
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
         {
@@ -81,7 +81,7 @@ namespace AstralForum.Controllers
             }
             return View(model);
         }
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> DeleteRole(int id)
         {
@@ -101,14 +101,14 @@ namespace AstralForum.Controllers
             }
         }
 		
-	    //[Authorize(Roles = "Admin")]
+	    [Authorize(Roles = "Admin")]
 		[HttpGet]
         public IActionResult ListRoles()
         {
             var roles = roleManager.Roles;
             return View(roles);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> EditRole(string id)
         {
@@ -132,7 +132,7 @@ namespace AstralForum.Controllers
             }
             return View(model);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpPost]
 		public async Task<IActionResult> EditRole(EditRoleViewModel model)
 		{
@@ -156,7 +156,7 @@ namespace AstralForum.Controllers
                 }
             }
 		}
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> EditUsersInRole(string id)
         {
@@ -188,7 +188,7 @@ namespace AstralForum.Controllers
 			}
             return View(model);
 		}
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpPost] 
         public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> model, string id)
         {
@@ -227,7 +227,7 @@ namespace AstralForum.Controllers
             }
             return RedirectToAction("EditRole", new { Id = id});
 		}
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> Ban(int id)
         {
@@ -254,7 +254,7 @@ namespace AstralForum.Controllers
             await notificationService.CreateNotification(notification, user.Id);
             return Redirect(returnUrl);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> Unban(int id)
         {
@@ -277,7 +277,7 @@ namespace AstralForum.Controllers
             await notificationService.CreateNotification(notification, user.Id);
             return Redirect(returnUrl);
         }
-		//[Authorize(Roles = "Admin, Moderator")]
+		[Authorize(Roles = "Admin, Moderator")]
 		public async Task<IActionResult> TimeOut(int id, DateTime time)
         {
             var user = await applicationDbContext.Users.FindAsync(id);
@@ -305,7 +305,7 @@ namespace AstralForum.Controllers
             return Redirect(returnUrl);
         }
 		//  Timed out for @((item.TimeOut - DateTime.Now).TotalHours.ToString("0")) hours and @((item.TimeOut - DateTime.Now).Minutes) minutes
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		public async Task<IActionResult> DeleteTimeout(int id)
         {
             var user = await applicationDbContext.Users.FindAsync(id);
@@ -328,7 +328,7 @@ namespace AstralForum.Controllers
             return Redirect(returnUrl);
             
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> HiddenThreads()
         {
@@ -336,7 +336,7 @@ namespace AstralForum.Controllers
 
             return View(model);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> DeleteThread(int id)
         {
@@ -355,7 +355,7 @@ namespace AstralForum.Controllers
 
             return RedirectToAction("HiddenThreads");
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> RecoverThread(int id)
         {
@@ -375,7 +375,7 @@ namespace AstralForum.Controllers
             return Redirect(returnUrl);
 
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> DeleteAllThreadsAndCommentsByUserId(int userid)
         {
@@ -384,7 +384,7 @@ namespace AstralForum.Controllers
             string returnUrl = HttpContext.Request.Headers["Referer"];
             return Redirect(returnUrl);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> DeletedThreads()
         {
@@ -392,7 +392,7 @@ namespace AstralForum.Controllers
 
             return View(model);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> HiddenComments()
         {
@@ -400,7 +400,7 @@ namespace AstralForum.Controllers
 
             return View(model);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> DeleteComment(int id)
         {
@@ -419,7 +419,7 @@ namespace AstralForum.Controllers
             await notificationService.CreateNotification(notification, comment.CreatedById);
             return Redirect(returnUrl);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> RecoverComment(int id)
         {
@@ -438,7 +438,7 @@ namespace AstralForum.Controllers
             await notificationService.CreateNotification(notification, comment.CreatedById);
             return Redirect(returnUrl);
         }
-		//[Authorize(Roles = "Admin")]
+		[Authorize(Roles = "Admin")]
 		[HttpGet]
         public async Task<IActionResult> DeletedComments()
         {

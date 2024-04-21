@@ -20,7 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AstralForum.csproj" />
     <ProjectReference Include="..\AstralForum\AstralForum.csproj" />
   </ItemGroup>
 
