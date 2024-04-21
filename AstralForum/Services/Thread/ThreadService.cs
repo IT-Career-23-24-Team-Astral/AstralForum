@@ -2,7 +2,6 @@
 using AstralForum.Mapping;
 using AstralForum.Repositories;
 using AstralForum.ServiceModels;
-using AstralForum.Data.Entities.Thread;
 using AstralForum.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
@@ -11,9 +10,9 @@ namespace AstralForum.Services.Thread
 {
 	public class ThreadService : IThreadService
 	{
-		private readonly ThreadRepository _threadRepository;
+		private readonly IThreadRepository _threadRepository;
 
-		public ThreadService(ThreadRepository threadRepository)
+		public ThreadService(IThreadRepository threadRepository)
 		{
 			_threadRepository = threadRepository;
 		}
@@ -24,12 +23,6 @@ namespace AstralForum.Services.Thread
 			return (await _threadRepository.Create(thread)).ToDto();
 		}
 
-		public async Task<ThreadDto> DeleteThread(ThreadDto threadDto)
-		{
-			Data.Entities.Thread.Thread thread = threadDto.ToEntity();
-			return (await _threadRepository.Delete(thread)).ToDto();
-		}
-
 		public int EditThread(int id, string newText, string newTitle)
 		{
 			return _threadRepository.EditThread(id, newText, newTitle);
@@ -37,6 +30,13 @@ namespace AstralForum.Services.Thread
 
 		public ThreadDto GetThreadById(int id)
 		{
+			Data.Entities.Thread.Thread thread = _threadRepository.GetThreadById(id);
+
+			if (thread == default)
+			{
+				throw new ArgumentException($"Thread with id {id} not found");
+			}
+
 			ThreadDto threadDto = _threadRepository.GetThreadById(id).ToDto(includeCommentReplies: false);
 
 			return threadDto;
@@ -134,7 +134,8 @@ namespace AstralForum.Services.Thread
         }
         public ThreadDto HideThread(int id)
         {
-            ThreadDto threadDto = _threadRepository.HideThread(id).ToDto(false, false, false, false, false, false, false);
+			ThreadDto threadDto = _threadRepository.HideThread(id).ToDto(false, false, false, false, false, false, false);
+            
             return threadDto;
         }
         public ThreadDto UnhideThread(int id)

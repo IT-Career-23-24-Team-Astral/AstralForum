@@ -39,9 +39,9 @@ namespace AstralForum.Mapping
             threadDto.CreatedBy = thread.CreatedBy?.ToDto();
             threadDto.CreatedOn = thread.CreatedOn;
             // include only top level comments in the dto
-            threadDto.Comments = includeComments ? thread.Comments.Select(c => c.ToDto(includeCommentReactions, includeCommentAttachments, includeCommentReplies)).Where(c => c.ParentCommentId == null).ToList() : new List<CommentDto>();
-            threadDto.Reactions = includeReactions ? thread.Reactions.Select(r => r.ToDto()).ToList() : new List<ThreadReactionDto>();
-            threadDto.Attachments = includeAttachments ? thread.Attachments.Select(a => a.ToDto()).ToList() : new List<ThreadAttachmentDto>();
+            threadDto.Comments = includeComments ? thread.Comments?.Select(c => c.ToDto(includeCommentReactions, includeCommentAttachments, includeCommentReplies)).Where(c => c.ParentCommentId == null).ToList() : new List<CommentDto>();
+            threadDto.Reactions = includeReactions ? thread.Reactions?.Select(r => r.ToDto()).ToList() : new List<ThreadReactionDto>();
+            threadDto.Attachments = includeAttachments ? thread.Attachments?.Select(a => a.ToDto()).ToList() : new List<ThreadAttachmentDto>();
             threadDto.IsHidden = thread.IsHidden;
             threadDto.IsDeleted = thread.IsDeleted;
 

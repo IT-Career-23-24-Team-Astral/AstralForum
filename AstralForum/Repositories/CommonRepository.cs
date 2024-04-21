@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AstralForum.Repositories
 {
-	public class CommonRepository<T> where T : BaseEntity
+	public class CommonRepository<T> : ICommonRepository<T> where T : BaseEntity
 	{
 		protected readonly ApplicationDbContext context;
 		public CommonRepository(ApplicationDbContext context)

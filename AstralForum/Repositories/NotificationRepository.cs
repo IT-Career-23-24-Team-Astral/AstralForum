@@ -39,18 +39,32 @@ namespace AstralForum.Repositories
                 .FirstOrDefault(n => n.UserId == userId && n.Id == notificationId);
 
             if (notification != null)
-            {
+        {
                 notification.IsRead = true;
                 context.Notifications.Update(notification);
                 await context.SaveChangesAsync();
                 return notification;
-            }
+        }
             else
             {
                 return null;
-            }
+        }
+        public List<NotificationApplicationUser> GetUserNotifications(string userId)
+        {
+            return context.UserNotifications.Where(u => u.UserId.Equals(userId) && !u.IsRead)
+                                            .Include(n => n.Notification)
+                                            .ToList();
         }
 
 
+        public void ReadNotification(int notificationId, string userId)
+        {
+            var notifications = context.UserNotifications
+                                        .FirstOrDefault(n => n.UserId.Equals(userId)
+                                        && n.Id == notificationId);
+            notifications.IsRead = true;
+            context.UserNotifications.Update(notifications);
+            context.SaveChanges();
+        }*/
     }
 }

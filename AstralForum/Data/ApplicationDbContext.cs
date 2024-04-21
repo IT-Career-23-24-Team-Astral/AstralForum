@@ -16,7 +16,12 @@ namespace AstralForum.Data
 {
     public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<int>, int>
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+		public ApplicationDbContext()
+			: base()
+		{
+		}
+
+		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
@@ -27,7 +32,7 @@ namespace AstralForum.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<CommentReaction> CommentReactions { get; set; }
         public DbSet<ReactionType> ReactionsTypes { get; set; }
-        public DbSet<Thread> Threads { get; set; }
+        public virtual DbSet<Thread> Threads { get; set; }
         public DbSet<ThreadAttachment> ThreadsAttachment { get; set; }
         public DbSet<Entities.ThreadCategory.ThreadCategory> ThreadCategories { get; set; }
 		public DbSet<Notification> Notifications { get; set; }

@@ -22,7 +22,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddScoped<ThreadRepository>();
+builder.Services.AddScoped<IThreadRepository, ThreadRepository>();
 builder.Services.AddScoped<ThreadCategoryRepository>();
 builder.Services.AddScoped<CommentRepository>();
 builder.Services.AddScoped<CommentReactionRepository>();

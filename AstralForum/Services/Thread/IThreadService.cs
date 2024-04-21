@@ -9,7 +9,6 @@ namespace AstralForum.Services.Thread
 		int EditThread(int id, string newText, string newTitle);
 		ThreadDto GetThreadById(int id);
 		ThreadDto GetThreadByThreadIdWithReactions(int id);
-		Task<ThreadDto> DeleteThread(ThreadDto commentDto);
         Task<List<ThreadDto>> GetAllHiddenThreads();
         Task<List<ThreadDto>> GetAllDeletedThreads();
 		ThreadDto HideThread(int id);

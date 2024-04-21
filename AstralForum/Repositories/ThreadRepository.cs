@@ -9,7 +9,7 @@ using Thread = AstralForum.Data.Entities.Thread.Thread;
 
 namespace AstralForum.Repositories
 {
-	public class ThreadRepository : CommonRepository<Data.Entities.Thread.Thread>
+	public class ThreadRepository : CommonRepository<Data.Entities.Thread.Thread>, IThreadRepository
 	{
 		public ThreadRepository(ApplicationDbContext context) : base(context) { }
 
@@ -67,6 +67,10 @@ namespace AstralForum.Repositories
         public Thread HideThread(int id)
         {
             var thread = context.Threads.FirstOrDefault(t => t.Id == id);
+
+            if (thread == null)
+                throw new ArgumentException($"No thread with id {id} found");
+
             thread.IsHidden = true;
             context.SaveChanges();
             return thread;
@@ -88,6 +92,10 @@ namespace AstralForum.Repositories
         public Thread GetDeletedThreadBack(int id)
         {
             var thread = context.Threads.FirstOrDefault(t => t.Id == id);
+
+            if (thread == null)
+                throw new ArgumentException($"No thread with id {id} found");
+
             thread.IsHidden = false;
             thread.IsDeleted = false;
             context.SaveChanges();
